@@ -27,6 +27,14 @@ class ImageConstant{
 
   static String imgArrowLeft = '$imagePath/arrow_left.svg';
 
+  static String imgEmail = '$imagePath/img_email.svg';
+
+  static String imgLocation  = '$imagePath/img_location.svg';
+
+  static String imgEye = '$imagePath/img_eye.svg';
+
+  static String imgEyeSlash = '$imagePath/img_eye_slash.svg';
+
 
 
 }

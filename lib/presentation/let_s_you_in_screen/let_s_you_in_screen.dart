@@ -188,9 +188,9 @@ class LetSYouInScreen extends GetWidget<LetsYouInController> {
 
   /// Navigates to the signInScreen when the action is triggered.
   onTapPasswordSignInButton() {
-    // Get.toNamed(
-    //   AppRoutes.signInScreen,
-    // );
+    Get.toNamed(
+      AppRoutes.signInScreen,
+    );
   }
 
   /// Navigates to the signUpBlankScreen when the action is triggered.
