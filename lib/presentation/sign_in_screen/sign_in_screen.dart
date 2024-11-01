@@ -281,6 +281,13 @@ class SignInScreen extends GetWidget<SignInController> {
             SizedBox(height: 24.h),
             CustomElevatedButton(
               text: "Sign In".tr,
+              onPressed: (){
+                if (_formKey.currentState!.validate()) {
+                  print("sign in clicked");
+Get.offNamed(AppRoutes.homeScreen);
+                }
+
+              },
             ),
             SizedBox(height: 24.h),
             GestureDetector(
@@ -330,6 +337,7 @@ class SignInScreen extends GetWidget<SignInController> {
       ),
     );
   }
+
   onTapTxtForgotPassword() {
     // Get.toNamed(
     //   AppRoutes.forgotPasswordScreen ,

@@ -7,3 +7,5 @@ export 'package:volco/theme/custom_text_style.dart';
 export 'package:volco/routes/app_routes.dart';
 export 'package:volco/theme/custom_button_style.dart';
 export 'package:volco/widgets/custom_elevated_button.dart';
+export 'package:volco/widgets/custom_text_form_field.dart';
+export 'package:volco/widgets/custom_image_view.dart';
