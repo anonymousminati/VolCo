@@ -5,7 +5,8 @@ import 'package:volco/presentation/splash_screen/controller/splash_controller.da
 import 'package:volco/widgets/custom_image_view.dart';
 
 class SplashScreen extends GetWidget<SplashController> {
-  @override
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

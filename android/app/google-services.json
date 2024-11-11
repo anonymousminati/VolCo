@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1026741882339",
+    "project_id": "volco-5ea01",
+    "storage_bucket": "volco-5ea01.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026741882339:android:29c8eda5e01b350bd324d6",
+        "android_client_info": {
+          "package_name": "com.example.volco"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl7sCtOoiX8DA2Sf1zE19iF4k5WAxySQc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

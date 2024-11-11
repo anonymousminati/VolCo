@@ -14,6 +14,7 @@ class HomeScreenInitialPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
       child: Container(
         width: double.maxFinite,
         padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -22,26 +23,7 @@ class HomeScreenInitialPage extends StatelessWidget {
           children: [
             _buildFloatingIconColumn(),
             SizedBox(height: 32.h),
-            _buildHotelRow(),
-            SizedBox(height: 32.h),
-            Container(
-              width: double.maxFinite,
-              margin: EdgeInsets.symmetric(horizontal: 24.h),
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: double.maxFinite,
-                    child: Column(
-                      children: [
-                        _buildRecentlyBookedRow(),
-                        SizedBox(height: 16.h),
-                        _buildHomeScreenList(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+
             SizedBox(height: 4.h),
           ],
         ),
@@ -52,7 +34,7 @@ class HomeScreenInitialPage extends StatelessWidget {
   Widget _buildSearchBar() {
     return CustomTextFormField(
       controller: controller.searchBarController,
-      hintText: "lbl_search".tr,
+      hintText: "search".tr,
       hintStyle: CustomTextStyles.bodyMediumGray500,
       textInputAction: TextInputAction.done,
       prefix: Container(
@@ -134,7 +116,7 @@ class HomeScreenInitialPage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 16.h),
                   child: Text(
-                    "lbl_comfort".tr,
+                    "VolCo".tr,
                     style: theme.textTheme.headlineSmall,
                   ),
                 ),
@@ -158,7 +140,7 @@ class HomeScreenInitialPage extends StatelessWidget {
           ),
           SizedBox(height: 34.h),
           Text(
-            "msg_hello_daniel".tr,
+            "hello Prathamesh".tr,
             style: theme.textTheme.headlineLarge,
           ),
           SizedBox(height: 22.h),
@@ -204,192 +186,11 @@ class HomeScreenInitialPage extends StatelessWidget {
 
   Widget _buildHotelRow() {
     return Container(
-      width: double.maxFinite,
-      margin: EdgeInsets.only(left: 24.h),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              height: 400.h,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgVolunteeringCleaning,
-                    height: 400.h,
-                    width: double.maxFinite,
-                    radius: BorderRadius.circular(36.h),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      width: double.maxFinite,
-                      margin: EdgeInsets.only(top: 32.h),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          _buildFortyEight(),
-                          Spacer(),
-                          Container(
-                            width: double.maxFinite,
-                            margin: EdgeInsets.only(right: 12.h),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 32.h, vertical: 20.h),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadiusStyle.customBorderBL36,
-                              gradient: LinearGradient(
-                                  begin: Alignment(0.5, 0),
-                                  end: Alignment(0.5, 1),
-                                  colors: [
-                                    appTheme.gray80000,
-                                    appTheme.blueGray90059,
-                                    appTheme.gray900.withOpacity(0.59)
-                                  ]),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: 16.h),
-                                Text(
-                                  "msg_emeralda_de_hotel".tr,
-                                  style: theme.textTheme.headlineSmall,
-                                ),
-                                SizedBox(height: 12.h),
-                                Text(
-                                  "lbl_paris_france".tr,
-                                  style: CustomTextStyles.bodyLarge16,
-                                ),
-                                SizedBox(height: 12.h),
-                                SizedBox(
-                                  width: double.maxFinite,
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "lbl_29".tr,
-                                        style: theme.textTheme.headlineSmall,
-                                      ),
-                                      Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                            left: 4.h,
-                                            bottom: 4.h,
-                                          ),
-                                          child: Text(
-                                            "lbl_per_night".tr,
-                                            style: CustomTextStyles
-                                                .bodyMediumWhiteA700,
-                                          ),
-                                        ),
-                                      ),
-                                      Spacer(),
-                                      CustomImageView(
-                                        imagePath: ImageConstant.imgBookmarkSkyblue,
-                                        height: 28.h,
-                                        width: 30.h,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: IntrinsicWidth(
-              child: SizedBox(
-                height: 400.h,
-                width: 312.h,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    CustomImageView(
-                      imagePath: ImageConstant.imgVolunteeringCleaning,
-                      height: 400.h,
-                      width: double.maxFinite,
-                      radius: BorderRadius.circular(36.h),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        width: double.maxFinite,
-                        margin: EdgeInsets.only(left: 12.h),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 32.h, vertical: 20.h),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadiusStyle.customBorderBL36,
-                          gradient: LinearGradient(
-                            begin: Alignment(0.5, 0),
-                            end: Alignment(0.5, 1),
-                            colors: [
-                              appTheme.gray80000,
-                              appTheme.blueGray90059,
-                              appTheme.gray900.withOpacity(0.59)
-                            ],
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 16.h),
-                            Text(
-                              "msg_emeralda_de_hotel".tr,
-                              style: theme.textTheme.headlineSmall,
-                            ),
-                            SizedBox(height: 12.h),
-                            Text(
-                              "lbl_paris_france".tr,
-                              style: CustomTextStyles.bodyLarge16,
-                            ),
-                            SizedBox(height: 12.h),
-                            SizedBox(
-                              width: double.maxFinite,
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "lbl_29".tr,
-                                    style: theme.textTheme.headlineSmall,
-                                  ),
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 4.h,
-                                        bottom: 4.h,
-                                      ),
-                                      child: Text(
-                                        "lbl_per_night".tr,
-                                        style: CustomTextStyles
-                                            .bodyMediumWhiteA700,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+        width: 500,
+        alignment: Alignment.centerLeft,
+        margin: EdgeInsets.only(left: 24.h),
+        child: SizedBox(
+            width: double.maxFinite, height: 400.h, child: Text("helllll"),),);
   }
 
   /// Section Widget

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:volco/core/app_export.dart';
+import 'package:volco/core/utils/authentication.dart';
 import 'package:volco/core/utils/image_constant.dart';
 import 'package:volco/presentation/let_s_you_in_screen/controller/let_s_you_in_controller.dart';
 import 'package:volco/presentation/onboarding_three_screen/controller/onboading_three_controller.dart';
@@ -76,6 +77,9 @@ class LetSYouInScreen extends GetWidget<LetsYouInController> {
   /// Section Widget
   Widget _buildFacebookLoginButton() {
     return CustomElevatedButton(
+      onPressed: (){
+        AuthService().signInWithFacebook();
+      },
       height: 60.h,
       text: "Continue with Facebook".tr,
       leftIcon: Container(
@@ -94,6 +98,9 @@ class LetSYouInScreen extends GetWidget<LetsYouInController> {
 
   Widget _buildGoogleLoginButton() {
     return CustomElevatedButton(
+      onPressed: (){
+        AuthService().signInWithGoogle();
+      },
       height: 60.h,
       text: "Continue with Google".tr,
       leftIcon: Container(
