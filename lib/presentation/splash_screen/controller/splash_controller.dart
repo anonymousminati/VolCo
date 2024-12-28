@@ -36,7 +36,7 @@ class SplashController extends GetxController {
       // User is authenticated, redirect to home screen
       Get.offNamed(AppRoutes.homeScreen);
     } else {
-      // No user session, redirect to the "Let's You In" screen
+      // No user session, redirect to the "Let's You In" screen i.e login + registration
       Get.offNamed(AppRoutes.letsYouInScreen);
     }
   }

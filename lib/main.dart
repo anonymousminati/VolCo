@@ -29,9 +29,18 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key, });
 
+  Future<void> fetchUser() async {
+    final SupabaseClient _supabaseClient = Supabase.instance.client;
+
+    final response = await _supabaseClient
+        .from('profiles')
+        .select();
+    print("reponse from users tables: $response");
+  }
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return Sizer(builder: (context,orientation,deviceType){
       return GetMaterialApp(
         debugShowCheckedModeBanner: false,

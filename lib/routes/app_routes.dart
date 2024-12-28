@@ -14,6 +14,8 @@ import 'package:volco/presentation/sign_in_screen/binding/sign_in_binding.dart';
 import 'package:volco/presentation/sign_in_screen/sign_in_screen.dart';
 import 'package:volco/presentation/splash_screen/binding/splash_binding.dart';
 import 'package:volco/presentation/splash_screen/splash_screen.dart';
+import 'package:volco/presentation/user_details_screen/binding/user_details_binding.dart';
+import 'package:volco/presentation/user_details_screen/user_details_screen.dart';
 import 'package:volco/presentation/welcome_screen/binding/welcome_binding.dart';
 import 'package:volco/presentation/welcome_screen/welcome_screen.dart';
 
@@ -40,7 +42,7 @@ class AppRoutes {
 
   static const String homeScreenInitialPage = '/home_screen_initial_page';
 
-
+  static const String userDetailsScreen = '/user_details_screen';
 
 
   static List<GetPage> pages = [
@@ -82,6 +84,10 @@ class AppRoutes {
         name: homeScreen,
         page: () => HomeScreen(),
         bindings: [HomeBinding()]),
+    GetPage(
+        name: userDetailsScreen,
+        page: () => UserDetailsScreen(),
+        bindings: [UserDetailsBinding()]),
 
 
     GetPage(

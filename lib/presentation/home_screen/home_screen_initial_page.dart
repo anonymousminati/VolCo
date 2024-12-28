@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:volco/core/app_export.dart';
+import 'package:volco/core/utils/authentication.dart';
 import 'package:volco/core/utils/image_constant.dart';
 import 'package:volco/presentation/home_screen/controller/home_controller.dart';
 import 'package:volco/presentation/home_screen/models/homescreenlist_item_model.dart';
@@ -121,6 +122,14 @@ class HomeScreenInitialPage extends StatelessWidget {
                   ),
                 ),
                 Spacer(),
+                CustomImageView(
+                  imagePath: ImageConstant.imgLocation,
+                  height: 28.h,
+                  width: 30.h,
+                  onTap: () {
+AuthService().logout();
+                  },
+                ),
                 CustomImageView(
                   imagePath: ImageConstant.imgBellBlue,
                   height: 28.h,
