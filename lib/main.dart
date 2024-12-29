@@ -17,44 +17,55 @@ Future<void> main() async {
     url: PROJECT_URL,
     anonKey: PROJECT_ANON_KEY,
     authOptions: FlutterAuthClientOptions(authFlowType: AuthFlowType.pkce),
+    realtimeClientOptions: const RealtimeClientOptions(
+      eventsPerSecond: 2,
+    ),
   );
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((value){
-
-    Logger.init(kReleaseMode ? LogMode.live: LogMode.debug);
-    runApp(const MyApp());
-  });
+  SupabaseHandler()
+      .client
+      .channel('profiles')
+      .onPostgresChanges(
+          schema: "public",
+          event: PostgresChangeEvent.all,
+          callback: (payload) {
+            print("Postgres changes: $payload");
+          })
+      .subscribe();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
+    (value) {
+      Logger.init(kReleaseMode ? LogMode.live : LogMode.debug);
+      runApp(const MyApp());
+    },
+  );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, });
+  const MyApp({
+    super.key,
+  });
 
   Future<void> fetchUser() async {
     final SupabaseClient _supabaseClient = Supabase.instance.client;
 
-    final response = await _supabaseClient
-        .from('profiles')
-        .select();
+    final response = await _supabaseClient.from('profiles').select();
     print("reponse from users tables: $response");
   }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-    return Sizer(builder: (context,orientation,deviceType){
-      return GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        initialRoute: AppRoutes.initialRoute,
-        getPages: AppRoutes.pages,
-        title: 'Volco',
-        theme: theme,
-        navigatorKey: null,
-
-      );
-
-
-  });}
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          initialRoute: AppRoutes.initialRoute,
+          getPages: AppRoutes.pages,
+          title: 'Volco',
+          theme: theme,
+          navigatorKey: null,
+        );
+      },
+    );
+  }
 }
-
-
-

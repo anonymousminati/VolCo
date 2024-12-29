@@ -9,3 +9,6 @@ export 'package:volco/theme/custom_button_style.dart';
 export 'package:volco/widgets/custom_elevated_button.dart';
 export 'package:volco/widgets/custom_text_form_field.dart';
 export 'package:volco/widgets/custom_image_view.dart';
+export 'package:volco/core/utils/authentication.dart';
+export 'package:volco/core/utils/permission_handler.dart';
+export 'package:volco/core/utils/supabase_handler.dart';

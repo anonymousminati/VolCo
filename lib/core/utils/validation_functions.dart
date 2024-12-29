@@ -56,7 +56,7 @@ bool isValidPhone(String? inputString, {bool isRequired = false}) {
   }
   if (inputString != null && inputString.isNotEmpty) {
     if (inputString.length > 16 || inputString.length < 6) return false;
-    const pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./8-9]*$';
+    const pattern = r'^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$';
     final regExp = RegExp(pattern);
     isInputStringValid = regExp.hasMatch(inputString);
   }

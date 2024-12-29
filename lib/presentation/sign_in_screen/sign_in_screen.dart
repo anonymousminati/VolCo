@@ -8,7 +8,7 @@ import 'package:volco/widgets/custom_image_view.dart';
 import 'package:volco/widgets/custom_text_form_field.dart';
 
 class SignInScreen extends GetWidget<SignInController> {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _signinformKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class SignInScreen extends GetWidget<SignInController> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Form(
-          key: _formKey,
+          key: _signinformKey,
           child: SizedBox(
             width: double.maxFinite,
             child: SingleChildScrollView(
@@ -282,7 +282,7 @@ class SignInScreen extends GetWidget<SignInController> {
             CustomElevatedButton(
               text: "Sign In".tr,
               onPressed: (){
-                if (_formKey.currentState!.validate()) {
+                if (_signinformKey.currentState!.validate()) {
                   print("sign in clicked");
 Get.offNamed(AppRoutes.homeScreen);
                 }

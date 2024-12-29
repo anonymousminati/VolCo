@@ -69,6 +69,10 @@ class ImageConstant{
 
   static String imgProfileSkyBlue = '$imagePath/img_profile_skyblue.svg';
 
+  static String imgTextSvg = '$imagePath/text_svg.svg';
+
+
+
 
 
 }

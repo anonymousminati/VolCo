@@ -2,8 +2,8 @@
 import 'dart:convert';
 
 class UserDetailsModel {
-  final String firstName;
-  final String lastName;
+  final String fullName;
+
   final String email;
   final String mobileNumber;
   final String location;
@@ -12,8 +12,7 @@ class UserDetailsModel {
   late final String? profileImageUrl;
 
   UserDetailsModel({
-    required this.firstName,
-    required this.lastName,
+    required this.fullName,
     required this.email,
     required this.mobileNumber,
     required this.location,
@@ -25,9 +24,8 @@ class UserDetailsModel {
   // Convert to JSON for API request
   Map<String, dynamic> toJson() {
     return {
-      'first_name': firstName,
-      'last_name': lastName,
-      'email': email,
+      'full_name': fullName,
+      'username': email,
       'mobile_number': mobileNumber,
       'location': location,
       'skills': skills,
@@ -39,9 +37,8 @@ class UserDetailsModel {
   // Create instance from JSON
   factory UserDetailsModel.fromJson(Map<String, dynamic> json) {
     return UserDetailsModel(
-      firstName: json['first_name'],
-      lastName: json['last_name'],
-      email: json['email'],
+      fullName: json['full_name'],
+      email: json['username'],
       mobileNumber: json['mobile_number'],
       location: json['location'],
       skills: json['skills'],
@@ -52,8 +49,8 @@ class UserDetailsModel {
 
   // Validate fields
   bool isValid() {
-    return firstName.isNotEmpty &&
-        lastName.isNotEmpty &&
+    print("userdetailsvalid: ${fullName.isNotEmpty} , ${email.isNotEmpty} , ${mobileNumber.isNotEmpty} , ${location.isNotEmpty} , ${skills.isNotEmpty} , ${age == null || age! > 0}");
+    return fullName.isNotEmpty &&
         email.isNotEmpty &&
         mobileNumber.isNotEmpty &&
         location.isNotEmpty &&

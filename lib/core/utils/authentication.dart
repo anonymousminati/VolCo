@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:volco/core/utils/project_constants.dart';
+import 'package:volco/core/utils/supabase_handler.dart';
 import 'package:volco/routes/app_routes.dart';
 
 class AuthenticationGetXController extends GetxController {
@@ -9,20 +10,31 @@ class AuthenticationGetXController extends GetxController {
 }
 
 class AuthService extends GetxController {
-  final SupabaseClient _supabaseClient = Supabase.instance.client;
-
+  final SupabaseClient _supabaseClient = SupabaseHandler().supabaseClient;
   /// Method to check if the user exists in the database
   Future<bool> _isUserInDatabase(String userId) async {
     try {
       final response =
-          await _supabaseClient.from('profiles').select().eq('id', userId);
+      await _supabaseClient.from('profiles').select().eq('id', userId);
 
-      return response.isNotEmpty;
+      // Check if the user exists and has an avatar URL
+      if (response.isNotEmpty) {
+        // Extract avatar_url from response and set it in the current user
+        print("User found: ${response[0]}");
+        // String avatarUrl = response[0]['avatar_url'] ?? '';
+        // print("avatar url: $avatarUrl ");
+        // userController.currentUser.value?.avatarUrl = avatarUrl;
+        //
+        // print("User found: avatar_url: ${userController.currentUser.value?.avatarUrl}");
+        return true;
+      }
+      return false;
     } catch (e) {
-      print('Error checking user in database: ${e}');
+      print('Error checking user in database: $e');
       return false;
     }
   }
+
 
   /// Method to add a new user to the database
   Future<void> addUserToDatabase(
@@ -43,11 +55,29 @@ class AuthService extends GetxController {
     }
   }
 
+  //create a function which will check value of column "all_field_filled" is TRUE or FALSE in the profile table
+  Future<bool> checkAllFieldFilled(String? userId) async {
+    try {
+      final response = await _supabaseClient
+          .from('profiles')
+          .select()
+          .eq('id', userId.toString());
+
+      return response[0]['all_field_filled'] == "TRUE" ? true : false;
+    } catch (e) {
+      print('Error checking user in database: ${e}');
+      return false;
+    }
+  }
   /// Post-login check
   Future<void> _postLoginCheck(String userId) async {
     bool userExists = await _isUserInDatabase(userId);
+    print("userExists: $userExists");
+    print("userId: $userId");
+    print("checkAllFieldFilled: ${await checkAllFieldFilled(userId)}");
 
-    if (userExists) {
+
+    if (userExists && await checkAllFieldFilled(userId)) {
       // User exists, redirect to the home screen
       Get.offAllNamed(AppRoutes.homeScreen);
     } else {

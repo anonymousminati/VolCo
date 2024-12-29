@@ -1,11 +1,14 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:volco/core/utils/supabase_handler.dart';
 import 'package:volco/presentation/user_details_screen/models/user_details_model.dart';
 
 class UserDetailsController extends GetxController {
+
   // Text controllers
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
@@ -26,14 +29,60 @@ class UserDetailsController extends GetxController {
       pickedImage.value = selectedImage;
     }
   }
+//create a function which will update the values of profile table with user_id
+  Future<bool> updateUserDetailswithoutFile() async {
+    try {
+      final User? user = await SupabaseService().getUserData();
+      if (user?.id == null) {
+        print("User is not authenticated: ${user?.id}");
+        return false;
+      }
+
+      print("user avatar print from updateuserdetailswithoutfiles ${user!.userMetadata?['avatar_url']}");
+      final userDetails = UserDetailsModel(
+        fullName: '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
+        email: emailController.text.trim(),
+        mobileNumber: mobileNumberController.text.trim(),
+        location: locationController.text.trim(),
+        skills: skillsController.text.trim(),
+        age: ageController.text.isNotEmpty ? int.tryParse(ageController.text.trim()) : null,
+        profileImageUrl: user!.userMetadata?['avatar_url']
+      );
+
+      if (!userDetails.isValid()) {
+        print("Invalid user details.");
+        return false;
+      }
+
+      final supabaseService = SupabaseService();
+      print("Before updating record...");
+      print(userDetails.toJson());
+      final updateResult = await supabaseService.updateRecord(
+        'profiles',
+        userDetails.toJson(),
+        'id',
+        user!.id.toString(),
+      );
+
+      print("After updating record.");
+
+
+      return true; // Successfully updated
+    } catch (e) {
+      print("Error updating user details: $e");
+      return false;
+    }
+  }
+
+
 
   // Method to save user details
-  Future<bool> saveUserDetails(File? file) async {
+  Future<bool> saveUserDetailswithImageFile(File? file) async {
     try {
       // Prepare user details
       final userDetails = UserDetailsModel(
-        firstName: firstNameController.text.trim(),
-        lastName: lastNameController.text.trim(),
+        fullName: firstNameController.text.trim()+ " " + lastNameController.text.trim(),
+
         email: emailController.text.trim(),
         mobileNumber: mobileNumberController.text.trim(),
         location: locationController.text.trim(),
