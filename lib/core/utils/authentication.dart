@@ -1,190 +1,149 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:volco/core/utils/pref_utils.dart';
 import 'package:volco/core/utils/project_constants.dart';
 import 'package:volco/core/utils/supabase_handler.dart';
 import 'package:volco/routes/app_routes.dart';
-
-class AuthenticationGetXController extends GetxController {
-  var session = Supabase.instance.client.obs;
+//create a middleware which will check for authentication and redirect user to the appropriate screen
+class AuthMiddleware extends GetMiddleware {
+  @override
+  RouteSettings? redirect(String? route) {
+    final isLoggedIn = Supabase.instance.client.auth.currentUser != null;
+    return isLoggedIn ? null : const RouteSettings(name: AppRoutes.letsYouInScreen);
+  }
 }
 
-class AuthService extends GetxController {
-  final SupabaseClient _supabaseClient = SupabaseHandler().supabaseClient;
-  /// Method to check if the user exists in the database
-  Future<bool> _isUserInDatabase(String userId) async {
-    try {
-      final response =
-      await _supabaseClient.from('profiles').select().eq('id', userId);
 
-      // Check if the user exists and has an avatar URL
-      if (response.isNotEmpty) {
-        // Extract avatar_url from response and set it in the current user
-        print("User found: ${response[0]}");
-        // String avatarUrl = response[0]['avatar_url'] ?? '';
-        // print("avatar url: $avatarUrl ");
-        // userController.currentUser.value?.avatarUrl = avatarUrl;
-        //
-        // print("User found: avatar_url: ${userController.currentUser.value?.avatarUrl}");
-        return true;
-      }
-      return false;
-    } catch (e) {
-      print('Error checking user in database: $e');
-      return false;
-    }
+class AuthController extends GetxController {
+  static AuthController get instance => Get.find<AuthController>();
+
+  final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
+  final RxBool isLoggedIn = false.obs;
+  final Rx<User?> currentUser = Rx<User?>(null);
+
+  @override
+  void onInit() {
+    super.onInit();
+    _initializeAuthState();
   }
 
 
-  /// Method to add a new user to the database
-  Future<void> addUserToDatabase(
-      String userId, Map<String, dynamic> userDetails) async {
-    try {
-      final response = await _supabaseClient.from('profiles').insert({
-        'id': userId,
-        ...userDetails, // include additional user details like name, email, etc.
-      });
-
-      if (response.error != null) {
-        throw Exception(
-            "Error adding user to database: ${response.error?.message}");
-      }
-    } catch (e) {
-      print('Error adding user to database: ${e}');
-      throw Exception(e);
-    }
-  }
-
-  //create a function which will check value of column "all_field_filled" is TRUE or FALSE in the profile table
-  Future<bool> checkAllFieldFilled(String? userId) async {
-    try {
-      final response = await _supabaseClient
-          .from('profiles')
-          .select()
-          .eq('id', userId.toString());
-
-      return response[0]['all_field_filled'] == "TRUE" ? true : false;
-    } catch (e) {
-      print('Error checking user in database: ${e}');
-      return false;
-    }
-  }
-  /// Post-login check
-  Future<void> _postLoginCheck(String userId) async {
-    bool userExists = await _isUserInDatabase(userId);
-    print("userExists: $userExists");
-    print("userId: $userId");
-    print("checkAllFieldFilled: ${await checkAllFieldFilled(userId)}");
-
-
-    if (userExists && await checkAllFieldFilled(userId)) {
-      // User exists, redirect to the home screen
-      Get.offAllNamed(AppRoutes.homeScreen);
+  /// Initialize authentication state
+  void _initializeAuthState() async {
+    // Check for stored session in SharedPreferences
+    String savedSession = PrefUtils().getSupabaseAuthSession();
+    if (savedSession.isNotEmpty) {
+      // If a session exists, restore the user from the session
+      final response = await supabaseClient.auth.setSession(savedSession);
+      currentUser.value = response.user;
+      isLoggedIn.value = currentUser.value != null;
     } else {
-      // User does not exist, redirect to user details screen
-      Get.offNamed(AppRoutes.userDetailsScreen);
+      final user = supabaseClient.auth.currentUser;
+      isLoggedIn.value = user != null;
+      currentUser.value = user;
     }
+
+    print('Current user on initialization: ${currentUser.value}'); // Check session
+
+    // Listen to authentication state changes
+    supabaseClient.auth.onAuthStateChange.listen((event) async {
+      currentUser.value = event.session?.user;
+      isLoggedIn.value = currentUser.value != null;
+      String? refreshtoken = await event.session?.refreshToken;
+      // Save the session to SharedPreferences
+      if (currentUser.value != null) {
+        PrefUtils().setSupabaseAuthSession(refreshtoken!);
+      } else {
+        PrefUtils().clearPreferencesData(); // Clear session if user logs out
+      }
+    });
   }
 
-  /// Sign in or sign up with Google
+
+  /// Method to log in via Google
   Future<void> signInWithGoogle() async {
     try {
-      final GoogleSignIn googleSignIn =
-          GoogleSignIn(clientId: IOS_CLIENT_ID, serverClientId: WEB_CLIENT_ID);
+      final GoogleSignIn googleSignIn = GoogleSignIn(clientId: IOS_CLIENT_ID, serverClientId: WEB_CLIENT_ID);
       final googleUser = await googleSignIn.signIn();
-      final googleAuth = await googleUser!.authentication;
-      final accessToken = googleAuth.accessToken;
-      final idToken = googleAuth.idToken;
-      print(1);
-      final response = await _supabaseClient.auth.signInWithIdToken(
+      final googleAuth = await googleUser?.authentication;
+      final accessToken = googleAuth?.accessToken;
+      final idToken = googleAuth?.idToken;
+
+      final response = await supabaseClient.auth.signInWithIdToken(
         provider: OAuthProvider.google,
         accessToken: accessToken,
         idToken: idToken.toString(),
       );
-      print(2);
-      if (response != null) {
-        print(3);
-        final user = _supabaseClient.auth.currentUser;
+
+      if (response.session != null) {
+        final user = supabaseClient.auth.currentUser;
         if (user != null) {
+          // Store session in SharedPreferences
+          await PrefUtils().setSupabaseAuthSession(response.session!.accessToken);
           await _postLoginCheck(user.id);
         }
       } else {
-        print("res: Failed to sign in with Google: ${response}");
-        Get.snackbar("Error", "Failed to sign in with Google: ${response}");
+        throw Exception("Failed to sign in with Google.");
       }
     } catch (e) {
-      print('catch Error signing in with Google: $e');
-      Get.snackbar("Error", "Failed to sign in with Google: $e");
+      Get.snackbar("Error", "Google Sign-In failed: $e");
     }
   }
 
-  /// Sign in or sign up with Facebook
-  Future<void> signInWithFacebook() async {
+  /// Post-login check to route users
+  Future<void> _postLoginCheck(String userId) async {
+    final userExists = await _isUserInDatabase(userId);
+    final allFieldsFilled = userExists ? await checkAllFieldsFilled(userId) : false;
+    if (userExists && allFieldsFilled) {
+      Get.offAllNamed(AppRoutes.homeScreen);
+    } else {
+      Get.offAllNamed(AppRoutes.userDetailsScreen);
+    }
+  }
+
+  /// Check if user exists in the database
+  Future<bool> _isUserInDatabase(String userId) async {
     try {
-      final result = await _supabaseClient.auth.signInWithOAuth(
-        OAuthProvider.facebook,
-        // redirectTo: "your-redirect-url", // Replace with your redirect URL
-      );
-
-      if (result) {
-        final user = _supabaseClient.auth.currentUser;
-        if (user != null) {
-          await _postLoginCheck(user.id);
-        }
-      }
+      final response = await supabaseClient.from('profiles').select().eq('id', userId);
+      return response.isNotEmpty;
     } catch (e) {
-      Get.snackbar("Error", "Failed to sign in with Facebook: $e");
+      print("Error checking user existence: $e");
+      return false;
     }
   }
 
-  // /// Sign in or sign up with Apple
-  // Future<void> signInWithApple() async {
-  //   try {
-  //     final response = await _supabaseClient.auth.signInWithOAuth(
-  //       OAuthProvider.apple,
-  //     );
-  //
-  //     final user = response.user;
-  //     if (user != null) {
-  //       bool userExists = await _isUserInDatabase(user.id);
-  //
-  //       if (userExists) {
-  //         // User exists, redirect to the home screen
-  //         Get.offAllNamed(AppRoutes.homeScreen);
-  //       } else {
-  //         // User does not exist, redirect to user details screen
-  //         Get.offNamed(AppRoutes.userDetailsScreen);
-  //       }
-  //     }
-  //   } catch (e) {
-  //     Get.snackbar("Error", e.toString());
-  //   }
-  // }
-  /// Method to log out the user
+  /// Check if all profile fields are filled
+  Future<bool> checkAllFieldsFilled(String userId) async {
+    try {
+      final response = await supabaseClient
+          .from('profiles')
+          .select('all_fields_filled')
+          .eq('id', userId)
+          .single();
+      return response['all_fields_filled'] ?? false;
+    } catch (e) {
+      print("Error checking fields: $e");
+      return false;
+    }
+  }
+
+  /// Log out the user
   Future<void> logout() async {
     try {
-      // Sign out from Supabase
-      await Supabase.instance.client.auth.signOut();
-
-      // Optionally, clear the user's GoogleSignIn session
-      GoogleSignIn().signOut();
-
-      // Redirect to the login screen or initial screen
-      Get.offAllNamed(AppRoutes
-          .letsYouInScreen); // Replace with your login or splash screen route
+      await clearOAuthSessions();
+      await supabaseClient.auth.signOut();
+      PrefUtils().clearPreferencesData(); // Clear session after logout
+      Get.offAllNamed(AppRoutes.letsYouInScreen);
     } catch (e) {
-      Get.snackbar("Error", "Failed to logout: $e");
+      Get.snackbar("Error", "Logout failed: $e");
     }
   }
 
-  /// Call this method after the user fills in the details on the user details screen
-  Future<void> saveUserDetails(
-      String userId, Map<String, dynamic> userDetails) async {
-    try {
-      await addUserToDatabase(userId, userDetails);
-      Get.offAllNamed(AppRoutes.homeScreen);
-    } catch (e) {
-      Get.snackbar("Error", "Failed to save user details: $e");
-    }
+  /// Clear OAuth sessions
+  Future<void> clearOAuthSessions() async {
+    await GoogleSignIn().signOut();
+    // Add other OAuth sign-out logic if needed
   }
 }

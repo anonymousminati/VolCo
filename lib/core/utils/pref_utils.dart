@@ -21,6 +21,21 @@ class PrefUtils {
     _sharedPreferences!.clear();
   }
 
+  //set the supabase auth session
+  Future<void> setSupabaseAuthSession(String value) {
+    return _sharedPreferences!.setString('supabase_auth_session', value);
+  }
+
+  //get the supabase auth session
+  String getSupabaseAuthSession() {
+    try {
+      return _sharedPreferences!.getString('supabase_auth_session')!;
+    } catch (e) {
+      print("error while getting shared pred supabase_auth_session: $e");
+      return '';
+    }
+  }
+
   Future<void> setThemeData(String value) {
     return _sharedPreferences!.setString('themeData', value);
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:volco/core/app_export.dart';
 import 'package:volco/core/utils/authentication.dart';
 import 'package:volco/core/utils/image_constant.dart';
@@ -10,6 +11,9 @@ import 'package:volco/widgets/custom_image_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class LetSYouInScreen extends GetWidget<LetsYouInController> {
+
+  SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -44,6 +48,7 @@ class LetSYouInScreen extends GetWidget<LetsYouInController> {
                   SizedBox(height: 56.h),
                   _buildPasswordSignInButton(),
                   SizedBox(height: 100.h),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
@@ -78,7 +83,7 @@ class LetSYouInScreen extends GetWidget<LetsYouInController> {
   Widget _buildFacebookLoginButton() {
     return CustomElevatedButton(
       onPressed: (){
-        AuthService().signInWithFacebook();
+        //handle facebook
       },
       height: 60.h,
       text: "Continue with Facebook".tr,
@@ -99,7 +104,7 @@ class LetSYouInScreen extends GetWidget<LetsYouInController> {
   Widget _buildGoogleLoginButton() {
     return CustomElevatedButton(
       onPressed: (){
-        AuthService().signInWithGoogle();
+        AuthController().signInWithGoogle();
       },
       height: 60.h,
       text: "Continue with Google".tr,

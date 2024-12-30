@@ -1,25 +1,70 @@
 import 'dart:io';
+import 'package:get/get.dart';
 import 'package:supabase/supabase.dart';
+import 'package:volco/core/app_export.dart';
 import 'package:volco/core/utils/project_constants.dart';
 
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseHandler {
-  // Private constructor
-  SupabaseHandler._internal();
-
   // Singleton instance
   static final SupabaseHandler _instance = SupabaseHandler._internal();
+
+  // Private constructor
+  SupabaseHandler._internal();
 
   // Public factory
   factory SupabaseHandler() => _instance;
 
   // Supabase client
-  final SupabaseClient client = SupabaseClient(PROJECT_URL, PROJECT_ANON_KEY);
+  SupabaseClient? _client;
 
-  // Method to fetch the Supabase client
-  SupabaseClient get supabaseClient => client;
+  // Getter for Supabase client
+  SupabaseClient get supabaseClient {
+    if (_client == null) {
+      throw Exception("SupabaseHandler is not initialized. Call initialize() first.");
+    }
+    return _client!;
+  }
+
+  // Initialization method
+  void initialize(String projectUrl, String anonKey) {
+    if (_client == null) {
+      _client = SupabaseClient( projectUrl, anonKey ,
+          authOptions: FlutterAuthClientOptions(authFlowType: AuthFlowType.pkce),
+          realtimeClientOptions: const RealtimeClientOptions(
+            eventsPerSecond: 2,
+          ));
+      _setAuthStateListener();
+    }
+  }
+
+  // Auth state listener
+  void _setAuthStateListener() {
+    _client!.auth.onAuthStateChange.listen((data) {
+      if (data.event == AuthChangeEvent.signedOut) {
+        // Redirect to LetsYouIn when user logs out
+        Get.offAllNamed(AppRoutes.letsYouInScreen);
+      } else if (data.event == AuthChangeEvent.signedIn) {
+        // You can handle post-login routing here
+      }
+    });
+  }
+
+  // Get current session
+  Session? get currentSession => _client?.auth.currentSession;
+
+  // Helper to check if user is logged in
+  bool get isLoggedIn => currentSession != null;
+
+  // Logout method
+  Future<void> signOut() async {
+    if (_client == null) {
+      throw Exception("SupabaseHandler is not initialized. Call initialize() first.");
+    }
+    await _client!.auth.signOut();
+  }
 }
-
 
 class SupabaseService {
   final SupabaseClient _supabaseClient = SupabaseHandler().supabaseClient;
@@ -71,6 +116,8 @@ class SupabaseService {
     final response = await _supabaseClient.from(tableName).insert(data);
     return response.error == null;
   }
+
+
 
   // Update a record in any table
   Future<bool> updateRecord(String tableName, Map<String, dynamic> data, String keyColumn, String keyValue) async {

@@ -49,50 +49,60 @@ class AppRoutes {
     GetPage(
         name: splashScreen,
         page: () => SplashScreen(),
-        bindings: [SplashBinding()]),
+        bindings: [SplashBinding()]
+    , ),
 
 
     GetPage(
         name: welcomeScreen,
         page: () => WelcomeScreen(),
-        bindings: [WelcomeBinding()]),
+        bindings: [WelcomeBinding()]
+    ,  ),
 
     GetPage(
         name: onboardingOneScreen,
         page: () => OnboadingOneScreen(),
-        bindings: [OnboardingOneBinding()]),
+        bindings: [OnboardingOneBinding()]
+    , ),
 
     GetPage(
         name: onboardingTwoScreen,
         page: () => OnboadingTwoScreen(),
-        bindings: [OnboardingTwoBinding()]),
+        bindings: [OnboardingTwoBinding()]
+    , ),
 
     GetPage(
         name: onboardingThreeScreen,
         page: () => OnboadingThreeScreen(),
-        bindings: [OnboardingThreeBinding()]),
+        bindings: [OnboardingThreeBinding()]
+    ,  ),
 
  GetPage(
         name: letsYouInScreen,
         page: () => LetSYouInScreen(),
-        bindings: [LetsYouInBindings()]),
+        bindings: [LetsYouInBindings()]
+ ,  ),
  GetPage(
         name: signInScreen,
         page: () => SignInScreen(),
-        bindings: [SignInBinding()]),
+        bindings: [SignInBinding()]
+ ,  ),
     GetPage(
         name: homeScreen,
         page: () => HomeScreen(),
-        bindings: [HomeBinding()]),
+        bindings: [HomeBinding()]
+    ,  ),
     GetPage(
         name: userDetailsScreen,
         page: () => UserDetailsScreen(),
-        bindings: [UserDetailsBinding()]),
+        bindings: [UserDetailsBinding()]
+    ,  ),
 
 
     GetPage(
         name: initialRoute,
         page: () => SplashScreen(),
-        bindings: [SplashBinding()])
+        bindings: [SplashBinding()]
+    ,  )
   ];
 }

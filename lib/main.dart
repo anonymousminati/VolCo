@@ -7,23 +7,27 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:volco/core/app_export.dart';
 import 'package:volco/core/utils/logger.dart';
 import 'package:volco/core/utils/project_constants.dart';
+import 'package:volco/presentation/home_screen/home_screen.dart';
+import 'package:volco/presentation/let_s_you_in_screen/let_s_you_in_screen.dart';
 import 'package:volco/presentation/splash_screen/splash_screen.dart';
 import 'package:volco/routes/app_routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Supabase.initialize(
-    url: PROJECT_URL,
-    anonKey: PROJECT_ANON_KEY,
-    authOptions: FlutterAuthClientOptions(authFlowType: AuthFlowType.pkce),
-    realtimeClientOptions: const RealtimeClientOptions(
-      eventsPerSecond: 2,
-    ),
-  );
+  // await Supabase.initialize(
+  //   url: PROJECT_URL,
+  //   anonKey: PROJECT_ANON_KEY,
+  //   authOptions: FlutterAuthClientOptions(authFlowType: AuthFlowType.pkce),
+  //   realtimeClientOptions: const RealtimeClientOptions(
+  //     eventsPerSecond: 2,
+  //   ),
+  // );
+   SupabaseHandler().initialize(PROJECT_URL, PROJECT_ANON_KEY);
 
+  Get.put(AuthController());
   SupabaseHandler()
-      .client
+      .supabaseClient
       .channel('profiles')
       .onPostgresChanges(
           schema: "public",
@@ -32,6 +36,8 @@ Future<void> main() async {
             print("Postgres changes: $payload");
           })
       .subscribe();
+
+
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (value) {
       Logger.init(kReleaseMode ? LogMode.live : LogMode.debug);
@@ -45,12 +51,7 @@ class MyApp extends StatelessWidget {
     super.key,
   });
 
-  Future<void> fetchUser() async {
-    final SupabaseClient _supabaseClient = Supabase.instance.client;
 
-    final response = await _supabaseClient.from('profiles').select();
-    print("reponse from users tables: $response");
-  }
 
   // This widget is the root of your application.
   @override
@@ -64,8 +65,10 @@ class MyApp extends StatelessWidget {
           title: 'Volco',
           theme: theme,
           navigatorKey: null,
+
         );
       },
     );
   }
 }
+

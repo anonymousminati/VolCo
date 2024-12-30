@@ -106,25 +106,25 @@ class UserDetailsScreen extends StatelessWidget {
                       },
                     ),
 
-                    CustomElevatedButton(
-                      text: "Submit 2".tr,
-                      onPressed: () async {
-                        try{
-                          final User? user = await SupabaseService().getUserData();
-                          String userId = user?.id ?? '';
-
-                          final testResponse = await Supabase.instance.client
-                              .from('profiles')
-                              .select()
-                              .eq('id', userId.toString());
-
-                          print("Test Query Response: ${testResponse}");
-                        }catch (e){
-                          print("Error in Test Query: $e");
-                        }
-
-                      },
-                    ),
+                    // CustomElevatedButton(
+                    //   text: "Submit 2".tr,
+                    //   onPressed: () async {
+                    //     try{
+                    //       final User? user = await SupabaseService().getUserData();
+                    //       String userId = user?.id ?? '';
+                    //
+                    //       final testResponse = await Supabase.instance.client
+                    //           .from('profiles')
+                    //           .select()
+                    //           .eq('id', userId.toString());
+                    //
+                    //       print("Test Query Response: ${testResponse}");
+                    //     }catch (e){
+                    //       print("Error in Test Query: $e");
+                    //     }
+                    //
+                    //   },
+                    // ),
 
                   ],
                 ),

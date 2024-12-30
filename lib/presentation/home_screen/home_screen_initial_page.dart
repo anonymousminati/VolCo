@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:volco/core/app_export.dart';
 import 'package:volco/core/utils/authentication.dart';
 import 'package:volco/core/utils/image_constant.dart';
@@ -11,7 +12,6 @@ class HomeScreenInitialPage extends StatelessWidget {
   HomeScreenInitialPage({super.key});
 
   HomeController controller = Get.put(HomeController());
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -127,7 +127,7 @@ class HomeScreenInitialPage extends StatelessWidget {
                   height: 28.h,
                   width: 30.h,
                   onTap: () {
-AuthService().logout();
+AuthController().logout();
                   },
                 ),
                 CustomImageView(
