@@ -207,8 +207,8 @@ class LetSYouInScreen extends GetWidget<LetsYouInController> {
 
   /// Navigates to the signUpBlankScreen when the action is triggered.
   onTapTxtSignupone() {
-    // Get.toNamed(
-    //   AppRoutes.signUpBlankScreen,
-    // );
+    Get.toNamed(
+      AppRoutes.signUpScreen,
+    );
   }
 }

@@ -3,12 +3,13 @@ import 'package:volco/core/app_export.dart';
 import 'package:volco/core/utils/image_constant.dart';
 import 'package:volco/core/utils/validation_functions.dart';
 import 'package:volco/presentation/sign_in_screen/controller/sign_in_controller.dart';
+import 'package:volco/presentation/sign_up_screen/controller/sign_up_controller.dart';
 import 'package:volco/widgets/custom_elevated_button.dart';
 import 'package:volco/widgets/custom_image_view.dart';
 import 'package:volco/widgets/custom_text_form_field.dart';
 
-class SignInScreen extends GetWidget<SignInController> {
-  GlobalKey<FormState> _signinformKey = GlobalKey<FormState>();
+class SignUpScreen extends GetWidget<SignUpController> {
+  GlobalKey<FormState> _signupformKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class SignInScreen extends GetWidget<SignInController> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Form(
-          key: _signinformKey,
+          key: _signupformKey,
           child: SizedBox(
             width: double.maxFinite,
             child: SingleChildScrollView(
@@ -37,7 +38,7 @@ class SignInScreen extends GetWidget<SignInController> {
                     ),
                     SizedBox(height: 70.h),
                     Text(
-                      "Login To Your Account".tr,
+                      "Welcome,You have a Good Heart! ".tr,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.displayMedium!.copyWith(
@@ -45,7 +46,7 @@ class SignInScreen extends GetWidget<SignInController> {
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    _buildLoginSection(),
+                    _buildSignUpSection(),
                     SizedBox(height: 56.h),
                     _buildDividerSection(),
                     SizedBox(height: 32.h),
@@ -141,16 +142,16 @@ class SignInScreen extends GetWidget<SignInController> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            "don't have an account?".tr,
+                            "Already Have Account?".tr,
                             style: CustomTextStyles.bodyMediumGray50,
                           ),
                           SizedBox(width: 8.h),
                           GestureDetector(
                             onTap: () {
-                              onTapTxtSignupone();
+//redirect to lets you in screen
                             },
                             child: Text(
-                              "sign up".tr,
+                              "sign in".tr,
                               style: CustomTextStyles.titleSmallPrimary,
                             ),
                           ),
@@ -167,7 +168,7 @@ class SignInScreen extends GetWidget<SignInController> {
     );
   }
 
-  Widget _buildLoginSection() {
+  Widget _buildSignUpSection() {
     return SizedBox(
         width: double.maxFinite,
         child: Column(
@@ -193,10 +194,7 @@ class SignInScreen extends GetWidget<SignInController> {
                 vertical: 18.h,
               ),
               validator: (value) {
-                if (value == null || (!isValidEmail(value, isRequired: true))) {
-                  return "Please Enter a Valid Email".tr;
-                }
-                return null;
+               return controller.validateEmail(value);
               },
             ),
             SizedBox(height: 24.h),
@@ -243,67 +241,70 @@ class SignInScreen extends GetWidget<SignInController> {
                     vertical: 18.h,
                   ),
                   validator: (value) {
-                    if (value == null ||
-                        value.isEmpty ||
-                        !isValidPassword(value, isRequired: true)) {
-                      return "Please Enter a Valid Password".tr;
-                    }
-                    return null;
+                    return controller.validatePassword(value);
                   },
                 )),
             SizedBox(height: 24.h),
-            SizedBox(
-              width: double.maxFinite,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      height: 24.h,
-                      width: 24.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          4.h,
-                        ),
-                        border: Border.all(
-                          color: theme.colorScheme.primary,
-                          width: 1.h,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 12.h),
-                    child: Text(
-                      "remember me!".tr,
-                      style: theme.textTheme.titleSmall,
-                    ),
-                  ),
-                ],
+            Obx(() => CustomTextFormField(
+              controller: controller.confirmPasswordController,
+              hintText: "confirm password".tr,
+              textInputType: TextInputType.visiblePassword,
+              textInputAction: TextInputAction.done,
+
+              prefix: Container(
+                margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
+                child: CustomImageView(
+                  imagePath: ImageConstant.imgLocation,
+                  height: 18.h,
+                  width: 20.h,
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
+              prefixConstraints: BoxConstraints(
+                maxHeight: 60.h,
+              ),
+              suffix: InkWell(
+                onTap: () {
+                  controller.isShowPassword.value =
+                  !controller.isShowPassword.value;
+                },
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(16.h, 18.h, 20.h, 18.h),
+                  child: CustomImageView(
+                    imagePath: controller.isShowPassword.value
+                        ? ImageConstant.imgEyeSlash
+                        : ImageConstant.imgEye,
+                    height: 18.h,
+                    width: 20.h,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              suffixConstraints: BoxConstraints(
+                maxHeight: 60.h,
+              ),
+              obscureText: controller.isShowPassword.value,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 20.h,
+                vertical: 18.h,
+              ),
+              validator: (value) {
+                return controller.validateConfirmPassword(value);
+              },
+            )),
             SizedBox(height: 24.h),
+
             CustomElevatedButton(
-              text: "Sign In".tr,
+              text: "Sign Up".tr,
               onPressed: (){
-                if (_signinformKey.currentState!.validate()) {
-                  print("sign in clicked");
+                if (_signupformKey.currentState!.validate()) {
+                  print("sign Up clicked");
 Get.offNamed(AppRoutes.homeScreen);
                 }
 
               },
             ),
-            SizedBox(height: 24.h),
-            GestureDetector(
-              onTap: () {
-                onTapTxtForgotPassword();
-              },
-              child: Text(
-                "forgot the Password?".tr,
-                style: CustomTextStyles.titleMediumPrimary,
-              ),
-            )
+
           ],
         ));
   }
@@ -343,11 +344,7 @@ Get.offNamed(AppRoutes.homeScreen);
     );
   }
 
-  onTapTxtForgotPassword() {
-    // Get.toNamed(
-    //   AppRoutes.forgotPasswordScreen ,
-    // );
-  }
+
   /// Navigates to the signUpBlankScreen when the action is triggered.
   onTapTxtSignupone() {
     // Get.toNamed(

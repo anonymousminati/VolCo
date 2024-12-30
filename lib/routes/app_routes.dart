@@ -12,6 +12,8 @@ import 'package:volco/presentation/onboarding_two_screen/binding/onboarding_two_
 import 'package:volco/presentation/onboarding_two_screen/onboading_two_screen.dart';
 import 'package:volco/presentation/sign_in_screen/binding/sign_in_binding.dart';
 import 'package:volco/presentation/sign_in_screen/sign_in_screen.dart';
+import 'package:volco/presentation/sign_up_screen/binding/sign_up_binding.dart';
+import 'package:volco/presentation/sign_up_screen/sign_up_screen.dart';
 import 'package:volco/presentation/splash_screen/binding/splash_binding.dart';
 import 'package:volco/presentation/splash_screen/splash_screen.dart';
 import 'package:volco/presentation/user_details_screen/binding/user_details_binding.dart';
@@ -103,6 +105,13 @@ class AppRoutes {
         name: initialRoute,
         page: () => SplashScreen(),
         bindings: [SplashBinding()]
-    ,  )
+    ,  ),
+
+    //create for signup screen
+    GetPage(
+        name: signUpScreen,
+        page: () => SignUpScreen(),
+        bindings: [SignUpBinding()]
+    ,  ),
   ];
 }
