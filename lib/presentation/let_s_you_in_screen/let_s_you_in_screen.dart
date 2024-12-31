@@ -35,6 +35,9 @@ class LetSYouInScreen extends GetWidget<LetsYouInController> {
                     height: 28.h,
                     width: 30.h,
                     alignment: Alignment.centerLeft,
+                    onTap: () {
+                      Get.back();
+                    },
                   ),
                   SizedBox(height: 134.h),
                   Text(

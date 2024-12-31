@@ -137,7 +137,16 @@ class SupabaseService {
       return false;
     }
   }
-
+//get record
+  Future<Map<String, dynamic>?> getRecord(String tableName, String keyColumn, String keyValue) async {
+    try {
+      final response = await _supabaseClient.from(tableName).select().eq(keyColumn, keyValue);
+      return response[0];
+    } catch (e) {
+      print("Error fetching record: $e");
+      return null;
+    }
+  }
 
   // Handle image upload errors
   void _handleUploadError(error) {

@@ -97,7 +97,7 @@ class AvatarCaptureController extends GetxController {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                  Lottie.asset(ImageConstant.uploadAnimationLottie,),
+                  Lottie.asset(ImageConstant.uploadSuccessAnimationLottie,),
                   ],
                 ),
               ),
@@ -108,8 +108,9 @@ class AvatarCaptureController extends GetxController {
             await Future.delayed(const Duration(seconds: 2, milliseconds: 100));
             Get.offAllNamed(AppRoutes.userDetailsScreen);
           } else {
-            Get.back(); // Close the bottom sheet
-            Get.snackbar("Error", "Failed to update profile.");
+            Get.back();
+            print("Failed to update avtar url");// Close the bottom sheet
+            Get.snackbar("Error", "Failed to avatar url.");
           }
         }
       }

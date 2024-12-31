@@ -35,6 +35,9 @@ class SignUpScreen extends GetWidget<SignUpController> {
                       imagePath: ImageConstant.imgArrowLeft,
                       height: 28.h,
                       width: 30.h,
+                      onTap: () {
+                        Get.back();
+                      },
                     ),
                     SizedBox(height: 70.h),
                     Text(

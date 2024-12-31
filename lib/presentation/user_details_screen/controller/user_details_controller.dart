@@ -17,7 +17,8 @@ class UserDetailsController extends GetxController {
   final locationController = TextEditingController();
   final skillsController = TextEditingController();
   final ageController = TextEditingController();
-
+  final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
+  final SupabaseService supabaseService = SupabaseService();
   // Image picker state
   Rxn<XFile> pickedImage = Rxn<XFile>();
 
@@ -37,7 +38,7 @@ class UserDetailsController extends GetxController {
         print("User is not authenticated: ${user?.id}");
         return false;
       }
-
+      Map<String, dynamic>? user_profile = await SupabaseService().getRecord('profiles', 'id', user!.id.toString());
       print("user avatar print from updateuserdetailswithoutfiles ${user!.userMetadata?['avatar_url']}");
       final userDetails = UserDetailsModel(
         fullName: '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
@@ -46,7 +47,7 @@ class UserDetailsController extends GetxController {
         location: locationController.text.trim(),
         skills: skillsController.text.trim(),
         age: ageController.text.isNotEmpty ? int.tryParse(ageController.text.trim()) : null,
-        profileImageUrl: user!.userMetadata?['avatar_url']
+        profileImageUrl:user_profile!['avatar_url'],
       );
 
       if (!userDetails.isValid()) {

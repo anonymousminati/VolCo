@@ -34,6 +34,9 @@ class SignInScreen extends GetWidget<SignInController> {
                       imagePath: ImageConstant.imgArrowLeft,
                       height: 28.h,
                       width: 30.h,
+                      onTap: () {
+                        Get.back();
+                      },
                     ),
                     SizedBox(height: 70.h),
                     Text(
@@ -193,10 +196,7 @@ class SignInScreen extends GetWidget<SignInController> {
                 vertical: 18.h,
               ),
               validator: (value) {
-                if (value == null || (!isValidEmail(value, isRequired: true))) {
-                  return "Please Enter a Valid Email".tr;
-                }
-                return null;
+                controller.validateEmail(value);
               },
             ),
             SizedBox(height: 24.h),
@@ -219,8 +219,7 @@ class SignInScreen extends GetWidget<SignInController> {
                   ),
                   suffix: InkWell(
                     onTap: () {
-                      controller.isShowPassword.value =
-                          !controller.isShowPassword.value;
+                      controller.togglePasswordVisibility();
                     },
                     child: Container(
                       margin: EdgeInsets.fromLTRB(16.h, 18.h, 20.h, 18.h),
@@ -243,12 +242,7 @@ class SignInScreen extends GetWidget<SignInController> {
                     vertical: 18.h,
                   ),
                   validator: (value) {
-                    if (value == null ||
-                        value.isEmpty ||
-                        !isValidPassword(value, isRequired: true)) {
-                      return "Please Enter a Valid Password".tr;
-                    }
-                    return null;
+                    controller.validatePassword(value);
                   },
                 )),
             SizedBox(height: 24.h),
@@ -287,10 +281,7 @@ class SignInScreen extends GetWidget<SignInController> {
             CustomElevatedButton(
               text: "Sign In".tr,
               onPressed: (){
-                if (_signinformKey.currentState!.validate()) {
-                  print("sign in clicked");
-Get.offNamed(AppRoutes.homeScreen);
-                }
+               controller.signInUser();
 
               },
             ),
