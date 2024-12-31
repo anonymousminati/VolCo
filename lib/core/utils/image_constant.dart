@@ -2,6 +2,9 @@ class ImageConstant{
   //image folder path
   static String imagePath = 'assets/images';
 
+  static String lottiePath = 'assets/lottie';
+
+
   //App logo images standard
   static String imgLogoStandard = '$imagePath/VolCo_logo_standard.png';
 
@@ -73,6 +76,9 @@ class ImageConstant{
 
 
 
+//lottie constants here
+  static String uploadAnimationLottie = '$lottiePath/uploadAnimation.json';
 
+  static String uploadSuccessAnimationLottie = '$lottiePath/uploadSuccess.json';
 
 }

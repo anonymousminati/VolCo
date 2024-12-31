@@ -174,6 +174,32 @@ class SignUpScreen extends GetWidget<SignUpController> {
         child: Column(
           children: [
             CustomTextFormField(
+              controller: controller.fullNameController,
+              hintText: "Full Name".tr,
+              textInputType: TextInputType.text,
+              prefix: Container(
+                margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
+                child: CustomImageView(
+                  imagePath: ImageConstant.imgTextSvg,
+                  height: 18.h,
+                  width: 20.h,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              prefixConstraints: BoxConstraints(
+                maxHeight: 60.h,
+              ),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 20.h,
+                vertical: 18.h,
+              ),
+              validator: (value) {
+                return controller.validateFullName(value);
+              },
+            ),
+            SizedBox(height: 24.h),
+
+            CustomTextFormField(
               controller: controller.emailController,
               hintText: "email".tr,
               textInputType: TextInputType.emailAddress,
@@ -299,6 +325,7 @@ class SignUpScreen extends GetWidget<SignUpController> {
               onPressed: (){
                 if (_signupformKey.currentState!.validate()) {
                   print("sign Up clicked");
+                  controller.signUpUser();
 // Get.offNamed(AppRoutes.homeScreen);
                 }
 

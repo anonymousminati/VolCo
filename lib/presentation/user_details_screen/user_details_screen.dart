@@ -36,6 +36,9 @@ class UserDetailsScreen extends StatelessWidget {
                       imagePath: ImageConstant.imgArrowLeft,
                       height: 28.h,
                       width: 30.h,
+                      onTap: () {
+                        Get.back();
+                      },
                     ),
                     SizedBox(height: 70.h),
                     Text(

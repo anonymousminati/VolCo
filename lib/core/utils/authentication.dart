@@ -8,9 +8,11 @@ import 'package:volco/core/utils/supabase_handler.dart';
 import 'package:volco/routes/app_routes.dart';
 //create a middleware which will check for authentication and redirect user to the appropriate screen
 class AuthMiddleware extends GetMiddleware {
+  final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
+
   @override
   RouteSettings? redirect(String? route) {
-    final isLoggedIn = Supabase.instance.client.auth.currentUser != null;
+    final isLoggedIn =supabaseClient.auth.currentUser != null;
     return isLoggedIn ? null : const RouteSettings(name: AppRoutes.letsYouInScreen);
   }
 }
@@ -81,8 +83,8 @@ class AuthController extends GetxController {
         final user = supabaseClient.auth.currentUser;
         if (user != null) {
           // Store session in SharedPreferences
-          await PrefUtils().setSupabaseAuthSession(response.session!.accessToken);
-          await _postLoginCheck(user.id);
+          await PrefUtils().setSupabaseAuthSession(response.session!.refreshToken!);
+          await postLoginCheck(user.id);
         }
       } else {
         throw Exception("Failed to sign in with Google.");
@@ -93,7 +95,7 @@ class AuthController extends GetxController {
   }
 
   /// Post-login check to route users
-  Future<void> _postLoginCheck(String userId) async {
+  Future<void> postLoginCheck(String userId) async {
     final userExists = await _isUserInDatabase(userId);
     final allFieldsFilled = userExists ? await checkAllFieldsFilled(userId) : false;
     if (userExists && allFieldsFilled) {

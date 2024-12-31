@@ -31,7 +31,7 @@ class SupabaseHandler {
   void initialize(String projectUrl, String anonKey) {
     if (_client == null) {
       _client = SupabaseClient( projectUrl, anonKey ,
-          authOptions: FlutterAuthClientOptions(authFlowType: AuthFlowType.pkce),
+          authOptions: const FlutterAuthClientOptions(authFlowType: AuthFlowType.implicit),
           realtimeClientOptions: const RealtimeClientOptions(
             eventsPerSecond: 2,
           ));
@@ -95,21 +95,22 @@ class SupabaseService {
   // Upload image to Supabase Storage
   Future<String?> uploadImage(File imageFile) async {
     try {
-      final fileName = imageFile.path.split('/').last;
-      final response = await _supabaseClient.storage
-          .from('avatars')
-          .upload(fileName, imageFile, fileOptions: const FileOptions(cacheControl: '3600', upsert: false));
+      final fileName = "avatars/${DateTime.now().millisecondsSinceEpoch}_${imageFile.path.split('/').last}";
+      final response = await _supabaseClient.storage.from('avatars').upload(fileName, imageFile);
 
       if (response != null) {
-        return _supabaseClient.storage.from('avatars').getPublicUrl(fileName);
+        // Retrieve the public URL for the uploaded image
+        final publicUrl = _supabaseClient.storage.from('avatars').getPublicUrl(fileName);
+        return publicUrl;
       } else {
-        _handleUploadError(response);
+        throw Exception("Image upload failed.");
       }
     } catch (e) {
       print("Image upload failed: $e");
       rethrow;
     }
   }
+
 
   // Insert a record into any table
   Future<bool> insertRecord(String tableName, Map<String, dynamic> data) async {
