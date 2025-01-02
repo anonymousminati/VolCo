@@ -1,6 +1,8 @@
 import 'package:volco/core/app_export.dart';
 import 'package:volco/presentation/avatar_capture_screen/avatar_capture_screen.dart';
 import 'package:volco/presentation/avatar_capture_screen/binding/avatar_capture_binding.dart';
+import 'package:volco/presentation/forgot_password_screen/binding/forgot_password_binding.dart';
+import 'package:volco/presentation/forgot_password_screen/forgot_password_screen.dart';
 import 'package:volco/presentation/home_screen/binding/home_binding.dart';
 import 'package:volco/presentation/home_screen/home_screen.dart';
 import 'package:volco/presentation/let_s_you_in_screen/binding/let_s_you_in_binding.dart';
@@ -49,6 +51,10 @@ class AppRoutes {
   static const String userDetailsScreen = '/user_details_screen';
 
   static const String avatarCaptureScreen = '/avatar_capture_screen';
+
+  static const String forgotPasswordScreen = '/forgot_password_screen';
+
+
 
 
 
@@ -111,6 +117,11 @@ class AppRoutes {
         bindings: [AvatarCaptureBinding()]
     ,  ),
 
+    GetPage(
+      name: forgotPasswordScreen,
+      page: () => ForgotPasswordScreen(),
+      bindings: [ForgotPasswordBinding()]
+      ,  ),
 
     GetPage(
         name: initialRoute,

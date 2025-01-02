@@ -335,14 +335,14 @@ class SignInScreen extends GetWidget<SignInController> {
   }
 
   onTapTxtForgotPassword() {
-    // Get.toNamed(
-    //   AppRoutes.forgotPasswordScreen ,
-    // );
+    Get.toNamed(
+      AppRoutes.forgotPasswordScreen ,
+    );
   }
   /// Navigates to the signUpBlankScreen when the action is triggered.
   onTapTxtSignupone() {
-    // Get.toNamed(
-    //   AppRoutes.signUpBlankScreen,
-    // );
+    Get.toNamed(
+      AppRoutes.signUpScreen,
+    );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -61,6 +63,48 @@ class AuthController extends GetxController {
         PrefUtils().clearPreferencesData(); // Clear session if user logs out
       }
     });
+  }
+
+  /// Send OTP to the user's email
+  Future<bool> sendOTPonEmail(String email) async {
+    try {
+      await supabaseClient.auth.signInWithOtp(
+        email: email,
+        emailRedirectTo: 'io.supabase.flutterquickstart://login-callback/', // Replace with your app's deep link or redirect URL
+      );
+
+      Get.snackbar("Success", "OTP sent to your email!");
+      return  true;
+    } catch (e) {
+      print("Error sending OTP: $e");
+      Get.snackbar("Error", "Failed to send OTP: $e");
+      return false;
+    }
+  }
+
+  /// Verify OTP and log the user in
+  Future<bool> verifyOTP(String email, String otp) async {
+    try {
+      final response = await supabaseClient.auth.verifyOTP(
+        email: email,
+        token: otp,
+        type: OtpType.email, // Or use `OtpType.signup` or `OtpType.recovery` as needed
+      );
+
+      if (response.session != null) {
+        final user = response.session!.user;
+        currentUser.value = user;
+        isLoggedIn.value = user != null;
+        Get.snackbar("Success", "Logged in successfully!");
+        postLoginCheck(user.id);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print("Error verifying OTP: $e");
+      Get.snackbar("Error", "Failed to verify OTP: $e");
+      return false;
+    }
   }
 
 
