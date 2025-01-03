@@ -96,7 +96,7 @@ class AuthController extends GetxController {
         currentUser.value = user;
         isLoggedIn.value = user != null;
         Get.snackbar("Success", "Logged in successfully!");
-        postLoginCheck(user.id);
+
         return true;
       }
       return false;
@@ -106,7 +106,13 @@ class AuthController extends GetxController {
       return false;
     }
   }
-
+  //reset password
+  Future<UserResponse> resetPassword(String newPassword) async {
+    final response = await supabaseClient.auth.updateUser(
+      UserAttributes(password: newPassword),
+    );
+    return response;
+  }
 
   /// Method to log in via Google
   Future<void> signInWithGoogle() async {
@@ -159,6 +165,7 @@ class AuthController extends GetxController {
       return false;
     }
   }
+
 
   /// Check if all profile fields are filled
   Future<bool> checkAllFieldsFilled(String userId) async {

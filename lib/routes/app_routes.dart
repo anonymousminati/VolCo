@@ -14,6 +14,8 @@ import 'package:volco/presentation/onboarding_three_screen/binding/onboarding_th
 import 'package:volco/presentation/onboarding_three_screen/onboading_three_screen.dart';
 import 'package:volco/presentation/onboarding_two_screen/binding/onboarding_two_binding.dart';
 import 'package:volco/presentation/onboarding_two_screen/onboading_two_screen.dart';
+import 'package:volco/presentation/reset_password_screen/binding/reset_password_binding.dart';
+import 'package:volco/presentation/reset_password_screen/reset_password_screen.dart';
 import 'package:volco/presentation/sign_in_screen/binding/sign_in_binding.dart';
 import 'package:volco/presentation/sign_in_screen/sign_in_screen.dart';
 import 'package:volco/presentation/sign_up_screen/binding/sign_up_binding.dart';
@@ -53,6 +55,8 @@ class AppRoutes {
   static const String avatarCaptureScreen = '/avatar_capture_screen';
 
   static const String forgotPasswordScreen = '/forgot_password_screen';
+
+  static const String resetPasswordScreen = '/reset_password_screen';
 
 
 
@@ -121,6 +125,11 @@ class AppRoutes {
       name: forgotPasswordScreen,
       page: () => ForgotPasswordScreen(),
       bindings: [ForgotPasswordBinding()]
+      ,  ),
+ GetPage(
+      name: resetPasswordScreen,
+      page: () => ResetPasswordScreen(),
+      bindings: [ResetPasswordBinding()]
       ,  ),
 
     GetPage(

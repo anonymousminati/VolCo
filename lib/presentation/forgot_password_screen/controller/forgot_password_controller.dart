@@ -50,10 +50,11 @@ class ForgotPasswordController extends GetxController {
       // Call Supabase function to verify OTP
       final response = await authController.verifyOTP(email, otp);
       if (response != null) {
+        Get.offAndToNamed(AppRoutes.resetPasswordScreen);
+
         Get.snackbar('Success', 'OTP verified successfully.');
         // Navigate to reset password screen or home screen
         print('Navigate to reset password screen or home screen');
-        // Get.toNamed(AppRoutes.resetPasswordScreen);
       }
     } catch (e) {
       print('Error verifying OTP: $e');
