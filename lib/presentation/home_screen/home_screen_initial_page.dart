@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:volco/core/app_export.dart';
@@ -12,8 +14,13 @@ class HomeScreenInitialPage extends StatelessWidget {
   HomeScreenInitialPage({super.key});
 
   HomeController controller = Get.put(HomeController());
+
+
+
   @override
   Widget build(BuildContext context) {
+    print("user avatar print from updateuserdetailswithoutfiles ${controller.avatarUrl}");
+
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Container(
@@ -99,6 +106,7 @@ class HomeScreenInitialPage extends StatelessWidget {
   }
 
   Widget _buildFloatingIconColumn() {
+
     return Container(
       width: double.maxFinite,
       margin: EdgeInsets.symmetric(horizontal: 24.h),
@@ -138,11 +146,16 @@ AuthController().logout();
                     onTapImgIconsone();
                   },
                 ),
-                CustomImageView(
-                  imagePath: ImageConstant.imgSettingSkyBlue,
-                  height: 28.h,
-                  width: 30.h,
-                  margin: EdgeInsets.only(left: 20.h),
+                Obx(
+                  () => CustomImageView(
+                    imagePath:controller.avatarUrl.value.isEmpty
+                        ? ImageConstant.imgProfileSkyBlue // Fallback if URL is empty
+                        : controller.avatarUrl.value,
+                    height: 28.h,
+                    width: 30.h,
+                    margin: EdgeInsets.only(left: 20.h),
+                    radius: BorderRadius.circular(14.h),
+                  ),
                 ),
               ],
             ),

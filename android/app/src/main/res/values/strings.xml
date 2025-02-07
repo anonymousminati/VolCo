@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="app_name">volco</string>
     <string name="facebook_app_id">1795673594573764</string>
     <string name="fb_login_protocol_scheme">fb1795673594573764</string>
     <string name="facebook_client_token">d14408b356641b3ca7d6de69cf190795</string>

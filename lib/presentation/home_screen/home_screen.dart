@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:volco/core/app_export.dart';
+import 'package:volco/presentation/create_event_catogory_screen/create_event_catogory_screen.dart';
 import 'package:volco/presentation/home_screen/controller/home_controller.dart';
 import 'package:volco/presentation/home_screen/home_screen_initial_page.dart';
 import 'package:volco/presentation/home_screen/controller/home_controller.dart';
@@ -47,8 +48,8 @@ class HomeScreen extends GetWidget<HomeController> {
         return AppRoutes.homeScreenInitialPage;
       // case BottomBarEnum.Search:
       //   return AppRoutes.searchPage;
-      // case BottomBarEnum.Booking:
-      //   return AppRoutes.bookingCompletedPage;
+      case BottomBarEnum.Create:
+        return AppRoutes.createEventCatogoryScreen;
       // case BottomBarEnum.Profile:
       //   return AppRoutes.profileSettingsPage;
       default:
@@ -63,8 +64,8 @@ class HomeScreen extends GetWidget<HomeController> {
         return HomeScreenInitialPage();
       // case AppRoutes.searchPage:
       //   return SearchPage();
-      // case AppRoutes.bookingCompletedPage:
-      //   return BookingCompletedPage();
+      case AppRoutes.createEventCatogoryScreen:
+        return CreateEventCatogoryScreen();
       // case AppRoutes.profileSettingsPage:
       //   return ProfileSettingsPage();
       default:

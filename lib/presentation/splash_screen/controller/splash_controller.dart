@@ -34,8 +34,12 @@ class SplashController extends GetxController {
     String savedSession = PrefUtils().getSupabaseAuthSession();
     if (savedSession.isNotEmpty) {
       // If the session exists, try to set the session and get the user details
-      final response = await supabaseClient.auth.setSession(savedSession);
-      currentUser = response.user;
+   try {
+        await supabaseClient.auth.recoverSession(savedSession);
+        currentUser = supabaseClient.auth.currentUser;
+      } catch (e) {
+        print("Error recovering session: $e");
+      }
     }
 
 

@@ -1,9 +1,8 @@
-class ImageConstant{
+class ImageConstant {
   //image folder path
   static String imagePath = 'assets/images';
 
   static String lottiePath = 'assets/lottie';
-
 
   //App logo images standard
   static String imgLogoStandard = '$imagePath/VolCo_logo_standard.png';
@@ -11,10 +10,10 @@ class ImageConstant{
   //App logo images High Resolution
   static String imgLogoHighRes = '$imagePath/VolCo_logo_high_res.png';
 
-
   static String imgWelcomeRectangle1 = '$imagePath/welcome_rectangle1.jpg';
 
-  static String imgTeacherTeachingOrphan = '$imagePath/teacher_teaching_orphan.png';
+  static String imgTeacherTeachingOrphan =
+      '$imagePath/teacher_teaching_orphan.png';
 
   static String imgVolunteerYourTime = '$imagePath/volunteer_your_time.png';
 
@@ -32,13 +31,14 @@ class ImageConstant{
 
   static String imgEmail = '$imagePath/img_email.svg';
 
-  static String imgLocation  = '$imagePath/img_location.svg';
+  static String imgLocation = '$imagePath/img_location.svg';
 
   static String imgEye = '$imagePath/img_eye.svg';
 
   static String imgEyeSlash = '$imagePath/img_eye_slash.svg';
 
-  static String imgVolunteeringCleaning = '$imagePath/volunteering_cleaning.jpg';
+  static String imgVolunteeringCleaning =
+      '$imagePath/volunteering_cleaning.jpg';
 
   static String imgStarSharp = '$imagePath/img_star_sharp.svg';
 
@@ -55,6 +55,8 @@ class ImageConstant{
   static String imgSearchWhite = '$imagePath/img_search_white.svg';
 
   static String imgSearchContrast = '$imagePath/img_search_contrast.svg';
+
+  static String imgSearchBlue = '$imagePath/search_blue_svg.svg';
 
   static String imgBellBlue = '$imagePath/img_bell_blue.svg';
 
@@ -74,11 +76,40 @@ class ImageConstant{
 
   static String imgTextSvg = '$imagePath/text_svg.svg';
 
+  static String imgCreateSvg = '$imagePath/create_icon.svg';
+
+  static String imgCreateBlueSvg = '$imagePath/create_icon.svg';
+
+  static String imgBookmarkSvg = '$imagePath/bookmark_svg.svg';
+
+  static String imgBookmarkBlueSvg = '$imagePath/bookmark_blue_svg.svg';
+
+  static String imgFilmSvg = '$imagePath/film_svg.svg';
+
+  static String imgFilmBlueSvg = '$imagePath/film_blue_svg.svg';
+
+  static String imgEducationIcon = '$imagePath/education_icon.png';
+
+  static String imgHealthCareIcon = '$imagePath/healthcare_icon.png';
+
+  static String imgCounsellingIcon = '$imagePath/counselling_icon.png';
+
+  static String imgConservationIcon = '$imagePath/conservation_icon.png';
+
+  static String imgWorkWithElderIcon = '$imagePath/work_with_elders_icon.png';
+
+  static String imgWorkWithOrphanIcon = '$imagePath/work_with_orphans.png';
+
+  static String imgAnimalRescueIcon = '$imagePath/animal_rescue_icon.png';
+
+  static String imgCleaningIcon = '$imagePath/cleaning.png';
+
+
+
 
 
 //lottie constants here
   static String uploadAnimationLottie = '$lottiePath/uploadAnimation.json';
 
   static String uploadSuccessAnimationLottie = '$lottiePath/uploadSuccess.json';
-
 }

@@ -1,6 +1,8 @@
 import 'package:volco/core/app_export.dart';
 import 'package:volco/presentation/avatar_capture_screen/avatar_capture_screen.dart';
 import 'package:volco/presentation/avatar_capture_screen/binding/avatar_capture_binding.dart';
+import 'package:volco/presentation/create_event_catogory_screen/binding/create_event_catogory_binding.dart';
+import 'package:volco/presentation/create_event_catogory_screen/create_event_catogory_screen.dart';
 import 'package:volco/presentation/forgot_password_screen/binding/forgot_password_binding.dart';
 import 'package:volco/presentation/forgot_password_screen/forgot_password_screen.dart';
 import 'package:volco/presentation/home_screen/binding/home_binding.dart';
@@ -58,91 +60,94 @@ class AppRoutes {
 
   static const String resetPasswordScreen = '/reset_password_screen';
 
-
-
-
-
+  static const String createEventCatogoryScreen =
+      '/create_event_catogory_screen';
 
   static List<GetPage> pages = [
     GetPage(
-        name: splashScreen,
-        page: () => SplashScreen(),
-        bindings: [SplashBinding()]
-    , ),
-
-
-    GetPage(
-        name: welcomeScreen,
-        page: () => WelcomeScreen(),
-        bindings: [WelcomeBinding()]
-    ,  ),
+      name: splashScreen,
+      page: () => SplashScreen(),
+      bindings: [SplashBinding()],
+    ),
 
     GetPage(
-        name: onboardingOneScreen,
-        page: () => OnboadingOneScreen(),
-        bindings: [OnboardingOneBinding()]
-    , ),
+      name: welcomeScreen,
+      page: () => WelcomeScreen(),
+      bindings: [WelcomeBinding()],
+    ),
 
     GetPage(
-        name: onboardingTwoScreen,
-        page: () => OnboadingTwoScreen(),
-        bindings: [OnboardingTwoBinding()]
-    , ),
+      name: onboardingOneScreen,
+      page: () => OnboadingOneScreen(),
+      bindings: [OnboardingOneBinding()],
+    ),
 
     GetPage(
-        name: onboardingThreeScreen,
-        page: () => OnboadingThreeScreen(),
-        bindings: [OnboardingThreeBinding()]
-    ,  ),
+      name: onboardingTwoScreen,
+      page: () => OnboadingTwoScreen(),
+      bindings: [OnboardingTwoBinding()],
+    ),
 
- GetPage(
-        name: letsYouInScreen,
-        page: () => LetSYouInScreen(),
-        bindings: [LetsYouInBindings()]
- ,  ),
- GetPage(
-        name: signInScreen,
-        page: () => SignInScreen(),
-        bindings: [SignInBinding()]
- ,  ),
     GetPage(
-        name: homeScreen,
-        page: () => HomeScreen(),
-        bindings: [HomeBinding()]
-    ,  ),
+      name: onboardingThreeScreen,
+      page: () => OnboadingThreeScreen(),
+      bindings: [OnboardingThreeBinding()],
+    ),
+
     GetPage(
-        name: userDetailsScreen,
-        page: () => UserDetailsScreen(),
-        bindings: [UserDetailsBinding()]
-    ,  ),
+      name: letsYouInScreen,
+      page: () => LetSYouInScreen(),
+      bindings: [LetsYouInBindings()],
+    ),
     GetPage(
-        name: avatarCaptureScreen,
-        page: () => AvatarCaptureScreen(),
-        bindings: [AvatarCaptureBinding()]
-    ,  ),
+      name: signInScreen,
+      page: () => SignInScreen(),
+      bindings: [SignInBinding()],
+    ),
+    GetPage(
+      name: homeScreen,
+      page: () => HomeScreen(),
+      bindings: [HomeBinding()],
+    ),
+    GetPage(
+      name: userDetailsScreen,
+      page: () => UserDetailsScreen(),
+      bindings: [UserDetailsBinding()],
+    ),
+    GetPage(
+      name: avatarCaptureScreen,
+      page: () => AvatarCaptureScreen(),
+      bindings: [AvatarCaptureBinding()],
+    ),
 
     GetPage(
       name: forgotPasswordScreen,
       page: () => ForgotPasswordScreen(),
-      bindings: [ForgotPasswordBinding()]
-      ,  ),
- GetPage(
+      bindings: [ForgotPasswordBinding()],
+    ),
+    GetPage(
       name: resetPasswordScreen,
       page: () => ResetPasswordScreen(),
-      bindings: [ResetPasswordBinding()]
-      ,  ),
+      bindings: [ResetPasswordBinding()],
+    ),
 
     GetPage(
-        name: initialRoute,
-        page: () => SplashScreen(),
-        bindings: [SplashBinding()]
-    ,  ),
+      name: initialRoute,
+      page: () => SplashScreen(),
+      bindings: [SplashBinding()],
+    ),
 
     //create for signup screen
     GetPage(
-        name: signUpScreen,
-        page: () => SignUpScreen(),
-        bindings: [SignUpBinding()]
-    ,  ),
+      name: signUpScreen,
+      page: () => SignUpScreen(),
+      bindings: [SignUpBinding()],
+    ),
+    GetPage(
+      name: createEventCatogoryScreen,
+      page: () => CreateEventCatogoryScreen(),
+      bindings: [CreateEventCatogoryBinding()],
+    ),
+
   ];
 }

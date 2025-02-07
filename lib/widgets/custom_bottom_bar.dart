@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:volco/core/app_export.dart';
 import 'package:volco/core/utils/image_constant.dart';
 
-enum BottomBarEnum { Home, Search, Booking, Profile }
+enum BottomBarEnum { Home, Search, Create,Saved, Media }
 
 class CustomBottomBar extends StatelessWidget {
   CustomBottomBar({super.key, this.onChanged});
@@ -12,26 +12,32 @@ class CustomBottomBar extends StatelessWidget {
     BottomMenuModel(
       icon: ImageConstant.imgHomeWhite,
       activeIcon: ImageConstant.imgHomeSkyBlue,
-      title: "home".tr,
+      title: "Home".tr,
       type: BottomBarEnum.Home,
     ),
     BottomMenuModel(
       icon: ImageConstant.imgSearchWhite,
-      activeIcon: ImageConstant.imgSearchContrast,
-      title: "search".tr,
+      activeIcon: ImageConstant.imgSearchBlue,
+      title: "Search".tr,
       type: BottomBarEnum.Search,
     ),
     BottomMenuModel(
-      icon: ImageConstant.imgNoteWhite,
-      activeIcon: ImageConstant.imgNoteSkyBlue,
-      title: "booking".tr,
-      type: BottomBarEnum.Booking,
+      icon: ImageConstant.imgCreateSvg,
+      activeIcon: ImageConstant.imgCreateBlueSvg,
+      title: "Create".tr,
+      type: BottomBarEnum.Create,
     ),
     BottomMenuModel(
-      icon: ImageConstant.imgProfileWhite,
-      activeIcon: ImageConstant.imgProfileSkyBlue,
-      title: "profile".tr,
-      type: BottomBarEnum.Profile,
+      icon: ImageConstant.imgBookmarkSvg,
+      activeIcon: ImageConstant.imgBookmarkBlueSvg,
+      title: "Saved".tr,
+      type: BottomBarEnum.Saved,
+    ),
+    BottomMenuModel(
+      icon: ImageConstant.imgFilmSvg,
+      activeIcon: ImageConstant.imgFilmBlueSvg,
+      title: "Media".tr,
+      type: BottomBarEnum.Media,
     )
   ];
 
@@ -82,7 +88,7 @@ class CustomBottomBar extends StatelessWidget {
                       imagePath: bottomMenuList[index].activeIcon,
                       height: 24.h,
                       width: 24.h,
-                      color: Color(0XFFC8CCCC),
+                      color: Color(0XFF1AADB6),
                     ),
                     Text(
                       bottomMenuList[index].title ?? "",

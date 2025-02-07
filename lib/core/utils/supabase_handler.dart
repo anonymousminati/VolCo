@@ -148,6 +148,13 @@ class SupabaseService {
     }
   }
 
+  Future<List<Map<String, dynamic>>> fetchCatogories() async {
+     // Access Supabase client
+    final response = await _supabaseClient.from('event_catogories').select("*");
+    print(response);// Fetch data from table
+    return response;
+  }
+
   // Handle image upload errors
   void _handleUploadError(error) {
     if (error.message.contains('row-level security policy')) {

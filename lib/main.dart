@@ -15,14 +15,7 @@ import 'package:volco/routes/app_routes.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await Supabase.initialize(
-  //   url: PROJECT_URL,
-  //   anonKey: PROJECT_ANON_KEY,
-  //   authOptions: FlutterAuthClientOptions(authFlowType: AuthFlowType.pkce),
-  //   realtimeClientOptions: const RealtimeClientOptions(
-  //     eventsPerSecond: 2,
-  //   ),
-  // );
+
    SupabaseHandler().initialize(PROJECT_URL, PROJECT_ANON_KEY);
 
   Get.put(AuthController());
