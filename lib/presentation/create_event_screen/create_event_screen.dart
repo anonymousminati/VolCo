@@ -2,17 +2,19 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:volco/core/app_export.dart';
 import 'package:volco/core/utils/image_constant.dart';
 import 'package:volco/core/utils/supabase_handler.dart';
 import 'package:volco/core/utils/validation_functions.dart';
 import 'package:volco/presentation/create_event_catogory_screen/controller/create_event_catogory_controller.dart';
-import 'package:volco/presentation/create_teaching_event_screen/controller/create_teaching_event_controller.dart';
+import 'package:volco/presentation/create_event_screen/controller/create_event_controller.dart';
 import 'package:volco/presentation/user_details_screen/controller/user_details_controller.dart';
+import 'package:volco/widgets/custom_image_picker.dart';
 
-class CreateTeachingEventScreen extends StatelessWidget {
-  final CreateTeachingEventController controller = Get.put(CreateTeachingEventController());
-  GlobalKey<FormState> _createTeachingEventformKey = GlobalKey<FormState>();
+class CreateEventScreen extends StatelessWidget {
+  final CreateEventController controller = Get.put(CreateEventController());
+  GlobalKey<FormState> _createEventformKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class CreateTeachingEventScreen extends StatelessWidget {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Form(
-          key: _createTeachingEventformKey,
+          key: _createEventformKey,
           child: SizedBox(
             width: double.maxFinite,
             child: SingleChildScrollView(
@@ -70,43 +72,14 @@ class CreateTeachingEventScreen extends StatelessWidget {
                     //   }),
                     // ),
                     // SizedBox(height: 24.h),
-                    _buildUsersDetailsFormSection(),
+                    _buildCreateEventFormSection(context),
                     // Save Button
                     SizedBox(height: 24.h),
                     CustomElevatedButton(
                       text: "Submit".tr,
                       onPressed: () async {
-                        if (_createTeachingEventformKey.currentState!.validate()) {
-                          // final File? imageFile = controller.pickedImage.value != null
-                          //     ? File(controller.pickedImage.value!.path)
-                          //     : null;
-                          // String? userId = await SupabaseService().getUserId();
-                          // print("user id from submit button: $userId");
-                          bool success = await controller.updateUserDetailswithoutFile();
-                          if (success) {
-                            print('User details saved successfully!');
-                            Get.snackbar(
-                              'Success',
-                              'User details saved successfully!',
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors.green,
-                              colorText: Colors.white,
-                            );
-                          } else {
-                            print('Failed to save user details.');
-                            Get.snackbar(
-                              'Error',
-                              'Failed to save user details.',
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors.red,
-                              colorText: Colors.white,
-                            );
-                          }
+                        if (_createEventformKey.currentState!.validate()){
 
-                          // Optionally navigate after a successful update (if needed)
-                          if (success) {
-                            Get.offNamed(AppRoutes.homeScreen);
-                          }
                         }
                       },
                     ),
@@ -140,16 +113,86 @@ class CreateTeachingEventScreen extends StatelessWidget {
       ),
     );
   }
+  Widget _buildDateTimePickers(BuildContext context) {
+    return Row(
+      // crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 24.h,
+      children: [
+        // Date Picker Field
+        Expanded(
+          child: Obx(
+            () => CustomTextFormField(
+                 
+              controller: TextEditingController(
+                text: controller.selectedDate.value != null
+                    ? "${controller.selectedDate.value!.day}-${controller.selectedDate.value!.month}-${controller.selectedDate.value!.year}"
+                    : "",
+              ),
+              readOnly: true,
+              hintText:"Select Event Date" ,
+              prefix: Container(
+                margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
+                child: CustomImageView(
+                  imagePath: ImageConstant.imgCalender,
+                  height: 18.h,
+                  width: 20.h,
+                  fit: BoxFit.contain,
+                ),
+              ),
+          
+              onTap: () => controller.showDatePicker(context),
+          
+            ),
+          ),
+        ),
 
-  Widget _buildUsersDetailsFormSection() {
+
+        // Time Picker
+        Expanded(
+          child: Obx(
+                () => CustomTextFormField(
+                 
+          
+                  controller: TextEditingController(
+                text: controller.selectedTime != null
+                    ? controller.selectedTime!.value?.format(context)
+                    : "",
+              ),
+              readOnly: true,
+              hintText:"Select Event Time" ,
+              prefix: Container(
+                margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
+                child: CustomImageView(
+                  imagePath: ImageConstant.imgClock,
+                  height: 18.h,
+                  width: 20.h,
+                  fit: BoxFit.contain,
+                ),
+              ),
+          
+              onTap: () => controller.showTimePickerDialog(context),
+          
+            ),
+          ),
+        ),
+
+      ],
+    );
+  }
+
+
+
+
+  Widget _buildCreateEventFormSection( BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
       child: Column(
+        spacing: 24.h,
         children: [
-          // First Name
+          // Event Name
           CustomTextFormField(
-            controller: controller.firstNameController,
-            hintText: "First Name".tr,
+            controller: controller.eventNameController,
+            hintText: "Event Name".tr,
             textInputType: TextInputType.text,
             textInputAction: TextInputAction.next,
             prefix: Container(
@@ -170,26 +213,94 @@ class CreateTeachingEventScreen extends StatelessWidget {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'First Name is required'.tr;
+                return 'Event Name is required'.tr;
               }
               if (!isText(value, isRequired: true)) {
-                return 'First Name should contain only alphabets'.tr;
+                return 'Event Name should contain only alphabets'.tr;
               }
               return null;
             },
           ),
-          SizedBox(height: 24.h),
 
-          // Last Name
+          // Event Description
           CustomTextFormField(
-            controller: controller.lastNameController,
-            hintText: "Last Name".tr,
+            controller: controller.eventDescriptionController,
+            hintText: "Event Description".tr,
+            textInputType: TextInputType.multiline,
+            // textInputAction: TextInputAction.newline,
+            maxLines: 20, // Allows dynamic height adjustment
+            minLines: 1,
+            prefix: Container(
+              margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
+              child: CustomImageView(
+                imagePath: ImageConstant.imgNoteWhite, // Use an appropriate icon
+                height: 18.h,
+                width: 20.h,
+                fit: BoxFit.contain,
+              ),
+            ),
+            prefixConstraints: BoxConstraints(
+              maxHeight: 60.h,
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 20.h,
+              vertical: 18.h,
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Event Description is required'.tr;
+              }
+              return null;
+            },
+          ),
+
+          CustomImagePickerWidget(),
+
+          _buildDateTimePickers(context),
+
+          // Duration
+          CustomTextFormField(
+            controller: controller.durationlController,
+            hintText: "Duration (Hours)".tr,
+            textInputType: TextInputType.number,
+            textInputAction: TextInputAction.next,
+            prefix: Container(
+              margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
+              child: CustomImageView(
+                imagePath: ImageConstant.imgClock,
+                height: 18.h,
+                width: 20.h,
+                fit: BoxFit.contain,
+              ),
+            ),
+            prefixConstraints: BoxConstraints(
+              maxHeight: 60.h,
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 20.h,
+              vertical: 18.h,
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Duration is required'.tr;
+              }
+              //check if the entered value is a double or not
+              if (toInt(value)! % 1 != 0)
+                return 'Enter a only hours number'.tr;
+              return null;
+            },
+          ),
+
+          //Location
+          CustomTextFormField(
+            controller: controller.locationController,
+            hintText: "Location".tr,
             textInputType: TextInputType.text,
-            textInputAction: TextInputAction.next,
+            textInputAction: TextInputAction.done,
             prefix: Container(
               margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
               child: CustomImageView(
-                imagePath: ImageConstant.imgTextSvg,
+                imagePath: ImageConstant.imgLocation,
                 height: 18.h,
                 width: 20.h,
                 fit: BoxFit.contain,
@@ -204,50 +315,14 @@ class CreateTeachingEventScreen extends StatelessWidget {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Last Name is required'.tr;
+                return 'Location is required'.tr;
               }
               if (!isText(value, isRequired: true)) {
-                return 'Last Name should contain only alphabets'.tr;
+                return 'Location should contain only alphabets'.tr;
               }
               return null;
             },
           ),
-          SizedBox(height: 24.h),
-
-          // Email
-          CustomTextFormField(
-            controller: controller.emailController,
-            hintText: "Email".tr,
-            textInputType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-            prefix: Container(
-              margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgEmail,
-                height: 18.h,
-                width: 20.h,
-                fit: BoxFit.contain,
-              ),
-            ),
-            prefixConstraints: BoxConstraints(
-              maxHeight: 60.h,
-            ),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 20.h,
-              vertical: 18.h,
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Email is required'.tr;
-              }
-              if (!isValidEmail(value, isRequired: true)) {
-                return 'Enter a valid email address'.tr;
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 24.h),
-
           // Phone Number
           CustomTextFormField(
             controller: controller.mobileNumberController,

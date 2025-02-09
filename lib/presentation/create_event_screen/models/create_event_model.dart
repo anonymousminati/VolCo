@@ -1,7 +1,7 @@
 // create_teaching_event_model.dart
 import 'dart:convert';
 
-class CreateTeachingEventModel {
+class CreateEventModel {
   final String fullName;
 
   final String email;
@@ -11,7 +11,7 @@ class CreateTeachingEventModel {
   final int? age;
   late final String? profileImageUrl;
 
-  CreateTeachingEventModel({
+  CreateEventModel({
     required this.fullName,
     required this.email,
     required this.mobileNumber,
@@ -35,8 +35,8 @@ class CreateTeachingEventModel {
   }
 
   // Create instance from JSON
-  factory CreateTeachingEventModel.fromJson(Map<String, dynamic> json) {
-    return CreateTeachingEventModel(
+  factory CreateEventModel.fromJson(Map<String, dynamic> json) {
+    return CreateEventModel(
       fullName: json['full_name'],
       email: json['username'],
       mobileNumber: json['mobile_number'],

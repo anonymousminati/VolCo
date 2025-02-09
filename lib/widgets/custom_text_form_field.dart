@@ -36,6 +36,7 @@ class CustomTextFormField extends StatelessWidget {
       this.textInputAction = TextInputAction.next,
       this.textInputType = TextInputType.text,
       this.maxLines,
+      this.minLines,
       this.hintText,
       this.hintStyle,
       this.prefix,
@@ -65,6 +66,7 @@ class CustomTextFormField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final TextInputType? textInputType;
   final int? maxLines;
+  final int? minLines;
   final String? hintText;
   final TextStyle? hintStyle;
   final Widget? prefix;
@@ -110,6 +112,7 @@ class CustomTextFormField extends StatelessWidget {
           textInputAction: textInputAction,
           keyboardType: textInputType,
           maxLines: maxLines ?? 1,
+          minLines: minLines??1,
           decoration: decoration,
           validator: validator,
         ),

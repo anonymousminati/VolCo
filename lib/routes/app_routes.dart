@@ -3,6 +3,8 @@ import 'package:volco/presentation/avatar_capture_screen/avatar_capture_screen.d
 import 'package:volco/presentation/avatar_capture_screen/binding/avatar_capture_binding.dart';
 import 'package:volco/presentation/create_event_catogory_screen/binding/create_event_catogory_binding.dart';
 import 'package:volco/presentation/create_event_catogory_screen/create_event_catogory_screen.dart';
+import 'package:volco/presentation/create_event_screen/binding/create_event_binding.dart';
+import 'package:volco/presentation/create_event_screen/create_event_screen.dart';
 import 'package:volco/presentation/forgot_password_screen/binding/forgot_password_binding.dart';
 import 'package:volco/presentation/forgot_password_screen/forgot_password_screen.dart';
 import 'package:volco/presentation/home_screen/binding/home_binding.dart';
@@ -62,6 +64,8 @@ class AppRoutes {
 
   static const String createEventCatogoryScreen =
       '/create_event_catogory_screen';
+  static const String createEventScreen =
+      '/create_event_screen';
 
   static List<GetPage> pages = [
     GetPage(
@@ -147,6 +151,10 @@ class AppRoutes {
       name: createEventCatogoryScreen,
       page: () => CreateEventCatogoryScreen(),
       bindings: [CreateEventCatogoryBinding()],
+    ), GetPage(
+      name: createEventScreen,
+      page: () => CreateEventScreen(),
+      bindings: [CreateEventBinding()],
     ),
 
   ];

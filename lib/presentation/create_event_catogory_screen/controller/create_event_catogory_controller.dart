@@ -77,3 +77,6 @@ class CreateEventCatogoryController extends GetxController {
     super.onClose();
   }
 }
+
+
+

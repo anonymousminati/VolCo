@@ -104,6 +104,10 @@ class ImageConstant {
 
   static String imgCleaningIcon = '$imagePath/cleaning.png';
 
+  static String imgCalender = '$imagePath/calendar_img.png';
+
+  static String imgClock = '$imagePath/clock_img.png';
+
 
 
 

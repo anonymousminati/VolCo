@@ -9,6 +9,7 @@ import 'package:volco/core/utils/supabase_handler.dart';
 import 'package:volco/core/utils/validation_functions.dart';
 import 'package:volco/presentation/create_event_catogory_screen/controller/create_event_catogory_controller.dart';
 import 'package:volco/presentation/user_details_screen/controller/user_details_controller.dart';
+import 'package:volco/widgets/custom_event_catogory_card.dart';
 
 class CreateEventCatogoryScreen extends StatelessWidget {
   final CreateEventCatogoryController controller = Get.put(CreateEventCatogoryController());
@@ -120,7 +121,7 @@ class CreateEventCatogoryScreen extends StatelessWidget {
                   print("category.categoryName: ${category.categoryName}");
 
 
-                  // Get.toNamed(category.redirectString);
+                  Get.toNamed(AppRoutes.createEventScreen, arguments: category.categoryName );
                   // controller.update();
                 },
               );
@@ -153,71 +154,5 @@ class CreateEventCatogoryScreen extends StatelessWidget {
 
   onTapImgIconsone(){
 
-  }
-}
-
-class EventCatogoryCard extends StatelessWidget {
-  final String text;
-  final String imageUrl;
-  final String subtitle;
-  final Function() onPressed;
-
-  const EventCatogoryCard({required this.text, required this.imageUrl, this.subtitle ="", required this.onPressed, Key? key})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        // width: 150,
-        // height: 150,
-        padding: const EdgeInsets.all(15.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.5),
-          boxShadow: [
-            BoxShadow(
-                offset: const Offset(10, 20),
-                blurRadius: 10,
-                spreadRadius: 0,
-                color: Colors.grey.withAlpha(50)),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-
-          children: [
-           CustomImageView(
-             imagePath: imageUrl,
-             height: 50,
-             width: 50,
-           ),
-           SizedBox(height: 20,),
-            AutoSizeText(text,
-                minFontSize: 18,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22
-                )),
-
-            Text(
-              subtitle ,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  color: Colors.grey,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 12),
-            ),
-
-          ],
-        ),
-      ),
-    );
   }
 }

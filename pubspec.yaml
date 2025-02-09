@@ -49,6 +49,8 @@ dependencies:
   lottie: ^3.1.3
   new_pinput: ^1.0.1
   auto_size_text: ^3.0.0
+  dotted_border: ^2.1.0
+  syncfusion_flutter_datepicker: ^28.2.4
 
 dev_dependencies:
   flutter_test:
