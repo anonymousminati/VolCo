@@ -10,8 +10,6 @@ import 'package:volco/core/utils/supabase_handler.dart';
 import 'package:volco/presentation/user_details_screen/models/user_details_model.dart';
 
 class CreateEventController extends GetxController {
-
-
   // Text controllers
   final eventNameController = TextEditingController();
   final eventDescriptionController = TextEditingController();
@@ -43,7 +41,8 @@ class CreateEventController extends GetxController {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            width: MediaQuery.of(context).size.width * 0.8, // 80% of screen width
+            width:
+                MediaQuery.of(context).size.width * 0.8, // 80% of screen width
             height: 400.0, // Fixed height
             child: SfDateRangePicker(
               minDate: DateTime.now(),
@@ -63,7 +62,6 @@ class CreateEventController extends GetxController {
   /// **📌 Show Time Picker**
   Future<void> showTimePickerDialog(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
-
       context: context,
       initialTime: selectedTime.value ?? TimeOfDay.now(),
     );
@@ -73,10 +71,12 @@ class CreateEventController extends GetxController {
       update(); // Notify GetX about the change
     }
   }
+
   // Method to pick an image
   Future<void> pickImage() async {
     final picker = ImagePicker();
-    final XFile? selectedImage = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? selectedImage =
+        await picker.pickImage(source: ImageSource.gallery);
     if (selectedImage != null) {
       pickedImage.value = selectedImage;
     }
@@ -100,7 +100,8 @@ class CreateEventController extends GetxController {
       // Upload the event image
       String? imageUrl;
       if (pickedImage.value != null) {
-        imageUrl = await supabaseService.uploadImage(File(pickedImage.value!.path));
+        imageUrl =
+            await supabaseService.uploadImage(File(pickedImage.value!.path));
       } else {
         Get.snackbar("Error", "Please select an event image.");
         return false;
@@ -109,7 +110,8 @@ class CreateEventController extends GetxController {
       // Combine selected date and time into a DateTime
       final DateTime date = selectedDate.value!;
       final TimeOfDay time = selectedTime.value!;
-      final DateTime eventDateTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+      final DateTime eventDateTime =
+          DateTime(date.year, date.month, date.day, time.hour, time.minute);
 
       // Build the event data map.
       // (Adjust field names if needed to match your database schema.)
@@ -131,7 +133,8 @@ class CreateEventController extends GetxController {
       };
 
       // Insert the event record into the "events" table.
-      final bool insertResult = await supabaseService.insertRecord('events', eventData);
+      final bool insertResult =
+          await supabaseService.insertRecord('events', eventData);
       if (insertResult) {
         Get.snackbar("Success", "Event created successfully!");
         return true;

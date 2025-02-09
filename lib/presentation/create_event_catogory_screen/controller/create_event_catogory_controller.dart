@@ -41,7 +41,8 @@ class CreateEventCatogoryController extends GetxController {
   }
 
   Future<void> _initializeEventCategories() async {
-    List<Map<String, dynamic>> response = await supabaseService.fetchCatogories();
+    List<Map<String, dynamic>> response =
+        await supabaseService.fetchCatogories();
     supabaseService.fetchCatogories();
     for (var category in response) {
       eventCategories.add(CreateEventCategoryModel(
@@ -50,25 +51,26 @@ class CreateEventCatogoryController extends GetxController {
         redirectString: category['catogory_redirect'],
       ));
     }
-
   }
 
   void _subscribeToCategoryChanges() {
     supabaseClient
-        .from('event_catogories')// Replace 'categories' with your actual table name
+        .from(
+            'event_catogories') // Replace 'categories' with your actual table name
         .stream(primaryKey: ['id']) // Track changes based on 'id'
         .listen((List<Map<String, dynamic>> updatedData) {
       print("Categories Updated: $updatedData");
 
       // Update eventCategories list
-      eventCategories.assignAll(updatedData.map((category) => CreateEventCategoryModel(
-        categoryName: category['catogory_name'],
-        imageIcon: category['catogory_image'],
-        redirectString: category['catogory_redirect'],
-      )).toList());
+      eventCategories.assignAll(updatedData
+          .map((category) => CreateEventCategoryModel(
+                categoryName: category['catogory_name'],
+                imageIcon: category['catogory_image'],
+                redirectString: category['catogory_redirect'],
+              ))
+          .toList());
     });
   }
-
 
   @override
   void onClose() {
@@ -77,6 +79,3 @@ class CreateEventCatogoryController extends GetxController {
     super.onClose();
   }
 }
-
-
-

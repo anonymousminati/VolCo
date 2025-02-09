@@ -78,7 +78,7 @@ class _CustomMultiSelectDropdownState extends State<CustomMultiSelectDropdown> {
                         : selectedItems.join(', '),
                     style: theme.textTheme.titleSmall?.copyWith(
                       color: selectedItems.isEmpty
-                          ? appTheme.gray800
+                          ? appTheme.gray500
                           : appTheme.gray700,
                     ),
                     overflow: TextOverflow.ellipsis,

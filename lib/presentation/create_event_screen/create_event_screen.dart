@@ -14,7 +14,6 @@ import 'package:volco/presentation/user_details_screen/controller/user_details_c
 import 'package:volco/widgets/customMultiSelectDropdown.dart';
 import 'package:volco/widgets/custom_image_picker.dart';
 
-
 class CreateEventScreen extends GetView<CreateEventController> {
   /// The selected activity category passed from the previous screen.
 
@@ -56,7 +55,7 @@ class CreateEventScreen extends GetView<CreateEventController> {
                     ),
                     SizedBox(height: 70.h),
                     Text(
-                      "Serve for Good".tr,
+                      "Create New Revolution".tr,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.displayMedium!.copyWith(
@@ -64,55 +63,17 @@ class CreateEventScreen extends GetView<CreateEventController> {
                       ),
                     ),
                     SizedBox(height: 24.h),
-                    // Profile Image Picker
-                    // Center(
-                    //   child: Obx(() {
-                    //     return GestureDetector(
-                    //       onTap: () => controller.pickImage(),
-                    //       child: CircleAvatar(
-                    //         radius: 50,
-                    //         backgroundImage: controller.pickedImage.value != null
-                    //             ? FileImage(File(controller.pickedImage.value!.path))
-                    //             : null,
-                    //         child: controller.pickedImage.value == null
-                    //             ? const Icon(Icons.camera_alt, size: 50)
-                    //             : null,
-                    //       ),
-                    //     );
-                    //   }),
-                    // ),
-                    // SizedBox(height: 24.h),
+
                     _buildCreateEventFormSection(context),
                     // Save Button
                     SizedBox(height: 24.h),
                     CustomElevatedButton(
                       text: "Submit".tr,
                       onPressed: () async {
-                        if (_createEventformKey.currentState!.validate()){
-
-                        }
+                        if (_createEventformKey.currentState!.validate()) {}
                       },
                     ),
 
-                    // CustomElevatedButton(
-                    //   text: "Submit 2".tr,
-                    //   onPressed: () async {
-                    //     try{
-                    //       final User? user = await SupabaseService().getUserData();
-                    //       String userId = user?.id ?? '';
-                    //
-                    //       final testResponse = await Supabase.instance.client
-                    //           .from('profiles')
-                    //           .select()
-                    //           .eq('id', userId.toString());
-                    //
-                    //       print("Test Query Response: ${testResponse}");
-                    //     }catch (e){
-                    //       print("Error in Test Query: $e");
-                    //     }
-                    //
-                    //   },
-                    // ),
 
                   ],
                 ),
@@ -123,6 +84,7 @@ class CreateEventScreen extends GetView<CreateEventController> {
       ),
     );
   }
+
   Widget _buildDateTimePickers(BuildContext context) {
     return Row(
       // crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,14 +94,13 @@ class CreateEventScreen extends GetView<CreateEventController> {
         Expanded(
           child: Obx(
             () => CustomTextFormField(
-                 
               controller: TextEditingController(
                 text: controller.selectedDate.value != null
                     ? "${controller.selectedDate.value!.day}-${controller.selectedDate.value!.month}-${controller.selectedDate.value!.year}"
                     : "",
               ),
               readOnly: true,
-              hintText:"Select Event Date" ,
+              hintText: "Select Event Date",
               prefix: Container(
                 margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
                 child: CustomImageView(
@@ -149,27 +110,22 @@ class CreateEventScreen extends GetView<CreateEventController> {
                   fit: BoxFit.contain,
                 ),
               ),
-          
               onTap: () => controller.showDatePicker(context),
-          
             ),
           ),
         ),
 
-
         // Time Picker
         Expanded(
           child: Obx(
-                () => CustomTextFormField(
-                 
-          
-                  controller: TextEditingController(
+            () => CustomTextFormField(
+              controller: TextEditingController(
                 text: controller.selectedTime != null
                     ? controller.selectedTime!.value?.format(context)
                     : "",
               ),
               readOnly: true,
-              hintText:"Select Event Time" ,
+              hintText: "Select Event Time",
               prefix: Container(
                 margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
                 child: CustomImageView(
@@ -179,21 +135,15 @@ class CreateEventScreen extends GetView<CreateEventController> {
                   fit: BoxFit.contain,
                 ),
               ),
-          
               onTap: () => controller.showTimePickerDialog(context),
-          
             ),
           ),
         ),
-
       ],
     );
   }
 
-
-
-
-  Widget _buildCreateEventFormSection( BuildContext context) {
+  Widget _buildCreateEventFormSection(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
       child: Column(
@@ -243,7 +193,8 @@ class CreateEventScreen extends GetView<CreateEventController> {
             prefix: Container(
               margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
               child: CustomImageView(
-                imagePath: ImageConstant.imgNoteWhite, // Use an appropriate icon
+                imagePath:
+                    ImageConstant.imgNoteWhite, // Use an appropriate icon
                 height: 18.h,
                 width: 20.h,
                 fit: BoxFit.contain,
@@ -295,8 +246,7 @@ class CreateEventScreen extends GetView<CreateEventController> {
                 return 'Duration is required'.tr;
               }
               //check if the entered value is a double or not
-              if (toInt(value)! % 1 != 0)
-                return 'Enter a only hours number'.tr;
+              if (toInt(value)! % 1 != 0) return 'Enter a only hours number'.tr;
               return null;
             },
           ),
@@ -337,7 +287,6 @@ class CreateEventScreen extends GetView<CreateEventController> {
           CustomMultiSelectDropdown(
             hintText: "Select Tags".tr,
             items: [
-
               "Childcare",
               "Mentorship",
               "Adoption Awareness",
@@ -356,6 +305,7 @@ class CreateEventScreen extends GetView<CreateEventController> {
             ],
             onSelectionChanged: (List<String> selectedItems) {
               print("Selected: $selectedItems");
+              controller.selectedTags.value = selectedItems;
             },
           ),
 
@@ -384,9 +334,9 @@ class CreateEventScreen extends GetView<CreateEventController> {
               if (value == null || value.isEmpty) {
                 return 'field is required'.tr;
               }
-             if(num.tryParse(value) != null){
+              if (num.tryParse(value) != null) {
                 return 'Enter a only number'.tr;
-             }
+              }
               return null;
             },
           ),
@@ -447,7 +397,6 @@ class CreateEventScreen extends GetView<CreateEventController> {
               vertical: 18.h,
             ),
             validator: (value) {
-
               return null;
             },
           ),
@@ -511,32 +460,31 @@ class CreateEventScreen extends GetView<CreateEventController> {
             },
           ),
 
-
           Obx(() {
             switch (controller.selectedCategory.value) {
               case 'Education':
                 return EducationFields();
-              // case 'health_and_wellness':
-              //   return HealthAndWellnessFields();
-              // case 'counseling':
-              //   return CounselingFields();
-              // case 'conservation':
-              //   return ConservationFields();
-              // case 'work_with_elders':
-              //   return WorkWithEldersFields();
-              // case 'work_with_orphans':
-              //   return WorkWithOrphansFields();
-              // case 'animal_rescue':
-              //   return AnimalRescueFields();
-              // case 'clean':
-              //   return CleanFields();
+              case 'health_and_wellness':
+                return HealthWellnessFields();
+              case 'counseling':
+                return CounselingFields();
+              case 'conservation':
+                return ConservationFields();
+              case 'work_with_elders':
+                return WorkWithEldersFields();
+              case 'work_with_orphans':
+                return WorkWithOrphansFields();
+              case 'animal_rescue':
+                return AnimalRescueFields();
+              case 'clean':
+                return CleanFields();
               default:
-                return SizedBox.shrink(); // If no activity selected, show nothing extra.
+                return SizedBox
+                    .shrink(); // If no activity selected, show nothing extra.
             }
           }),
         ],
       ),
     );
   }
-
 }

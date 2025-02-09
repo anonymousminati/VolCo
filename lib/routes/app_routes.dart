@@ -154,10 +154,9 @@ class AppRoutes {
     GetPage(
       name: createEventScreen,
       page: () {
+        final String categoryType = Get.arguments['categoryType'] ?? "";
 
-  final String categoryType = Get.arguments['categoryType']??"";
-
-  return CreateEventScreen(categoryType: categoryType);
+        return CreateEventScreen(categoryType: categoryType);
       },
       bindings: [CreateEventBinding()],
     ),

@@ -1,46 +1,106 @@
 import 'package:flutter/material.dart';
 import 'package:volco/core/app_export.dart';
 
-class CustomDropdownField extends StatelessWidget {
-  final String label;
+class CustomSelectDropdown extends StatefulWidget {
+  final String hintText;
   final List<String> options;
   final Function(String?)? onChanged;
   final String? initialValue;
+  final EdgeInsetsGeometry? contentPadding;
+  final Color? fillColor;
+  final BoxBorder? borderDecoration;
 
-  const CustomDropdownField({
+  const CustomSelectDropdown({
     Key? key,
-    required this.label,
+    required this.hintText,
     required this.options,
     this.onChanged,
     this.initialValue,
+    this.contentPadding,
+    this.fillColor,
+    this.borderDecoration,
   }) : super(key: key);
 
   @override
+  _CustomSelectDropdownState createState() => _CustomSelectDropdownState();
+}
+
+class _CustomSelectDropdownState extends State<CustomSelectDropdown> {
+  String? selectedItem;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedItem = widget.initialValue;
+  }
+
+  void _showDropdownDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.h),
+          ),
+          backgroundColor: appTheme.blueGray900,
+          title: Text(
+            widget.hintText?? "Select an option",
+            style: theme.textTheme.titleMedium?.copyWith(color: appTheme.gray400),
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView(
+              shrinkWrap: true,
+              children: widget.options.map((String option) {
+                return ListTile(
+                  title: Text(
+                    option,
+                    style: theme.textTheme.titleSmall?.copyWith(color: appTheme.gray500),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      selectedItem = option;
+                    });
+                    widget.onChanged?.call(option);
+                    Navigator.pop(context);
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return InputDecorator(
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: theme.textTheme.bodyMedium,
-        contentPadding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 18.h),
-        filled: true,
-        fillColor: appTheme.blueGray900,
-        border: OutlineInputBorder(
+    return GestureDetector(
+      onTap: () => _showDropdownDialog(context),
+      child: Container(
+        width: double.infinity,
+        padding: widget.contentPadding ?? EdgeInsets.all(18.h),
+        decoration: BoxDecoration(
+          color: widget.fillColor ?? appTheme.blueGray900,
           borderRadius: BorderRadius.circular(12.h),
-          borderSide: BorderSide.none,
+          border: widget.borderDecoration ?? Border.all(
+            color: theme.colorScheme.primary,
+            width: 1,
+          ),
         ),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: initialValue,
-          isExpanded: true,
-          hint: Text("Select $label".tr, style: theme.textTheme.bodyMedium),
-          items: options.map((option) {
-            return DropdownMenuItem<String>(
-              value: option,
-              child: Text(option, style: theme.textTheme.bodyMedium),
-            );
-          }).toList(),
-          onChanged: onChanged,
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                selectedItem ?? widget.hintText,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  color: selectedItem == null ? appTheme.gray500 : appTheme.gray700,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Icon(Icons.arrow_drop_down, color: theme.colorScheme.primary),
+          ],
         ),
       ),
     );

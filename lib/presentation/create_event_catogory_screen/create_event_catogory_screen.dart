@@ -12,7 +12,8 @@ import 'package:volco/presentation/user_details_screen/controller/user_details_c
 import 'package:volco/widgets/custom_event_catogory_card.dart';
 
 class CreateEventCatogoryScreen extends StatelessWidget {
-  final CreateEventCatogoryController controller = Get.put(CreateEventCatogoryController());
+  final CreateEventCatogoryController controller =
+      Get.put(CreateEventCatogoryController());
   GlobalKey<FormState> _createEventCatogoryformKey = GlobalKey<FormState>();
 
   @override
@@ -67,9 +68,10 @@ class CreateEventCatogoryScreen extends StatelessWidget {
                           },
                         ),
                         Obx(
-                              () => CustomImageView(
-                            imagePath:controller.avatarUrl.value.isEmpty
-                                ? ImageConstant.imgProfileSkyBlue // Fallback if URL is empty
+                          () => CustomImageView(
+                            imagePath: controller.avatarUrl.value.isEmpty
+                                ? ImageConstant
+                                    .imgProfileSkyBlue // Fallback if URL is empty
                                 : controller.avatarUrl.value,
                             height: 28.h,
                             width: 30.h,
@@ -94,7 +96,6 @@ class CreateEventCatogoryScreen extends StatelessWidget {
                   _buildCotogorySelectSection(),
                   // Save Button
                   SizedBox(height: 24.h),
-
                 ],
               ),
             ),
@@ -108,18 +109,17 @@ class CreateEventCatogoryScreen extends StatelessWidget {
     return SizedBox(
       width: double.maxFinite,
       child: Obx(() => GridView.builder(
-        itemCount: controller.eventCategories.length,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          final category = controller.eventCategories[index];
-          return      EventCatogoryCard(
+            itemCount: controller.eventCategories.length,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final category = controller.eventCategories[index];
+              return EventCatogoryCard(
                 text: category.categoryName,
                 imageUrl: category.imageIcon,
                 // subtitle: category.categoryName,
                 onPressed: () {
                   print("category.categoryName: ${category.categoryName}");
-
 
                   Get.toNamed(
                     AppRoutes.createEventScreen,
@@ -128,13 +128,13 @@ class CreateEventCatogoryScreen extends StatelessWidget {
                   controller.update();
                 },
               );
-        }, gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-
-        crossAxisCount: 2, // number of items in each row
-        mainAxisSpacing: 20.0, // spacing between rows
-        crossAxisSpacing: 20.0, // spacing between columns
-      ),
-      )),
+            },
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // number of items in each row
+              mainAxisSpacing: 20.0, // spacing between rows
+              crossAxisSpacing: 20.0, // spacing between columns
+            ),
+          )),
       //   children: [
       //
       //     // First Name
@@ -153,9 +153,5 @@ class CreateEventCatogoryScreen extends StatelessWidget {
     );
   }
 
-
-
-  onTapImgIconsone(){
-
-  }
+  onTapImgIconsone() {}
 }
