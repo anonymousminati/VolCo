@@ -11,20 +11,30 @@ import 'package:volco/presentation/user_details_screen/models/user_details_model
 
 class CreateEventController extends GetxController {
 
+
   // Text controllers
   final eventNameController = TextEditingController();
   final eventDescriptionController = TextEditingController();
-  final durationlController = TextEditingController();
+  final durationController = TextEditingController();
   final mobileNumberController = TextEditingController();
   final locationController = TextEditingController();
   final skillsController = TextEditingController();
   final ageController = TextEditingController();
-  final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
-  final SupabaseService supabaseService = SupabaseService();
+
   // Image picker state
   Rxn<XFile> pickedImage = Rxn<XFile>();
   Rxn<DateTime> selectedDate = Rxn<DateTime>();
   Rxn<TimeOfDay> selectedTime = Rxn<TimeOfDay>();
+  RxString selectedCategory = ''.obs;
+  RxList<String> selectedTags = <String>[].obs;
+
+  final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
+  final SupabaseService supabaseService = SupabaseService();
+
+  void updateSelectedCategory(String category) {
+    print("Received categoryType: $category");
+    selectedCategory.value = category;
+  }
 
   /// **📌 Show Syncfusion Date Picker**
   void showDatePicker(BuildContext context) {
@@ -66,9 +76,73 @@ class CreateEventController extends GetxController {
   // Method to pick an image
   Future<void> pickImage() async {
     final picker = ImagePicker();
-    final selectedImage = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? selectedImage = await picker.pickImage(source: ImageSource.gallery);
     if (selectedImage != null) {
       pickedImage.value = selectedImage;
+    }
+  }
+
+  /// Create a new event record.
+  Future<bool> createEvent() async {
+    try {
+      // Validate required fields
+      if (eventNameController.text.isEmpty ||
+          eventDescriptionController.text.isEmpty ||
+          durationController.text.isEmpty ||
+          mobileNumberController.text.isEmpty ||
+          locationController.text.isEmpty ||
+          selectedDate.value == null ||
+          selectedTime.value == null) {
+        Get.snackbar("Error", "Please fill in all required fields.");
+        return false;
+      }
+
+      // Upload the event image
+      String? imageUrl;
+      if (pickedImage.value != null) {
+        imageUrl = await supabaseService.uploadImage(File(pickedImage.value!.path));
+      } else {
+        Get.snackbar("Error", "Please select an event image.");
+        return false;
+      }
+
+      // Combine selected date and time into a DateTime
+      final DateTime date = selectedDate.value!;
+      final TimeOfDay time = selectedTime.value!;
+      final DateTime eventDateTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+
+      // Build the event data map.
+      // (Adjust field names if needed to match your database schema.)
+      final Map<String, dynamic> eventData = {
+        'organizer_id': supabaseClient.auth.currentUser?.id,
+        'event_name': eventNameController.text.trim(),
+        'event_description': eventDescriptionController.text.trim(),
+        'image_url': imageUrl,
+        'event_date': eventDateTime.toIso8601String(),
+        'duration_hours': int.parse(durationController.text.trim()),
+        'location': locationController.text.trim(),
+        'contact_number': mobileNumberController.text.trim(),
+        // For the extra fields, you can either store them in separate tables or include them in a JSONB column.
+        // Here, we assume the common table only stores common fields.
+        'activity_type': selectedCategory.value,
+        'tags': selectedTags, // This could be stored as an array or JSON.
+        'created_at': DateTime.now().toIso8601String(),
+        'updated_at': DateTime.now().toIso8601String(),
+      };
+
+      // Insert the event record into the "events" table.
+      final bool insertResult = await supabaseService.insertRecord('events', eventData);
+      if (insertResult) {
+        Get.snackbar("Success", "Event created successfully!");
+        return true;
+      } else {
+        Get.snackbar("Error", "Failed to create event.");
+        return false;
+      }
+    } catch (e) {
+      print("Error creating event: $e");
+      Get.snackbar("Error", "Error creating event: $e");
+      return false;
     }
   }
 
@@ -76,7 +150,7 @@ class CreateEventController extends GetxController {
     // Dispose of text controllers
     eventNameController.dispose();
     eventDescriptionController.dispose();
-    durationlController.dispose();
+    durationController.dispose();
     mobileNumberController.dispose();
     locationController.dispose();
     skillsController.dispose();

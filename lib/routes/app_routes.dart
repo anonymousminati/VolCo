@@ -64,8 +64,7 @@ class AppRoutes {
 
   static const String createEventCatogoryScreen =
       '/create_event_catogory_screen';
-  static const String createEventScreen =
-      '/create_event_screen';
+  static const String createEventScreen = '/create_event_screen';
 
   static List<GetPage> pages = [
     GetPage(
@@ -151,11 +150,16 @@ class AppRoutes {
       name: createEventCatogoryScreen,
       page: () => CreateEventCatogoryScreen(),
       bindings: [CreateEventCatogoryBinding()],
-    ), GetPage(
+    ),
+    GetPage(
       name: createEventScreen,
-      page: () => CreateEventScreen(),
+      page: () {
+
+  final String categoryType = Get.arguments['categoryType']??"";
+
+  return CreateEventScreen(categoryType: categoryType);
+      },
       bindings: [CreateEventBinding()],
     ),
-
   ];
 }

@@ -121,8 +121,11 @@ class CreateEventCatogoryScreen extends StatelessWidget {
                   print("category.categoryName: ${category.categoryName}");
 
 
-                  Get.toNamed(AppRoutes.createEventScreen, arguments: category.categoryName );
-                  // controller.update();
+                  Get.toNamed(
+                    AppRoutes.createEventScreen,
+                    arguments: {'categoryType': category.categoryName},
+                  );
+                  controller.update();
                 },
               );
         }, gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

@@ -9,12 +9,21 @@ import 'package:volco/core/utils/supabase_handler.dart';
 import 'package:volco/core/utils/validation_functions.dart';
 import 'package:volco/presentation/create_event_catogory_screen/controller/create_event_catogory_controller.dart';
 import 'package:volco/presentation/create_event_screen/controller/create_event_controller.dart';
+import 'package:volco/presentation/create_event_screen/widgets/eventFields.dart';
 import 'package:volco/presentation/user_details_screen/controller/user_details_controller.dart';
 import 'package:volco/widgets/customMultiSelectDropdown.dart';
 import 'package:volco/widgets/custom_image_picker.dart';
 
-class CreateEventScreen extends StatelessWidget {
-  final CreateEventController controller = Get.put(CreateEventController());
+
+class CreateEventScreen extends GetView<CreateEventController> {
+  /// The selected activity category passed from the previous screen.
+
+  final String categoryType;
+
+  CreateEventScreen({Key? key, required this.categoryType}) : super(key: key) {
+    print("Received categoryType1: $categoryType");
+    controller.updateSelectedCategory(categoryType);
+  }
   GlobalKey<FormState> _createEventformKey = GlobalKey<FormState>();
 
   @override
@@ -261,7 +270,7 @@ class CreateEventScreen extends StatelessWidget {
 
           // Duration
           CustomTextFormField(
-            controller: controller.durationlController,
+            controller: controller.durationController,
             hintText: "Duration (Hours)".tr,
             textInputType: TextInputType.number,
             textInputAction: TextInputAction.next,
@@ -351,7 +360,7 @@ class CreateEventScreen extends StatelessWidget {
           ),
 
           CustomTextFormField(
-            controller: controller.durationlController,
+            controller: controller.durationController,
             hintText: "No of Volunteers required".tr,
             textInputType: TextInputType.number,
             textInputAction: TextInputAction.next,
@@ -501,6 +510,30 @@ class CreateEventScreen extends StatelessWidget {
               return null;
             },
           ),
+
+
+          Obx(() {
+            switch (controller.selectedCategory.value) {
+              case 'Education':
+                return EducationFields();
+              // case 'health_and_wellness':
+              //   return HealthAndWellnessFields();
+              // case 'counseling':
+              //   return CounselingFields();
+              // case 'conservation':
+              //   return ConservationFields();
+              // case 'work_with_elders':
+              //   return WorkWithEldersFields();
+              // case 'work_with_orphans':
+              //   return WorkWithOrphansFields();
+              // case 'animal_rescue':
+              //   return AnimalRescueFields();
+              // case 'clean':
+              //   return CleanFields();
+              default:
+                return SizedBox.shrink(); // If no activity selected, show nothing extra.
+            }
+          }),
         ],
       ),
     );
