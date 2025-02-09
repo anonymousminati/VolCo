@@ -108,6 +108,10 @@ class ImageConstant {
 
   static String imgClock = '$imagePath/clock_img.png';
 
+  static String imgNumberSvg = '$imagePath/number_svg.svg';
+
+  static String imgUrl = '$imagePath/urlImage.png';
+
 
 
 

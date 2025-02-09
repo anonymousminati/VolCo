@@ -10,6 +10,7 @@ import 'package:volco/core/utils/validation_functions.dart';
 import 'package:volco/presentation/create_event_catogory_screen/controller/create_event_catogory_controller.dart';
 import 'package:volco/presentation/create_event_screen/controller/create_event_controller.dart';
 import 'package:volco/presentation/user_details_screen/controller/user_details_controller.dart';
+import 'package:volco/widgets/customMultiSelectDropdown.dart';
 import 'package:volco/widgets/custom_image_picker.dart';
 
 class CreateEventScreen extends StatelessWidget {
@@ -323,10 +324,68 @@ class CreateEventScreen extends StatelessWidget {
               return null;
             },
           ),
-          // Phone Number
+
+          CustomMultiSelectDropdown(
+            hintText: "Select Tags".tr,
+            items: [
+
+              "Childcare",
+              "Mentorship",
+              "Adoption Awareness",
+              "Trauma Support",
+              "Festival Events",
+              "Play Therapy",
+              "Skill Development",
+              "Education Support",
+              "Nutrition Program",
+              "Art Therapy",
+              "Sports Coaching",
+              "Holiday Celebrations",
+              "School Supplies Drive",
+              "Orphanage Visits",
+              "Child Safety"
+            ],
+            onSelectionChanged: (List<String> selectedItems) {
+              print("Selected: $selectedItems");
+            },
+          ),
+
+          CustomTextFormField(
+            controller: controller.durationlController,
+            hintText: "No of Volunteers required".tr,
+            textInputType: TextInputType.number,
+            textInputAction: TextInputAction.next,
+            prefix: Container(
+              margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
+              child: CustomImageView(
+                imagePath: ImageConstant.imgNumberSvg,
+                height: 22.h,
+                width: 24.h,
+                fit: BoxFit.contain,
+              ),
+            ),
+            prefixConstraints: BoxConstraints(
+              maxHeight: 60.h,
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 20.h,
+              vertical: 18.h,
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'field is required'.tr;
+              }
+             if(num.tryParse(value) != null){
+                return 'Enter a only number'.tr;
+             }
+              return null;
+            },
+          ),
+
+          // Contact Number
           CustomTextFormField(
             controller: controller.mobileNumberController,
-            hintText: "Phone Number".tr,
+            hintText: "Contact Number".tr,
             textInputType: TextInputType.phone,
             textInputAction: TextInputAction.next,
             prefix: Container(
@@ -347,7 +406,7 @@ class CreateEventScreen extends StatelessWidget {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Phone Number is required'.tr;
+                return 'Contact Number is required'.tr;
               }
               if (!isValidPhone(value, isRequired: true)) {
                 return 'Enter a valid phone number'.tr;
@@ -355,18 +414,17 @@ class CreateEventScreen extends StatelessWidget {
               return null;
             },
           ),
-          SizedBox(height: 24.h),
 
-          // Address
+          // Social Media
           CustomTextFormField(
             controller: controller.locationController,
-            hintText: "Location".tr,
+            hintText: "Social Media Links".tr,
             textInputType: TextInputType.text,
             textInputAction: TextInputAction.done,
             prefix: Container(
               margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
               child: CustomImageView(
-                imagePath: ImageConstant.imgLocation,
+                imagePath: ImageConstant.imgUrl,
                 height: 18.h,
                 width: 20.h,
                 fit: BoxFit.contain,
@@ -380,13 +438,12 @@ class CreateEventScreen extends StatelessWidget {
               vertical: 18.h,
             ),
             validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Address is required'.tr;
-              }
+
               return null;
             },
           ),
-          SizedBox(height: 24.h),
+
+          //skills
           CustomTextFormField(
             controller: controller.skillsController,
             hintText: "Skills".tr,
@@ -415,7 +472,7 @@ class CreateEventScreen extends StatelessWidget {
               return null;
             },
           ),
-          SizedBox(height: 24.h),
+          //Age
           CustomTextFormField(
             controller: controller.ageController,
             hintText: "Age".tr,
