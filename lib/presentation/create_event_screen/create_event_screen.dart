@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:volco/core/app_export.dart';
@@ -27,60 +28,71 @@ class CreateEventScreen extends GetView<CreateEventController> {
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Form(
-          key: _createEventformKey,
-          child: SizedBox(
-            width: double.maxFinite,
-            child: SingleChildScrollView(
-              child: Container(
+        body:Obx((){
+          if (controller.isLoading.value) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }else{
+            return Form(
+              key: _createEventformKey,
+              child: SizedBox(
                 width: double.maxFinite,
-                padding: EdgeInsets.only(
-                  left: 24.h,
-                  right: 24.h,
-                  top: 10.h,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomImageView(
-                      imagePath: ImageConstant.imgArrowLeft,
-                      height: 28.h,
-                      width: 30.h,
-                      onTap: () {
-                        Get.back();
-                      },
+                child: SingleChildScrollView(
+                  child: Container(
+                    width: double.maxFinite,
+                    padding: EdgeInsets.only(
+                      left: 24.h,
+                      right: 24.h,
+                      top: 10.h,
                     ),
-                    SizedBox(height: 70.h),
-                    Text(
-                      "Create New Revolution".tr,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.displayMedium!.copyWith(
-                        height: 1.50,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        CustomImageView(
+                          imagePath: ImageConstant.imgArrowLeft,
+                          height: 28.h,
+                          width: 30.h,
+                          onTap: () {
+                            Get.back();
+                          },
+                        ),
+                        SizedBox(height: 24.h),
+                        Text(
+                          "Create New Revolution".tr,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.displayMedium!.copyWith(
+                            height: 1.50,
+                          ),
+                        ),
+                        SizedBox(height: 24.h),
+
+                        _buildCreateEventFormSection(context),
+                        // Save Button
+                        SizedBox(height: 24.h),
+                        CustomElevatedButton(
+                          text: "Submit".tr,
+                          onPressed: () async {
+                            if (_createEventformKey.currentState!.validate()) {}
+                          },
+                        ),
+
+
+                      ],
                     ),
-                    SizedBox(height: 24.h),
-
-                    _buildCreateEventFormSection(context),
-                    // Save Button
-                    SizedBox(height: 24.h),
-                    CustomElevatedButton(
-                      text: "Submit".tr,
-                      onPressed: () async {
-                        if (_createEventformKey.currentState!.validate()) {}
-                      },
-                    ),
-
-
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        ),
+            );
+          }
+        })
+
       ),
     );
   }
@@ -215,7 +227,12 @@ class CreateEventScreen extends GetView<CreateEventController> {
             },
           ),
 
-          CustomImagePickerWidget(),
+          CustomImagePickerWidget(
+            onImagePicked: (String imagePath) {
+              controller.pickedImage.value = XFile(imagePath); // Use fromPath()
+              print("Picked Image Path: ${controller.pickedImage.value?.path}");
+            },
+          ),
 
           _buildDateTimePickers(context),
 
@@ -310,7 +327,7 @@ class CreateEventScreen extends GetView<CreateEventController> {
           ),
 
           CustomTextFormField(
-            controller: controller.durationController,
+            controller: controller.volunteerController,
             hintText: "No of Volunteers required".tr,
             textInputType: TextInputType.number,
             textInputAction: TextInputAction.next,
@@ -376,7 +393,7 @@ class CreateEventScreen extends GetView<CreateEventController> {
 
           // Social Media
           CustomTextFormField(
-            controller: controller.locationController,
+            controller: controller.socialMediaController,
             hintText: "Social Media Links".tr,
             textInputType: TextInputType.text,
             textInputAction: TextInputAction.done,
@@ -401,82 +418,24 @@ class CreateEventScreen extends GetView<CreateEventController> {
             },
           ),
 
-          //skills
-          CustomTextFormField(
-            controller: controller.skillsController,
-            hintText: "Skills".tr,
-            textInputType: TextInputType.text,
-            textInputAction: TextInputAction.done,
-            prefix: Container(
-              margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgNoteSkyBlue,
-                height: 18.h,
-                width: 20.h,
-                fit: BoxFit.contain,
-              ),
-            ),
-            prefixConstraints: BoxConstraints(
-              maxHeight: 60.h,
-            ),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 20.h,
-              vertical: 18.h,
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Address is required'.tr;
-              }
-              return null;
-            },
-          ),
-          //Age
-          CustomTextFormField(
-            controller: controller.ageController,
-            hintText: "Age".tr,
-            textInputType: TextInputType.number,
-            textInputAction: TextInputAction.done,
-            prefix: Container(
-              margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgProfileWhite,
-                height: 18.h,
-                width: 20.h,
-                fit: BoxFit.contain,
-              ),
-            ),
-            prefixConstraints: BoxConstraints(
-              maxHeight: 60.h,
-            ),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 20.h,
-              vertical: 18.h,
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'age is required'.tr;
-              }
-              return null;
-            },
-          ),
 
           Obx(() {
             switch (controller.selectedCategory.value) {
               case 'Education':
                 return EducationFields();
-              case 'health_and_wellness':
+              case 'Health & Wellness':
                 return HealthWellnessFields();
-              case 'counseling':
+              case 'Counselling':
                 return CounselingFields();
-              case 'conservation':
+              case 'Conservation':
                 return ConservationFields();
-              case 'work_with_elders':
+              case 'Work With Elders':
                 return WorkWithEldersFields();
-              case 'work_with_orphans':
+              case 'Work With Orphans':
                 return WorkWithOrphansFields();
-              case 'animal_rescue':
+              case 'Animal Rescue':
                 return AnimalRescueFields();
-              case 'clean':
+              case 'Cleaning':
                 return CleanFields();
               default:
                 return SizedBox

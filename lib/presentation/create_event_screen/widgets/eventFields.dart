@@ -1,43 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:volco/core/app_export.dart';
+import 'package:volco/presentation/create_event_screen/controller/create_event_controller.dart';
 import 'package:volco/widgets/CustomDropdownField.dart';
 import 'package:volco/widgets/customMultiSelectDropdown.dart';
 import 'package:volco/widgets/custom_text_form_field.dart';
 
 class EducationFields extends StatelessWidget {
   // You can pass controllers or callbacks if needed.
+  final CreateEventController controller = Get.find<CreateEventController>();
+  final SupabaseService supabaseService = SupabaseService();
+
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 24.h,
       children: [
         // Age Group Dropdown
-        CustomSelectDropdown(
+        Obx(()=>CustomSelectDropdown(
           hintText: "Age Group*".tr,
-          options: ["Children", "Teens", "Adults", "Seniors"],
+          options: controller.ageGroups.toList(),
           // initialValue: "Children",
           onChanged: (value) {
             // Save the selected value in your controller.
+            controller.selectedAgeGroup.value = value!;
           },
-        ),
-        SizedBox(height: 16.h),
+        )),
+
         // Subject Focus Dropdown
-        CustomSelectDropdown(
+        Obx(()=>CustomSelectDropdown(
           hintText: "Subject Focus*".tr,
-          options: ["STEM", "Literacy", "Vocational", "Financial Literacy"],
+          options: controller.subjectFocus.toList(),
           onChanged: (value) {
             // Save the selected value in your controller.
+            controller.selectedSubjectFocus.value = value!;
           },
-        ),
-        SizedBox(height: 16.h),
+        ),),
+
         // Language Requirements
         CustomTextFormField(
+          controller: controller.languageRequirementsController,
           hintText: "Language Requirements".tr,
           textInputType: TextInputType.text,
           // Pass controller if needed.
         ),
-        SizedBox(height: 16.h),
+
         // Materials Needed
         CustomTextFormField(
           hintText: "Materials Needed".tr,
@@ -50,99 +60,125 @@ class EducationFields extends StatelessWidget {
 }
 
 class HealthWellnessFields extends StatelessWidget {
+  final CreateEventController controller = Get.find<CreateEventController>();
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 24.h,
       children: [
         // Type of Service Checkboxes
-        CustomMultiSelectDropdown(
-          hintText: "Type of Service*".tr,
-          items: ["Medical Checkups", "Vaccination Drive", "Health Education"],
+        Obx(()=>CustomMultiSelectDropdown(
+          hintText: "Type of Service".tr,
+          items: controller.typeOfServices.toList(),
           onSelectionChanged: (selectedValues) {
             // Handle selected values
+            controller.selectedServices = RxList(selectedValues);
           },
-        ),
-        SizedBox(height: 16.h),
+        ),),
+
         // Medical Professional Required Dropdown
-        CustomSelectDropdown(
-          hintText: "Medical Professional Required*".tr,
-          options: ["Doctors", "Nurses", "Paramedics"],
-          onChanged: (value) {
-            // Save the selected value
-          },
-        ),
-        SizedBox(height: 16.h),
+       Obx(()=> CustomSelectDropdown(
+         hintText: "Medical Professional Required*".tr,
+         options: controller.medicalProfessionalList.toList(),
+         onChanged: (value) {
+           // Save the selected value
+           controller.selectedMedicalProfessional.value = value!;
+         },
+       ),),
+
         // Equipment Needed
         CustomTextFormField(
           hintText: "Equipment Needed".tr,
           textInputType: TextInputType.text,
+          controller: controller.equipmentNeeded,
         ),
-        SizedBox(height: 16.h),
+
         // Medication Handling Guidelines
         CustomTextFormField(
+          controller: controller.medicationGuidelines,
           hintText: "Medication Handling Guidelines".tr,
           textInputType: TextInputType.multiline,
+          maxLines: 20,
         ),
       ],
     );
   }
 }
 
-
 class CounselingFields extends StatelessWidget {
+  final CreateEventController controller = Get.find<CreateEventController>();
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 24.h,
       children: [
         // Counseling Type Dropdown
-        CustomSelectDropdown(
-          hintText: "Counseling Type*".tr,
-          options: ["Mental Health", "Career", "Family", "Addiction"],
-          onChanged: (value) {},
-        ),
-        SizedBox(height: 16.h),
+       Obx(()=> CustomSelectDropdown(
+         hintText: "Counseling Type*".tr,
+         options: controller.counselingTypes.toList(),
+         onChanged: (value) {
+           // Save the selected value
+           controller.selectedCounselingType.value = value!;
+         },
+       ),),
+
         // Session Format Dropdown
-        CustomSelectDropdown(
-          hintText: "Session Format*".tr,
-          options: ["Individual", "Group"],
-          onChanged: (value) {},
-        ),
+       Obx(()=> CustomSelectDropdown(
+         hintText: "Session Format*".tr,
+         options:controller.sessionFormats.toList(),
+         onChanged: (value) {
+           // Save the selected value
+           controller.selectedSessionFormat.value = value!;
+         },
+       ),)
       ],
     );
   }
 }
 
 class ConservationFields extends StatelessWidget {
+  final CreateEventController controller = Get.find<CreateEventController>();
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 24.h,
       children: [
         // Activity Type Dropdown
-        CustomSelectDropdown(
-          hintText: "Activity Type*".tr,
-          options: ["Beach Cleanup", "Tree Planting", "Wildlife Monitoring"],
-          onChanged: (value) {},
-        ),
-        SizedBox(height: 16.h),
+       Obx(()=> CustomSelectDropdown(
+         hintText: "Activity Type*".tr,
+         options: controller.conservationActivityTypes.toList(),
+         onChanged: (value) {
+           // Save the selected value
+           controller.selectedActivityType.value = value!;
+         },
+       ),),
+
         // Tools Provided/Needed
         CustomTextFormField(
           hintText: "Tools Provided/Needed".tr,
           textInputType: TextInputType.text,
+          controller: controller.toolsProvided,
         ),
-        SizedBox(height: 16.h),
+
         // Environmental Impact Description
         CustomTextFormField(
           hintText: "Environmental Impact Description".tr,
           textInputType: TextInputType.multiline,
+          maxLines: 20,
+          controller: controller.environmentalImpact,
         ),
-        SizedBox(height: 16.h),
+
         // Waste Disposal Plan
         CustomTextFormField(
           hintText: "Waste Disposal Plan".tr,
           textInputType: TextInputType.multiline,
+          controller: controller.wasteDisposalPlan,
         ),
       ],
     );
@@ -150,22 +186,29 @@ class ConservationFields extends StatelessWidget {
 }
 
 class WorkWithEldersFields extends StatelessWidget {
+  final CreateEventController controller = Get.find<CreateEventController>();
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 24.h,
       children: [
         // Activity Type Dropdown
-        CustomSelectDropdown(
-          hintText: "Activity Type*".tr,
-          options: ["Companionship", "Medical Support", "Recreation"],
-          onChanged: (value) {},
-        ),
-        SizedBox(height: 16.h),
+        Obx(()=>CustomSelectDropdown(
+    hintText: "Activity Type*".tr,
+      options: controller.elderActivityTypes.toList(),
+      onChanged: (value) {
+        // Save the selected value
+        controller.selectedElderActivityType.value = value!;
+      },
+    ),) ,
+
         // Items to Bring
         CustomTextFormField(
           hintText: "Items to Bring".tr,
           textInputType: TextInputType.text,
+          controller: controller.itemsToBring,
         ),
       ],
     );
@@ -173,28 +216,34 @@ class WorkWithEldersFields extends StatelessWidget {
 }
 
 class WorkWithOrphansFields extends StatelessWidget {
+  final CreateEventController controller = Get.find<CreateEventController>();
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 24.h,
       children: [
         // Child Age Range Text Field
         CustomTextFormField(
           hintText: "Child Age Range*".tr,
           textInputType: TextInputType.text,
+          controller: controller.childAgeRange,
         ),
-        SizedBox(height: 16.h),
+
         // Activity Type Dropdown
-        CustomSelectDropdown(
-          hintText: "Activity Type*".tr,
-          options: ["Education", "Play Therapy", "Skill Development"],
-          onChanged: (value) {},
-        ),
-        SizedBox(height: 16.h),
+       Obx(()=> CustomSelectDropdown(
+         hintText: "Activity Type*".tr,
+         options: controller.orphanActivityTypes.toList(),
+         onChanged: (value) {
+           // Save the selected value
+           controller.selectedOrphanActivityType.value = value!;
+         },
+       ),),
         // Donation Needs
         CustomTextFormField(
           hintText: "Donation Needs".tr,
           textInputType: TextInputType.text,
+          controller: controller.donationNeeds,
         ),
       ],
     );
@@ -202,35 +251,43 @@ class WorkWithOrphansFields extends StatelessWidget {
 }
 
 class AnimalRescueFields extends StatelessWidget {
+  final CreateEventController controller = Get.find<CreateEventController>();
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing:  24.h,
       children: [
         // Animal Type Dropdown
-        CustomSelectDropdown(
+        Obx(()=>CustomSelectDropdown(
           hintText: "Animal Type*".tr,
-          options: ["Dogs", "Cats", "Wildlife", "Livestock"],
-          onChanged: (value) {},
-        ),
-        SizedBox(height: 16.h),
+          options: controller.animalTypes.toList(),
+          onChanged: (value) {
+            // Save the selected value
+            controller.selectedAnimalType.value = value!;
+          },
+        ),),
         // Tasks Involved Dropdown
-        CustomSelectDropdown(
+        Obx(()=>CustomSelectDropdown(
           hintText: "Tasks Involved*".tr,
-          options: ["Rescue", "Feeding", "Medical Care", "Adoption"],
-          onChanged: (value) {},
-        ),
-        SizedBox(height: 16.h),
+          options: controller.taskInvolved.toList(),
+          onChanged: (value) {
+            // Save the selected value
+            controller.selectedTaskInvolved.value = value!;
+          },
+        ),),
         // Vaccination Status Disclosure
         CustomTextFormField(
           hintText: "Vaccination Status Disclosure".tr,
           textInputType: TextInputType.multiline,
+          controller: controller.vaccinationStatus,
         ),
-        SizedBox(height: 16.h),
         // Handling Equipment
         CustomTextFormField(
           hintText: "Handling Equipment".tr,
           textInputType: TextInputType.text,
+          controller: controller.handlingEquipment,
         ),
       ],
     );
@@ -238,29 +295,39 @@ class AnimalRescueFields extends StatelessWidget {
 }
 
 class CleanFields extends StatelessWidget {
+
+  final CreateEventController controller = Get.find<CreateEventController>();
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 24.h,
       children: [
         // Area Type Dropdown
-        CustomSelectDropdown(
-          hintText: "Area Type*".tr,
-          options: ["Public Space", "Residential", "Water Body"],
-          onChanged: (value) {},
-        ),
-        SizedBox(height: 16.h),
+       Obx(()=> CustomSelectDropdown(
+         hintText: "Area Type*".tr,
+         options: controller.areaTypes.toList(),
+         onChanged: (value) {
+           // Save the selected value
+           controller.selectedAreaType.value = value!;
+         },
+       ),),
         // Waste Category Dropdown
-        CustomSelectDropdown(
+        Obx(()=>CustomSelectDropdown(
           hintText: "Waste Category*".tr,
-          options: ["Plastic", "Organic", "Construction Debris"],
-          onChanged: (value) {},
-        ),
-        SizedBox(height: 16.h),
+          options: controller.wasteCategories.toList(),
+          onChanged: (value) {
+            // Save the selected value
+            controller.selectedWasteCategory.value = value!;
+          },
+        ),),
         // Recycling Plan Description
         CustomTextFormField(
           hintText: "Recycling Plan Description".tr,
           textInputType: TextInputType.multiline,
+          controller: controller.recyclingPlan,
         ),
       ],
     );

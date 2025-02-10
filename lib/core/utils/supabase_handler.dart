@@ -163,4 +163,20 @@ class SupabaseService {
       throw Exception("Image upload failed: ${error.message}");
     }
   }
+
+  Future<List<String>> fetchEventFieldOptions(String eventType, String fieldName) async {
+    try {
+      final response = await _supabaseClient.rpc(
+          'get_event_field_options', params: {
+        'p_event_type': eventType,
+        'p_field_name': fieldName,
+      });
+      print("res: $response");
+      return response.map<String>((row) => row['opt_value'] as String)
+          .toList();
+    } catch (e) {
+      print("Error fetching record: $e");
+      return [];
+    }
+  }
 }
