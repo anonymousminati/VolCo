@@ -33,6 +33,7 @@ class _CustomImagePickerWidgetState extends State<CustomImagePickerWidget> {
       setState(() {
         _imageFile = File(pickedFile.path);
       });
+      widget.onImagePicked?.call(pickedFile.path);
       // Optionally, if you want to immediately notify the controller with the file path or URL,
       // you can call the callback here. (Typically, the upload is handled outside of this widget.)
       // widget.onImagePicked?.call(pickedFile.path);

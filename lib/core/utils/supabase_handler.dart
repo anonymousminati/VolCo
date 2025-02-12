@@ -73,6 +73,7 @@ class SupabaseService {
   Future<User?> getUserData() async {
     try {
       final User? user = _supabaseClient.auth.currentUser;
+
       return user;
     } catch (e) {
       print("Error fetching user data: $e");
@@ -93,7 +94,7 @@ class SupabaseService {
   }
 
   // Upload image to Supabase Storage
-  Future<String?> uploadImage(File imageFile) async {
+  Future<String?> uploadAvatarImage(File imageFile) async {
     try {
       final fileName = "avatars/${DateTime.now().millisecondsSinceEpoch}_${imageFile.path.split('/').last}";
       final response = await _supabaseClient.storage.from('avatars').upload(fileName, imageFile);
@@ -105,9 +106,9 @@ class SupabaseService {
       } else {
         throw Exception("Image upload failed.");
       }
-    } catch (e) {
+    }  catch (e) {
       print("Image upload failed: $e");
-      rethrow;
+      return null;
     }
   }
 

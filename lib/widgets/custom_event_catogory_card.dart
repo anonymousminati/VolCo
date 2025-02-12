@@ -7,9 +7,10 @@ class EventCatogoryCard extends StatelessWidget {
   final String text;
   final String imageUrl;
   final String subtitle;
+  final Color? color;
   final Function() onPressed;
 
-  const EventCatogoryCard({required this.text, required this.imageUrl, this.subtitle ="", required this.onPressed, Key? key})
+  const EventCatogoryCard({required this.text, required this.imageUrl, this.subtitle ="", required this.onPressed, this.color,Key? key})
       : super(key: key);
 
   @override
@@ -22,7 +23,7 @@ class EventCatogoryCard extends StatelessWidget {
         // height: 150,
         padding: const EdgeInsets.all(15.0),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: color??Colors.white,
           borderRadius: BorderRadius.circular(12.5),
           boxShadow: [
             BoxShadow(

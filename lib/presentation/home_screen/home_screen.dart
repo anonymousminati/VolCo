@@ -3,7 +3,6 @@ import 'package:volco/core/app_export.dart';
 import 'package:volco/presentation/create_event_catogory_screen/create_event_catogory_screen.dart';
 import 'package:volco/presentation/home_screen/controller/home_controller.dart';
 import 'package:volco/presentation/home_screen/home_screen_initial_page.dart';
-import 'package:volco/presentation/home_screen/controller/home_controller.dart';
 import 'package:volco/widgets/custom_bottom_bar.dart';
 
 
@@ -35,7 +34,7 @@ class HomeScreen extends GetWidget<HomeController> {
       width: double.maxFinite,
       child: CustomBottomBar(
         onChanged: (BottomBarEnum type) {
-          Get.toNamed(getCurrentRoute(type), id: 1);
+          Get.offNamed(getCurrentRoute(type), id: 1);
         },
       ),
     );

@@ -14,7 +14,6 @@ import 'package:volco/widgets/custom_event_catogory_card.dart';
 class CreateEventCatogoryScreen extends StatelessWidget {
   final CreateEventCatogoryController controller =
       Get.put(CreateEventCatogoryController());
-  GlobalKey<FormState> _createEventCatogoryformKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -23,80 +22,87 @@ class CreateEventCatogoryScreen extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         body: SizedBox(
           width: double.maxFinite,
-          child: SingleChildScrollView(
-            child: Container(
-              width: double.maxFinite,
-              padding: EdgeInsets.only(
-                left: 24.h,
-                right: 24.h,
-                top: 10.h,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: double.maxFinite,
-                    child: Row(
-                      children: [
-                        CustomImageView(
-                          imagePath: ImageConstant.imgLogoStandard,
-                          height: 32.h,
-                          width: 34.h,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 16.h),
-                          child: Text(
-                            "VolCo".tr,
-                            style: theme.textTheme.headlineSmall,
+          child: RefreshIndicator(
+            onRefresh: () async {
+              controller.fetchAvatarUrl();
+              controller.initializeEventCategories();
+              controller.shuffleAndPrintColors();
+            },
+            child: SingleChildScrollView(
+              child: Container(
+                width: double.maxFinite,
+                padding: EdgeInsets.only(
+                  left: 24.h,
+                  right: 24.h,
+                  top: 10.h,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: double.maxFinite,
+                      child: Row(
+                        children: [
+                          CustomImageView(
+                            imagePath: ImageConstant.imgLogoStandard,
+                            height: 32.h,
+                            width: 34.h,
                           ),
-                        ),
-                        Spacer(),
-                        CustomImageView(
-                          imagePath: ImageConstant.imgLocation,
-                          height: 28.h,
-                          width: 30.h,
-                          onTap: () {
-                            AuthController().logout();
-                          },
-                        ),
-                        CustomImageView(
-                          imagePath: ImageConstant.imgBellBlue,
-                          height: 28.h,
-                          width: 30.h,
-                          onTap: () {
-                            onTapImgIconsone();
-                          },
-                        ),
-                        Obx(
-                          () => CustomImageView(
-                            imagePath: controller.avatarUrl.value.isEmpty
-                                ? ImageConstant
-                                    .imgProfileSkyBlue // Fallback if URL is empty
-                                : controller.avatarUrl.value,
+                          Padding(
+                            padding: EdgeInsets.only(left: 16.h),
+                            child: Text(
+                              "VolCo".tr,
+                              style: theme.textTheme.headlineSmall,
+                            ),
+                          ),
+                          Spacer(),
+                          CustomImageView(
+                            imagePath: ImageConstant.imgLocation,
                             height: 28.h,
                             width: 30.h,
-                            margin: EdgeInsets.only(left: 20.h),
-                            radius: BorderRadius.circular(14.h),
+                            onTap: () {
+                              AuthController().logout();
+                            },
                           ),
-                        ),
-                      ],
+                          CustomImageView(
+                            imagePath: ImageConstant.imgBellBlue,
+                            height: 28.h,
+                            width: 30.h,
+                            onTap: () {
+                              onTapImgIconsone();
+                            },
+                          ),
+                          Obx(
+                            () => CustomImageView(
+                              imagePath: controller.avatarUrl.value.isEmpty
+                                  ? ImageConstant
+                                      .imgProfileSkyBlue // Fallback if URL is empty
+                                  : controller.avatarUrl.value,
+                              height: 28.h,
+                              width: 30.h,
+                              margin: EdgeInsets.only(left: 20.h),
+                              radius: BorderRadius.circular(14.h),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 34.h),
-                  Text(
-                    "Select Type of Event".tr,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.displayMedium!.copyWith(
-                      height: 1.50,
+                    SizedBox(height: 34.h),
+                    Text(
+                      "Select Type of Event".tr,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.displayMedium!.copyWith(
+                        height: 1.50,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 24.h),
+                    SizedBox(height: 24.h),
 
-                  _buildCotogorySelectSection(),
-                  // Save Button
-                  SizedBox(height: 24.h),
-                ],
+                    _buildCotogorySelectSection(),
+                    // Save Button
+                    SizedBox(height: 24.h),
+                  ],
+                ),
               ),
             ),
           ),
@@ -114,9 +120,11 @@ class CreateEventCatogoryScreen extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               final category = controller.eventCategories[index];
+
               return EventCatogoryCard(
                 text: category.categoryName,
                 imageUrl: category.imageIcon,
+                color: controller.myColors[index],
                 // subtitle: category.categoryName,
                 onPressed: () {
                   print("category.categoryName: ${category.categoryName}");

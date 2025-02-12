@@ -13,7 +13,7 @@ import 'package:volco/widgets/custom_outlined_button.dart';
 class HomeScreenInitialPage extends StatelessWidget {
   HomeScreenInitialPage({super.key});
 
-  HomeController controller = Get.put(HomeController());
+  HomeController controller = Get.find<HomeController>();
 
 
 

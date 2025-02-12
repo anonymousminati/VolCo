@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,17 +19,27 @@ class CreateEventCatogoryController extends GetxController {
   RxString avatarUrl = ''.obs; // RxString for reactive updates
   RxList<CreateEventCategoryModel> eventCategories =
       <CreateEventCategoryModel>[].obs;
+  List<Color> myColors = [
+    Color(0xFFB6F36B),
+    Color(0xFFFDDE67),
+    Color(0xFFFF9B61),
+    Color(0xFFC8A0FF),
+    Color(0xFF95DBFA),
+    Color(0xFF7462E1),
+    Color(0xFFFBF3DA),
+    Color(0xFFF2E0A6),
 
+  ].obs;
   @override
   void onReady() {
     super.onReady();
-    _fetchAvatarUrl(); // Fetch avatar URL when the controller is ready
-    _initializeEventCategories(); // Initialize event categories
-
-    _subscribeToCategoryChanges(); // Subscribe to category changes
+    fetchAvatarUrl(); // Fetch avatar URL when the controller is ready
+    initializeEventCategories(); // Initialize event categories
+    shuffleAndPrintColors();
+    subscribeToCategoryChanges(); // Subscribe to category changes
   }
 
-  void _fetchAvatarUrl() async {
+  void fetchAvatarUrl() async {
     try {
       User? user = await SupabaseService().getUserData();
       if (user != null) {
@@ -39,11 +50,31 @@ class CreateEventCatogoryController extends GetxController {
       print('Error fetching avatar URL: $error');
     }
   }
+  void shuffleAndPrintColors() {
+    // Create a random number generator.
+    final random = Random();
 
-  Future<void> _initializeEventCategories() async {
+    // Shuffle the list in place using the Fisher-Yates algorithm.
+    for (var i = myColors.length - 1; i > 0; i--) {
+      // Pick a random number from 0 to i.
+      var n = random.nextInt(i + 1);
+
+      // Swap colors[i] with the element at random index.
+      var temp = myColors[i];
+      myColors[i] = myColors[n];
+      myColors[n] = temp;
+    }
+
+    // Print the shuffled list of colors.
+    print('Shuffled Colors:');
+    myColors.forEach((color) => print(color));
+  }
+
+  Future<void> initializeEventCategories() async {
     List<Map<String, dynamic>> response =
         await supabaseService.fetchCatogories();
     supabaseService.fetchCatogories();
+    eventCategories.clear();
     for (var category in response) {
       eventCategories.add(CreateEventCategoryModel(
         categoryName: category['catogory_name'],
@@ -53,7 +84,7 @@ class CreateEventCatogoryController extends GetxController {
     }
   }
 
-  void _subscribeToCategoryChanges() {
+  void subscribeToCategoryChanges() {
     supabaseClient
         .from(
             'event_catogories') // Replace 'categories' with your actual table name
@@ -62,6 +93,7 @@ class CreateEventCatogoryController extends GetxController {
       print("Categories Updated: $updatedData");
 
       // Update eventCategories list
+      eventCategories.clear();
       eventCategories.assignAll(updatedData
           .map((category) => CreateEventCategoryModel(
                 categoryName: category['catogory_name'],
@@ -69,6 +101,8 @@ class CreateEventCatogoryController extends GetxController {
                 redirectString: category['catogory_redirect'],
               ))
           .toList());
+
+
     });
   }
 

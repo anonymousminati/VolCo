@@ -63,7 +63,7 @@ class AvatarCaptureController extends GetxController {
 
     try {
       // Upload image
-      final publicUrl = await supabaseService.uploadImage(pickedImage.value!);
+      final publicUrl = await supabaseService.uploadAvatarImage(pickedImage.value!);
 
       if (publicUrl != null) {
         print("Public URL: $publicUrl");

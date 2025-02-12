@@ -41,7 +41,7 @@ bool isText(String? inputString, {bool isRequired = false}) {
     isInputStringValid = true;
   }
   if (inputString != null && inputString.isNotEmpty) {
-    const pattern = r'^[a-zA-Z]+$';
+    const pattern = r'^[a-zA-Z\s]+$';
     final regExp = RegExp(pattern);
     isInputStringValid = regExp.hasMatch(inputString);
   }

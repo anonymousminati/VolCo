@@ -3,13 +3,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:volco/core/app_export.dart';
+import 'package:volco/core/utils/image_constant.dart';
 import 'package:volco/core/utils/supabase_handler.dart';
 import 'package:volco/presentation/user_details_screen/models/user_details_model.dart';
 
 class CreateEventController extends GetxController {
+  final dateFormatter = DateFormat('yyyy-MM-dd');
   // **📌 Common Event Fields**
   final eventNameController = TextEditingController();
   final eventDescriptionController = TextEditingController();
@@ -20,12 +24,15 @@ class CreateEventController extends GetxController {
   final ageController = TextEditingController();
   final volunteerController = TextEditingController();
   final socialMediaController = TextEditingController();
+  final dateController = TextEditingController();
+  final timeController = TextEditingController();
   // **📌 Image Picker & Date-Time Fields**
   Rxn<XFile> pickedImage = Rxn<XFile>();
   Rxn<DateTime> selectedDate = Rxn<DateTime>();
   Rxn<TimeOfDay> selectedTime = Rxn<TimeOfDay>();
   RxString selectedCategory = ''.obs;
   RxList<String> selectedTags = <String>[].obs;
+  RxList<String> TagsValueList = <String>[].obs;
 
   // **📌 Supabase Services**
   final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
@@ -36,11 +43,10 @@ class CreateEventController extends GetxController {
   RxList<String> ageGroups = <String>[].obs;
   RxList<String> subjectFocus = <String>[].obs;
 
-
   var selectedAgeGroup = RxnString();
   var selectedSubjectFocus = RxnString();
   final languageRequirementsController = TextEditingController();
-  var materialsNeeded = "".obs;
+  final materialsNeededController = TextEditingController();
 
   // **Health & Wellness**
   RxList<String> typeOfServices = <String>[].obs;
@@ -96,10 +102,10 @@ class CreateEventController extends GetxController {
   // **📌 Loading State**
   RxBool isLoading = true.obs;
 
+  int eventId = 0;
 
   @override
   void onInit() {
-
     super.onInit();
 
     ever(selectedCategory, (type) {
@@ -108,36 +114,43 @@ class CreateEventController extends GetxController {
 
     // Initial Load
     loadActivitySpecificFields(selectedCategory.value);
-
   }
 
   void updateSelectedCategory(String category) {
     print("Received categoryType: $category");
     selectedCategory.value = category;
   }
-  Future<void> loadActivitySpecificFields(String? type) async {
 
+  Future<void> loadActivitySpecificFields(String? type) async {
     isLoading.value = true;
     List<Future> futures = [];
     if (type == "Education") {
+      futures.add(loadTags('education'));
       futures.add(loadEducationAgeGroups());
       futures.add(loadEducationSubjectFocus());
     } else if (type == "Health & Wellness") {
+      futures.add(loadTags('health_and_wellness'));
       futures.add(loadHealthServicesType());
       futures.add(loadHealthMedicalProfessionals());
     } else if (type == "Counseling") {
+      futures.add(loadTags('counseling'));
       futures.add(loadCounselingTypes());
       futures.add(loadCounselingSessionFormats());
     } else if (type == "Conservation") {
+      futures.add(loadTags('conservation'));
       futures.add(loadConservationActivityTypes());
     } else if (type == "Work with Elders") {
+      futures.add(loadTags('work_with_elders'));
       futures.add(loadElderActivityTypes());
     } else if (type == "Work with Orphans") {
+      futures.add(loadTags('work_with_orphans'));
       futures.add(loadOrphanActivityTypes());
     } else if (type == "Animal Rescue") {
+      futures.add(loadTags('animal_rescue'));
       futures.add(loadAnimalTypes());
       futures.add(loadTaskInvolved());
     } else if (type == "Clean Activity") {
+      futures.add(loadTags('clean'));
       futures.add(loadAreaTypes());
       futures.add(loadWasteCategories());
     }
@@ -145,6 +158,7 @@ class CreateEventController extends GetxController {
     await Future.wait(futures);
     isLoading.value = false;
   }
+
   /// **📌 Show Syncfusion Date Picker**
   void showDatePicker(BuildContext context) {
     showDialog(
@@ -159,7 +173,8 @@ class CreateEventController extends GetxController {
               minDate: DateTime.now(),
               onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
                 selectedDate.value = args.value;
-                update(); // Notify GetX about the change
+                dateController.text = dateFormatter.format(args.value);
+                update();
                 Navigator.pop(context);
               },
               selectionMode: DateRangePickerSelectionMode.single,
@@ -179,10 +194,10 @@ class CreateEventController extends GetxController {
 
     if (pickedTime != null) {
       selectedTime.value = pickedTime;
+      timeController.text = pickedTime.format(context);
       update(); // Notify GetX about the change
     }
   }
-
 
   // Method to pick an image
   Future<void> pickImage() async {
@@ -198,8 +213,8 @@ class CreateEventController extends GetxController {
   void resetFields() {
     selectedAgeGroup.value = null;
     selectedSubjectFocus.value = null;
-    languageRequirementsController.text="";
-    materialsNeeded.value = "";
+    languageRequirementsController.text = "";
+    materialsNeededController.text = "";
 
     selectedServices.clear();
     selectedMedicalProfessional.value = null;
@@ -235,138 +250,336 @@ class CreateEventController extends GetxController {
 
   // ** Education Activity Loaders **
   Future<void> loadEducationAgeGroups() async {
-    ageGroups.value = await supabaseService.fetchEventFieldOptions('education', 'age_group');
+    ageGroups.value =
+        await supabaseService.fetchEventFieldOptions('education', 'age_group');
     print("ageGroups: $ageGroups");
   }
 
   Future<void> loadEducationSubjectFocus() async {
-    subjectFocus.value = await supabaseService.fetchEventFieldOptions('education', 'subject_focus');
+    subjectFocus.value = await supabaseService.fetchEventFieldOptions(
+        'education', 'subject_focus');
     print("subjectFocus: $subjectFocus");
   }
 
   // ** Health & Wellness Loaders **
   Future<void> loadHealthServicesType() async {
-    typeOfServices.value = await supabaseService.fetchEventFieldOptions('health_and_wellness', 'type_of_service');
+    typeOfServices.value = await supabaseService.fetchEventFieldOptions(
+        'health_and_wellness', 'type_of_service');
     print("typeOfServices: $typeOfServices");
   }
 
   Future<void> loadHealthMedicalProfessionals() async {
-    medicalProfessionalList.value = await supabaseService.fetchEventFieldOptions('health_and_wellness', 'medical_professional_required');
+    medicalProfessionalList.value =
+        await supabaseService.fetchEventFieldOptions(
+            'health_and_wellness', 'medical_professional_required');
     print("medicalProfessionalList: $medicalProfessionalList");
   }
 
   // ** Counseling Loaders **
   Future<void> loadCounselingTypes() async {
-    counselingTypes.value = await supabaseService.fetchEventFieldOptions('counseling', 'counseling_type');
+    counselingTypes.value = await supabaseService.fetchEventFieldOptions(
+        'counseling', 'counseling_type');
     print("counselingTypes: $counselingTypes");
   }
 
   Future<void> loadCounselingSessionFormats() async {
-    sessionFormats.value = await supabaseService.fetchEventFieldOptions('counseling', 'session_format');
+    sessionFormats.value = await supabaseService.fetchEventFieldOptions(
+        'counseling', 'session_format');
     print("sessionFormats: $sessionFormats");
   }
 
   // ** Conservation Loader **
   Future<void> loadConservationActivityTypes() async {
-    conservationActivityTypes.value = await supabaseService.fetchEventFieldOptions('conservation', 'activity_type');
+    conservationActivityTypes.value = await supabaseService
+        .fetchEventFieldOptions('conservation', 'activity_type');
     print("conservationActivityTypes: $conservationActivityTypes");
   }
 
   // ** Work with Elders Loader **
   Future<void> loadElderActivityTypes() async {
-    elderActivityTypes.value = await supabaseService.fetchEventFieldOptions('work_with_elders', 'activity_type');
+    elderActivityTypes.value = await supabaseService.fetchEventFieldOptions(
+        'work_with_elders', 'activity_type');
     print("elderActivityTypes: $elderActivityTypes");
   }
 
   // ** Work with Orphans Loader **
   Future<void> loadOrphanActivityTypes() async {
-    orphanActivityTypes.value = await supabaseService.fetchEventFieldOptions('work_with_orphans', 'activity_type');
+    orphanActivityTypes.value = await supabaseService.fetchEventFieldOptions(
+        'work_with_orphans', 'activity_type');
     print("orphanActivityTypes: $orphanActivityTypes");
   }
 
   // ** Animal Rescue Loaders **
   Future<void> loadAnimalTypes() async {
-    animalTypes.value = await supabaseService.fetchEventFieldOptions('animal_rescue', 'animal_type');
+    animalTypes.value = await supabaseService.fetchEventFieldOptions(
+        'animal_rescue', 'animal_type');
     print("animalTypes: $animalTypes");
   }
 
   Future<void> loadTaskInvolved() async {
-    taskInvolved.value = await supabaseService.fetchEventFieldOptions('animal_rescue', 'task_involved');
+    taskInvolved.value = await supabaseService.fetchEventFieldOptions(
+        'animal_rescue', 'task_involved');
     print("taskInvolved: $taskInvolved");
   }
 
   // ** Clean Activity Loaders **
   Future<void> loadAreaTypes() async {
-    areaTypes.value = await supabaseService.fetchEventFieldOptions('clean_activity', 'area_type');
+    areaTypes.value = await supabaseService.fetchEventFieldOptions(
+        'clean_activity', 'area_type');
     print("areaTypes: $areaTypes");
   }
 
   Future<void> loadWasteCategories() async {
-    wasteCategories.value = await supabaseService.fetchEventFieldOptions('clean_activity', 'waste_category');
+    wasteCategories.value = await supabaseService.fetchEventFieldOptions(
+        'clean_activity', 'waste_category');
     print("wasteCategories: $wasteCategories");
   }
 
+  // ** tag loader **
+  Future<void> loadTags(String tageventcatogory) async {
+    TagsValueList.value =
+        await supabaseService.fetchEventFieldOptions(tageventcatogory, 'tag');
+    print("selectedTags: $TagsValueList");
+  }
+
   /// **📌 Create New Event**
-  Future<bool> createEvent() async {
+
+  Future<bool> createNewEvent() async {
+    Get.bottomSheet(
+      Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: appTheme.gray800,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Lottie.asset(
+              ImageConstant.uploadAnimationLottie,
+            ),
+          ],
+        ),
+      ),
+      isDismissible: false,
+    );
     try {
-      if (eventNameController.text.isEmpty ||
-          eventDescriptionController.text.isEmpty ||
-          durationController.text.isEmpty ||
-          mobileNumberController.text.isEmpty ||
-          locationController.text.isEmpty ||
-          selectedDate.value == null ||
-          selectedTime.value == null) {
-        Get.snackbar("Error", "Please fill in all required fields.");
+      print("uploading....");
+      print("createNewEvent 1");
+      // **Fetch Organizer ID (Current User)**
+      final User? user = await supabaseService.getUserData();
+      print("createNewEvent 2");
+
+      if (user == null) {
+        print("User not logged in.");
+        Get.back();
         return false;
       }
+      final organizerId = user.id;
+      print("createNewEvent 3");
 
-      // **📌 Upload Event Image**
-      String? imageUrl;
+      // **Upload Image to Supabase Storage**
+      String imageUrl = "";
+
       if (pickedImage.value != null) {
-        imageUrl =
-        await supabaseService.uploadImage(File(pickedImage.value!.path));
-      } else {
-        Get.snackbar("Error", "Please select an event image.");
-        return false;
+        print("createNewEvent 4");
+
+        final imageFile = File(pickedImage.value!.path);
+        final imageName =
+            "event_images/${DateTime.now().millisecondsSinceEpoch}_${pickedImage.value!.path.split('/').last}";
+        print("createNewEvent 5");
+
+        final response = await supabaseClient.storage
+            .from("event_images")
+            .upload(imageName, imageFile);
+        print("createNewEvent 6");
+
+        if (response.isEmpty) {
+          print("Image upload failed");
+          Get.back();
+          return false;
+        }
+        print("createNewEvent 7");
+
+        imageUrl = await supabaseClient.storage
+            .from("event_images")
+            .getPublicUrl(imageName);
+
+        print("createNewEvent 8");
+
+        print("Image uploaded successfully: $imageUrl");
       }
+      print("createNewEvent 9");
 
-      // **📌 Merge Date & Time**
-      final DateTime date = selectedDate.value!;
-      final TimeOfDay time = selectedTime.value!;
-      final DateTime eventDateTime =
-      DateTime(date.year, date.month, date.day, time.hour, time.minute);
-
-      // **📌 Prepare Event Data**
-      final Map<String, dynamic> eventData = {
-        'organizer_id': supabaseClient.auth.currentUser?.id,
+      // **Insert into Events Table**
+      final eventInsertResponse = await supabaseClient.from('events').insert({
+        'organizer_id': organizerId,
         'event_name': eventNameController.text.trim(),
         'event_description': eventDescriptionController.text.trim(),
         'image_url': imageUrl,
-        'event_date': eventDateTime.toIso8601String(),
-        'duration_hours': int.parse(durationController.text.trim()),
+        'event_date': dateFormatter.format(selectedDate.value!),
+        'event_time':
+            "${selectedTime.value?.hour}:${selectedTime.value?.minute}",
+        'duration_hours': int.tryParse(durationController.text) ?? 1,
         'location': locationController.text.trim(),
+        'required_volunteers': int.tryParse(volunteerController.text) ?? 1,
         'contact_number': mobileNumberController.text.trim(),
+        'social_media_link': socialMediaController.text.trim(),
+        'emergency_contact_info':
+            "Emergency contact details here", // Update as needed
+        'volunteer_requirements': volunteerController.text.trim(),
         'activity_type': selectedCategory.value,
-        'tags': selectedTags,
-        'created_at': DateTime.now().toIso8601String(),
-        'updated_at': DateTime.now().toIso8601String(),
-      };
+      }).select('event_id');
+      print("createNewEvent 10");
 
-      // **📌 Insert Event Record**
-      final bool insertResult =
-      await supabaseService.insertRecord('events', eventData);
-      if (insertResult) {
-        Get.snackbar("Success", "Event created successfully!");
-        return true;
-      } else {
-        Get.snackbar("Error", "Failed to create event.");
+      if (eventInsertResponse == null || eventInsertResponse.isEmpty) {
+        print("Failed to create event.");
+        Get.back();
         return false;
       }
+      print("createNewEvent 11");
+      print("eventInsertResponse: $eventInsertResponse");
+       eventId = eventInsertResponse.first['event_id'];
+      print("Event Created with ID: $eventId");
+
+      // **Insert Additional Fields Based on Category**
+      if (selectedCategory.value == "Education") {
+        await supabaseClient.from('event_tags').insert({
+          'event_id': eventId,
+          'tag_name': selectedTags.join(", "),
+        });
+        await supabaseClient.from('education_event_details').insert({
+          'event_id': eventId.toString(),
+          'age_group': selectedAgeGroup.value ?? "",
+          'subject_focus': selectedSubjectFocus.value ?? "",
+          'language_requirements': languageRequirementsController.text.trim(),
+          'materials_needed': materialsNeededController.text,
+        });
+        print("createNewEvent 12 1");
+      } else if (selectedCategory.value == "Health & Wellness") {
+        await supabaseClient.from('event_tags').insert({
+          'event_id': eventId,
+          'tag_name': selectedTags.join(", "),
+        });
+        await supabaseClient.from('health_event_details').insert({
+          'event_id': eventId,
+          'service_type': selectedServices.join(", "),
+          'medical_professional_required':
+              selectedMedicalProfessional.value ?? "",
+          'equipment_needed': equipmentNeeded.text.trim(),
+          'medication_guidelines': medicationGuidelines.text.trim(),
+        });
+        print("createNewEvent 12 2");
+      } else if (selectedCategory.value == "Counseling") {
+        await supabaseClient.from('event_tags').insert({
+          'event_id': eventId,
+          'tag_name': selectedTags.join(", "),
+        });
+        await supabaseClient.from('counseling_event_details').insert({
+          'event_id': eventId,
+          'counseling_type': selectedCounselingType.value ?? "",
+          'session_format': selectedSessionFormat.value ?? "",
+        });
+        print("createNewEvent 12 3");
+      } else if (selectedCategory.value == "Conservation") {
+        await supabaseClient.from('event_tags').insert({
+          'event_id': eventId,
+          'tag_name': selectedTags.join(", "),
+        });
+        await supabaseClient.from('conservation_event_details').insert({
+          'event_id': eventId,
+          'activity_type': selectedActivityType.value ?? "",
+          'tools_provided': toolsProvided.text.trim(),
+          'environmental_impact': environmentalImpact.text.trim(),
+          'waste_disposal_plan': wasteDisposalPlan.text.trim(),
+        });
+        print("createNewEvent 12 4");
+      } else if (selectedCategory.value == "Work with Elders") {
+        await supabaseClient.from('event_tags').insert({
+          'event_id': eventId,
+          'tag_name': selectedTags.join(", "),
+        });
+        await supabaseClient.from('elder_care_event_details').insert({
+          'event_id': eventId,
+          'activity_type': selectedElderActivityType.value ?? "",
+          'items_to_bring': itemsToBring.text.trim(),
+        });
+        print("createNewEvent 12 5");
+      } else if (selectedCategory.value == "Work with Orphans") {
+        await supabaseClient.from('event_tags').insert({
+          'event_id': eventId,
+          'tag_name': selectedTags.join(", "),
+        });
+        await supabaseClient.from('orphan_care_event_details').insert({
+          'event_id': eventId,
+          'child_age_range': childAgeRange.text.trim(),
+          'activity_type': selectedOrphanActivityType.value ?? "",
+          'donation_needs': donationNeeds.text.trim(),
+        });
+        print("createNewEvent 12 6");
+      } else if (selectedCategory.value == "Animal Rescue") {
+        await supabaseClient.from('event_tags').insert({
+          'event_id': eventId,
+          'tag_name': selectedTags.join(", "),
+        });
+        await supabaseClient.from('animal_rescue_event_details').insert({
+          'event_id': eventId,
+          'animal_type': selectedAnimalType.value ?? "",
+          'task_involved': selectedTaskInvolved.value ?? "",
+          'vaccination_status': vaccinationStatus.text.trim(),
+          'handling_equipment': handlingEquipment.text.trim(),
+        });
+        print("createNewEvent 12 7");
+      } else if (selectedCategory.value == "Clean Activity") {
+        await supabaseClient.from('event_tags').insert({
+          'event_id': eventId,
+          'tag_name': selectedTags.join(", "),
+        });
+        await supabaseClient.from('clean_activity_event_details').insert({
+          'event_id': eventId,
+          'area_type': selectedAreaType.value ?? "",
+          'waste_category': selectedWasteCategory.value ?? "",
+          'recycling_plan': recyclingPlan.text.trim(),
+        });
+        print("createNewEvent 12 8");
+      }
+
+      print("Event created successfully!");
+      Get.back();
+      Get.bottomSheet(
+        Container(
+          height: double.infinity,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: appTheme.gray800,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Lottie.asset(
+                ImageConstant.uploadSuccessAnimationLottie,
+              ),
+            ],
+          ),
+        ),
+        isDismissible: false,
+      );
+      resetFields(); // Reset fields after successful creation
+      return true;
     } catch (e) {
+      Get.back();
       print("Error creating event: $e");
-      Get.snackbar("Error", "Error creating event: $e");
+
       return false;
-    }
+    } finally {}
   }
 
   void onClose() {
@@ -392,8 +605,7 @@ class CreateEventController extends GetxController {
     vaccinationStatus.dispose();
     handlingEquipment.dispose();
     recyclingPlan.dispose();
-
-
+    materialsNeededController.dispose();
     super.onClose();
   }
 }

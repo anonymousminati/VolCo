@@ -49,7 +49,7 @@ class SignInController extends GetxController {
         height: double.infinity,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: appTheme.gray800,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
@@ -88,7 +88,7 @@ class SignInController extends GetxController {
               height: double.infinity,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: appTheme.gray800,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),

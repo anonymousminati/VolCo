@@ -5,10 +5,13 @@ import 'package:volco/presentation/create_event_catogory_screen/binding/create_e
 import 'package:volco/presentation/create_event_catogory_screen/create_event_catogory_screen.dart';
 import 'package:volco/presentation/create_event_screen/binding/create_event_binding.dart';
 import 'package:volco/presentation/create_event_screen/create_event_screen.dart';
+import 'package:volco/presentation/event_description_screen/binding/event_description_binding.dart';
+import 'package:volco/presentation/event_description_screen/event_description_screen.dart';
 import 'package:volco/presentation/forgot_password_screen/binding/forgot_password_binding.dart';
 import 'package:volco/presentation/forgot_password_screen/forgot_password_screen.dart';
 import 'package:volco/presentation/home_screen/binding/home_binding.dart';
 import 'package:volco/presentation/home_screen/home_screen.dart';
+import 'package:volco/presentation/home_screen/home_screen_initial_page.dart';
 import 'package:volco/presentation/let_s_you_in_screen/binding/let_s_you_in_binding.dart';
 import 'package:volco/presentation/let_s_you_in_screen/let_s_you_in_screen.dart';
 import 'package:volco/presentation/onboarding_one_screen/binding/onboarding_one_binding.dart';
@@ -66,6 +69,8 @@ class AppRoutes {
       '/create_event_catogory_screen';
   static const String createEventScreen = '/create_event_screen';
 
+  static const String eventDescriptionScreen = '/event_description_screen';
+
   static List<GetPage> pages = [
     GetPage(
       name: splashScreen,
@@ -106,6 +111,11 @@ class AppRoutes {
       name: signInScreen,
       page: () => SignInScreen(),
       bindings: [SignInBinding()],
+    ),
+    GetPage(
+      name: homeScreenInitialPage,
+      page: () => HomeScreenInitialPage(),
+      bindings: [HomeBinding()],
     ),
     GetPage(
       name: homeScreen,
@@ -159,6 +169,18 @@ class AppRoutes {
         return CreateEventScreen(categoryType: categoryType);
       },
       bindings: [CreateEventBinding()],
+    ),
+    GetPage(
+      name: eventDescriptionScreen,
+      page: () {
+        final String selectedActivityCategory =
+            Get.arguments['eventCategory'] ?? "";
+        final int eventCreatedId = Get.arguments['eventCreatedId'] ?? 0;
+        return EventDescriptionScreen(
+            selectedActivityCategory: selectedActivityCategory,
+            eventCreatedId: eventCreatedId);
+        },
+      bindings: [EventDescriptionBinding()],
     ),
   ];
 }

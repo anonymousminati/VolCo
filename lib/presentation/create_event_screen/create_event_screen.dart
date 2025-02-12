@@ -11,6 +11,7 @@ import 'package:volco/core/utils/validation_functions.dart';
 import 'package:volco/presentation/create_event_catogory_screen/controller/create_event_catogory_controller.dart';
 import 'package:volco/presentation/create_event_screen/controller/create_event_controller.dart';
 import 'package:volco/presentation/create_event_screen/widgets/eventFields.dart';
+import 'package:volco/presentation/home_screen/home_screen.dart';
 import 'package:volco/presentation/user_details_screen/controller/user_details_controller.dart';
 import 'package:volco/widgets/customMultiSelectDropdown.dart';
 import 'package:volco/widgets/custom_image_picker.dart';
@@ -24,7 +25,8 @@ class CreateEventScreen extends GetView<CreateEventController> {
     print("Received categoryType1: $categoryType");
     controller.updateSelectedCategory(categoryType);
   }
-  GlobalKey<FormState> _createEventformKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _createEventformKey = GlobalKey<FormState>(debugLabel: '_createEventformKey');
+
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +81,30 @@ class CreateEventScreen extends GetView<CreateEventController> {
                         CustomElevatedButton(
                           text: "Submit".tr,
                           onPressed: () async {
-                            if (_createEventformKey.currentState!.validate()) {}
+                            if (_createEventformKey.currentState!.validate()) {
+                              print("step1");
+                              // Call createNewEvent() from the controller
+                              bool success = await controller.createNewEvent();
+                              print("step2");
+
+                              if (success) {
+                                print("step3");
+                                // Navigate to home screen if event creation is successful.
+                                Get.offAllNamed(AppRoutes.eventDescriptionScreen,arguments: {
+                                  "eventCreatedId":controller.eventId,
+                                  "eventCategory":controller.selectedCategory.value
+
+                                });
+                              } else {
+                                print("step4");
+
+                                Get.snackbar("Error", "Event creation failed. Please try again.");
+                              }
+                            }else{
+                              print("step5");
+
+                              Get.snackbar("Error", "Please fill all the fields");
+                            }
                           },
                         ),
 
@@ -104,51 +129,39 @@ class CreateEventScreen extends GetView<CreateEventController> {
       children: [
         // Date Picker Field
         Expanded(
-          child: Obx(
-            () => CustomTextFormField(
-              controller: TextEditingController(
-                text: controller.selectedDate.value != null
-                    ? "${controller.selectedDate.value!.day}-${controller.selectedDate.value!.month}-${controller.selectedDate.value!.year}"
-                    : "",
+          child:  CustomTextFormField(
+            controller: controller.dateController,
+            readOnly: true,
+            hintText: "Select Event Date",
+            prefix: Container(
+              margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
+              child: CustomImageView(
+                imagePath: ImageConstant.imgCalender,
+                height: 18.h,
+                width: 20.h,
+                fit: BoxFit.contain,
               ),
-              readOnly: true,
-              hintText: "Select Event Date",
-              prefix: Container(
-                margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
-                child: CustomImageView(
-                  imagePath: ImageConstant.imgCalender,
-                  height: 18.h,
-                  width: 20.h,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              onTap: () => controller.showDatePicker(context),
             ),
+            onTap: () => controller.showDatePicker(context),
           ),
         ),
 
         // Time Picker
         Expanded(
-          child: Obx(
-            () => CustomTextFormField(
-              controller: TextEditingController(
-                text: controller.selectedTime != null
-                    ? controller.selectedTime!.value?.format(context)
-                    : "",
+          child:CustomTextFormField(
+            controller:controller.timeController,
+            readOnly: true,
+            hintText: "Select Event Time",
+            prefix: Container(
+              margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
+              child: CustomImageView(
+                imagePath: ImageConstant.imgClock,
+                height: 18.h,
+                width: 20.h,
+                fit: BoxFit.contain,
               ),
-              readOnly: true,
-              hintText: "Select Event Time",
-              prefix: Container(
-                margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
-                child: CustomImageView(
-                  imagePath: ImageConstant.imgClock,
-                  height: 18.h,
-                  width: 20.h,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              onTap: () => controller.showTimePickerDialog(context),
             ),
+            onTap: () => controller.showTimePickerDialog(context),
           ),
         ),
       ],
@@ -232,6 +245,7 @@ class CreateEventScreen extends GetView<CreateEventController> {
               controller.pickedImage.value = XFile(imagePath); // Use fromPath()
               print("Picked Image Path: ${controller.pickedImage.value?.path}");
             },
+
           ),
 
           _buildDateTimePickers(context),
@@ -301,30 +315,14 @@ class CreateEventScreen extends GetView<CreateEventController> {
             },
           ),
 
-          CustomMultiSelectDropdown(
-            hintText: "Select Tags".tr,
-            items: [
-              "Childcare",
-              "Mentorship",
-              "Adoption Awareness",
-              "Trauma Support",
-              "Festival Events",
-              "Play Therapy",
-              "Skill Development",
-              "Education Support",
-              "Nutrition Program",
-              "Art Therapy",
-              "Sports Coaching",
-              "Holiday Celebrations",
-              "School Supplies Drive",
-              "Orphanage Visits",
-              "Child Safety"
-            ],
-            onSelectionChanged: (List<String> selectedItems) {
-              print("Selected: $selectedItems");
-              controller.selectedTags.value = selectedItems;
-            },
-          ),
+         Obx(()=> CustomMultiSelectDropdown(
+           hintText: "Select Tags".tr,
+           items:controller.TagsValueList.toList(),
+           onSelectionChanged: (List<String> selectedItems) {
+             print("Selected: $selectedItems");
+             controller.selectedTags.value = selectedItems;
+           },
+         )),
 
           CustomTextFormField(
             controller: controller.volunteerController,
@@ -351,9 +349,7 @@ class CreateEventScreen extends GetView<CreateEventController> {
               if (value == null || value.isEmpty) {
                 return 'field is required'.tr;
               }
-              if (num.tryParse(value) != null) {
-                return 'Enter a only number'.tr;
-              }
+
               return null;
             },
           ),

@@ -105,7 +105,7 @@ class UserDetailsController extends GetxController {
       if (pickedImage.value != null) {
         String? profileImageUrl;
         try {
-          profileImageUrl = await supabaseService.uploadImage(File(pickedImage.value!.path));
+          profileImageUrl = await supabaseService.uploadAvatarImage(File(pickedImage.value!.path));
         } catch (e) {
           if (e.toString().contains("RLS violation")) {
             Get.snackbar("Error", "You don't have permission to upload images.");
