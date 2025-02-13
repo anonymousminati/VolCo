@@ -1,30 +1,54 @@
-import 'dart:ffi';
-import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:volco/core/app_export.dart';
-import 'package:volco/core/utils/image_constant.dart';
 import 'package:volco/core/utils/supabase_handler.dart';
-import 'package:volco/presentation/user_details_screen/models/user_details_model.dart';
 
 class EventDescriptionController extends GetxController {
+  var isLoading = true.obs;
+  var eventDetails = {}.obs; // Stores general event details
+  var activityDetails = {}.obs; // Stores category-specific details
 
+  final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
+
+  Future<void> fetchEventDetails(int eventId, String eventCategory) async {
+    try {
+      isLoading.value = true;
+
+      // Fetch event details
+      final responseofevents = await supabaseClient
+          .from('events')
+          .select()
+          .eq('event_id', eventId)
+          .single();
+
+      // Fetch activity-specific details
+      final responseofActivityEvents = await supabaseClient
+          .from('${eventCategory.toLowerCase()}_event_details')
+          .select()
+          .eq('event_id', eventId)
+          .single();
+
+      // Store event details
+      eventDetails.assignAll(responseofevents);
+      activityDetails.assignAll(responseofActivityEvents);
+
+    } catch (e) {
+      print("Error fetching event details: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   @override
   void onInit() {
     super.onInit();
+    final args = Get.arguments;
+    if (args != null) {
+      final int eventId = args['eventCreatedId'] ?? 30;
+      final String eventCategory = args['eventCategory'] ?? "education";
 
-  }
-
-
-  void onClose() {
-    // Dispose of text controllers
-
-    super.onClose();
+      if (eventId > 0 && eventCategory.isNotEmpty) {
+        fetchEventDetails(eventId, eventCategory);
+      }
+    }
   }
 }

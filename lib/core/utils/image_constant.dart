@@ -112,6 +112,10 @@ class ImageConstant {
 
   static String imgUrl = '$imagePath/urlImage.png';
 
+  static String imgUrlSkyBlue = '$imagePath/urlimageskyblue.png';
+
+  static String imgUrlEmergencyContact = '$imagePath/emergency_contact_number.png';
+
 
 
 

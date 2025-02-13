@@ -426,7 +426,7 @@ class CreateEventController extends GetxController {
             "${selectedTime.value?.hour}:${selectedTime.value?.minute}",
         'duration_hours': int.tryParse(durationController.text) ?? 1,
         'location': locationController.text.trim(),
-        'required_volunteers': int.tryParse(volunteerController.text) ?? 1,
+        // 'required_volunteers': int.tryParse(volunteerController.text) ?? 1,
         'contact_number': mobileNumberController.text.trim(),
         'social_media_link': socialMediaController.text.trim(),
         'emergency_contact_info':

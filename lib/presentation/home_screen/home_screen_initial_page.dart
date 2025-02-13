@@ -31,6 +31,19 @@ class HomeScreenInitialPage extends StatelessWidget {
           children: [
             _buildFloatingIconColumn(),
             SizedBox(height: 32.h),
+            CustomElevatedButton(
+              text: "Submit".tr,
+              onPressed: () async {
+
+                    // Navigate to home screen if event creation is successful.
+                    Get.offAllNamed(AppRoutes.eventDescriptionScreen,arguments: {
+                      "eventCreatedId":30,
+                      "eventCategory":"Education"
+
+                    });
+
+              },
+            ),
 
             SizedBox(height: 4.h),
           ],
