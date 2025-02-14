@@ -18,32 +18,13 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
   }) : super(key: key);
 
   /// This function builds extra fields based on the category.
-  Widget _buildActivitySpecificDetails(String category, RxMap activity, RxMap event) {
+  Widget _buildActivitySpecificDetails(
+      String category, RxMap activity, RxMap event) {
     switch (category.toLowerCase()) {
       case "education":
         return Column(
           spacing: 20.h,
-
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-              spacing: 20.h,
-              children: [
-                Expanded(
-                  child: InfoContainer(
-                    title: "Volunteer Required",
-                    value: event["required_volunteers"]?.toString() ?? "N/A",
-                  ),
-                ),
-                Expanded(
-                  child: InfoContainer(
-                    title: "Subject Focused",
-                    value: activity["subject_focus"] ?? "N/A",
-                  ),
-                ),
-              ],
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               spacing: 20.h,
@@ -62,9 +43,51 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                 ),
               ],
             ),
-            InfoContainer(
-              title: "Materials Needed",
-              value: activity["materials_needed"] ?? "N/A",
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              spacing: 20.h,
+              children: [
+                Expanded(
+                  child: InfoContainer(
+                    title: "Volunteer Required",
+                    value: event["volunteer_requirements"]?.toString() ?? "N/A",
+                  ),
+                ),
+                Expanded(
+                  child: InfoContainer(
+                    title: "Subject Focused",
+                    value: activity["subject_focus"] ?? "N/A",
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12.h),
+              decoration: BoxDecoration(
+                color: appTheme.blueGray900,
+                borderRadius: BorderRadius.circular(12.h),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Materials Needed",
+                    style: theme.textTheme.bodyLarge!.copyWith(
+                      color: Colors.white70,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    activity["materials_needed"] ?? "N/A",
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         );
@@ -72,7 +95,6 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
       case "health & wellness":
         return Column(
           spacing: 20.h,
-
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -81,24 +103,65 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                 Expanded(
                   child: InfoContainer(
                     title: "Service Type",
-                    value: (activity["type_of_service"] as List<dynamic>?)?.join(", ") ?? "N/A",
+                    value: (activity["type_of_service"].split(',').map((e) {
+                      return e.trim();
+                    }).toList())?.join(", ") ??
+                        "N/A",
+
                   ),
                 ),
                 Expanded(
                   child: InfoContainer(
                     title: "Medical Professional",
-                    value: (activity["medical_professional_required"] as List<dynamic>?)?.join(", ") ?? "N/A",
+                    value: activity["medical_professional_required"] ?? "N/A",
                   ),
                 ),
               ],
             ),
-            InfoContainer(
-              title: "Equipment Needed",
-              value: (activity["equipment_needed"] as List<dynamic>?)?.join(", ") ?? "N/A",
+            Row(
+              spacing: 20.h,
+              children: [
+                Expanded(
+                  child: InfoContainer(
+                    title: "Equipment Needed",
+                    value: activity["equipment_needed"] ?? "N/A",
+                  ),
+                ),
+                Expanded(
+                  child: InfoContainer(
+                    title: "Volunteer Required",
+                    value: event["volunteer_requirements"]?.toString() ?? "N/A",
+                  ),
+                ),
+              ],
             ),
-            InfoContainer(
-              title: "Medication Handling",
-              value: activity["medication_handling_guidelines"] ?? "N/A",
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12.h),
+              decoration: BoxDecoration(
+                color: appTheme.blueGray900,
+                borderRadius: BorderRadius.circular(12.h),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Medication Handling",
+                    style: theme.textTheme.bodyLarge!.copyWith(
+                      color: Colors.white70,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    activity["medication_handling_guidelines"] ?? "N/A",
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         );
@@ -106,15 +169,51 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
       case "counseling":
         return Column(
           spacing: 20.h,
-
           children: [
-            InfoContainer(
-              title: "Counseling Type",
-              value: activity["counseling_type"] ?? "N/A",
+            Row(
+              spacing: 20.h,
+              children: [
+                Expanded(
+                  child: InfoContainer(
+                    title: "Volunteer Required",
+                    value: event["volunteer_requirements"]?.toString() ?? "N/A",
+                  ),
+                ),
+                Expanded(
+                  child: InfoContainer(
+                    title: "Counseling Type",
+                    value: activity["counseling_type"] ?? "N/A",
+                  ),
+                ),
+              ],
             ),
-            InfoContainer(
-              title: "Session Format",
-              value: activity["session_format"] ?? "N/A",
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12.h),
+              decoration: BoxDecoration(
+                color: appTheme.blueGray900,
+                borderRadius: BorderRadius.circular(12.h),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Session Format",
+                    style: theme.textTheme.bodyLarge!.copyWith(
+                      color: Colors.white70,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    activity["session_format"] ?? "N/A",
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         );
@@ -122,23 +221,71 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
       case "conservation":
         return Column(
           spacing: 20.h,
-
           children: [
-            InfoContainer(
-              title: "Activity Type",
-              value: activity["activity_type"] ?? "N/A",
+            Row(
+              spacing: 20.h,
+              children: [
+                Expanded(
+                  child: InfoContainer(
+                    title: "Activity Type",
+                    value: activity["activity_type"] ?? "N/A",
+                  ),
+                ),
+                Expanded(
+                  child: InfoContainer(
+                    title: "Tools Provided/Needed",
+                    value: (activity["tools_provided_needed"] as List<dynamic>?)
+                            ?.join(", ") ??
+                        "N/A",
+                  ),
+                ),
+              ],
             ),
-            InfoContainer(
-              title: "Tools Provided/Needed",
-              value: (activity["tools_provided_needed"] as List<dynamic>?)?.join(", ") ?? "N/A",
+            Row(
+              spacing: 20.h,
+              children: [
+                Expanded(
+                  child: InfoContainer(
+                    title: "Volunteer Required",
+                    value: event["volunteer_requirements"]?.toString() ?? "N/A",
+                  ),
+                ),
+                Expanded(
+                  child: InfoContainer(
+                    title: "Environmental Impact",
+                    value:
+                        activity["environmental_impact_description"] ?? "N/A",
+                  ),
+                ),
+              ],
             ),
-            InfoContainer(
-              title: "Environmental Impact",
-              value: activity["environmental_impact"] ?? "N/A",
-            ),
-            InfoContainer(
-              title: "Waste Disposal Plan",
-              value: activity["waste_disposal_plan"] ?? "N/A",
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12.h),
+              decoration: BoxDecoration(
+                color: appTheme.blueGray900,
+                borderRadius: BorderRadius.circular(12.h),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Waste Disposal Plan",
+                    style: theme.textTheme.bodyLarge!.copyWith(
+                      color: Colors.white70,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    activity["waste_disposal_plan"] ?? "N/A",
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         );
@@ -146,19 +293,81 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
       case "work with elders":
         return Column(
           spacing: 20.h,
-
           children: [
-            InfoContainer(
-              title: "Activity Type",
-              value: activity["activity_type"] ?? "N/A",
+            Row(
+              spacing: 20.h,
+              children: [
+                Expanded(
+                  child: InfoContainer(
+                    title: "Volunteer Required",
+                    value: event["volunteer_requirements"]?.toString() ?? "N/A",
+                  ),
+                ),
+                Expanded(
+                  child: InfoContainer(
+                    title: "Activity Type",
+                    value: activity["activity_type"] ?? "N/A",
+                  ),
+                ),
+              ],
             ),
-            InfoContainer(
-              title: "Mobility Requirements",
-              value: activity["mobility_requirements"] ?? "N/A",
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12.h),
+              decoration: BoxDecoration(
+                color: appTheme.blueGray900,
+                borderRadius: BorderRadius.circular(12.h),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Wheelchair Accessible",
+                    style: theme.textTheme.bodyLarge!.copyWith(
+                      color: Colors.white70,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    activity["wheelchair_accessible"] ?? "N/A",
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            InfoContainer(
-              title: "Items to Bring",
-              value: (activity["items_to_bring"] as List<dynamic>?)?.join(", ") ?? "N/A",
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12.h),
+              decoration: BoxDecoration(
+                color: appTheme.blueGray900,
+                borderRadius: BorderRadius.circular(12.h),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Items to Bring",
+                    style: theme.textTheme.bodyLarge!.copyWith(
+                      color: Colors.white70,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    (activity["items_to_bring"] as List<dynamic>?)
+                            ?.join(", ") ??
+                        "N/A",
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         );
@@ -166,19 +375,41 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
       case "work with orphans":
         return Column(
           spacing: 20.h,
-
           children: [
-            InfoContainer(
-              title: "Child Age Range",
-              value: activity["child_age_range"] ?? "N/A",
+            Row(
+              spacing: 20.h,
+              children: [
+                Expanded(
+                  child: InfoContainer(
+                    title: "Volunteer Required",
+                    value: event["volunteer_requirements"]?.toString() ?? "N/A",
+                  ),
+                ),
+                Expanded(
+                  child: InfoContainer(
+                    title: "Child Age Range",
+                    value: activity["child_age_range"] ?? "N/A",
+                  ),
+                ),
+              ],
             ),
-            InfoContainer(
-              title: "Activity Type",
-              value: activity["activity_type"] ?? "N/A",
-            ),
-            InfoContainer(
-              title: "Donation Needs",
-              value: (activity["donation_needs"] as List<dynamic>?)?.join(", ") ?? "N/A",
+            Row(
+              children: [
+                Expanded(
+                  child: InfoContainer(
+                    title: "Activity Type",
+                    value: activity["activity_type"] ?? "N/A",
+                  ),
+                ),
+                Expanded(
+                  child: InfoContainer(
+                    title: "Donation Needs",
+                    value: (activity["donation_needs"] as List<dynamic>?)
+                            ?.join(", ") ??
+                        "N/A",
+                  ),
+                ),
+              ],
             ),
           ],
         );
@@ -186,43 +417,125 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
       case "animal rescue":
         return Column(
           spacing: 20.h,
-
           children: [
-            InfoContainer(
-              title: "Animal Type",
-              value: activity["animal_type"] ?? "N/A",
+            Row(
+              spacing: 20.h,
+              children: [
+                Expanded(
+                  child: InfoContainer(
+                    title: "Animal Type",
+                    value: activity["animal_type"] ?? "N/A",
+                  ),
+                ),
+                Expanded(
+                  child: InfoContainer(
+                    title: "Tasks Involved",
+                    value: (activity["tasks_involved"] as List<dynamic>?)
+                            ?.join(", ") ??
+                        "N/A",
+                  ),
+                ),
+              ],
             ),
-            InfoContainer(
-              title: "Tasks Involved",
-              value: (activity["tasks_involved"] as List<dynamic>?)?.join(", ") ?? "N/A",
-            ),
-            InfoContainer(
-              title: "Vaccination Status",
-              value: activity["vaccination_status"] ?? "N/A",
-            ),
-            InfoContainer(
-              title: "Handling Equipment",
-              value: (activity["handling_equipment"] as List<dynamic>?)?.join(", ") ?? "N/A",
+            Row(
+              spacing: 20.h,
+              children: [
+                Expanded(
+                  child: InfoContainer(
+                    title: "Vaccination Status",
+                    value: activity["vaccination_status"] ?? "N/A",
+                  ),
+                ),
+                Expanded(
+                  child: InfoContainer(
+                    title: "Handling Equipment",
+                    value: (activity["handling_equipment"] as List<dynamic>?)
+                            ?.join(", ") ??
+                        "N/A",
+                  ),
+                ),
+              ],
             ),
           ],
         );
 
-      case "clean":
+      case "cleaning":
         return Column(
           spacing: 20.h,
-
           children: [
-            InfoContainer(
-              title: "Area Type",
-              value: activity["area_type"] ?? "N/A",
+            Row(
+              spacing: 20.h,
+              children: [
+                Expanded(
+                  child: InfoContainer(
+                    title: "Volunteer Required",
+                    value: event["volunteer_requirements"]?.toString() ?? "N/A",
+                  ),
+                ),
+                Expanded(
+                  child: InfoContainer(
+                    title: "Area Type",
+                    value: activity["area_type"] ?? "N/A",
+                  ),
+                ),
+              ],
             ),
-            InfoContainer(
-              title: "Waste Category",
-              value: (activity["waste_category"] as List<dynamic>?)?.join(", ") ?? "N/A",
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12.h),
+              decoration: BoxDecoration(
+                color: appTheme.blueGray900,
+                borderRadius: BorderRadius.circular(12.h),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Waste Category",
+                    style: theme.textTheme.bodyLarge!.copyWith(
+                      color: Colors.white70,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    activity["waste_category"]??
+                        "N/A",
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            InfoContainer(
-              title: "Recycling Plan",
-              value: activity["recycling_plan"] ?? "N/A",
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12.h),
+              decoration: BoxDecoration(
+                color: appTheme.blueGray900,
+                borderRadius: BorderRadius.circular(12.h),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Recycling Plan",
+                    style: theme.textTheme.bodyLarge!.copyWith(
+                      color: Colors.white70,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    activity["recycling_plan_description"] ?? "N/A",
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         );
@@ -230,6 +543,20 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
       default:
         return SizedBox.shrink();
     }
+  }
+
+  Widget _buildTagBadge(String tag) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: appTheme.amber500,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        tag,
+        style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+      ),
+    );
   }
 
   @override
@@ -261,7 +588,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                     width: 30.h,
                     onTap: () => Get.back(),
                   ),
-                   
+
                   // Event Image
                   Container(
                     padding: EdgeInsets.all(8.h),
@@ -277,11 +604,12 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                       radius: BorderRadius.circular(4.h),
                     ),
                   ),
-                   
+
                   // Event Name
                   AutoSizeText(
                     event['event_name'] ?? "Event Name",
-                    style: CustomTextStyles.titleLarge20.copyWith(fontSize: 40.h),
+                    style:
+                        CustomTextStyles.titleLarge20.copyWith(fontSize: 40.h),
                     maxLines: 2,
                     minFontSize: 20,
                     overflow: TextOverflow.ellipsis,
@@ -295,7 +623,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                       fontSize: 28.h,
                     ),
                   ),
-                   
+
                   // Row with Time, Date, Duration
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -323,7 +651,8 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                                 SizedBox(height: 4.h),
                                 AutoSizeText(
                                   "Time",
-                                  style: theme.textTheme.bodyMedium?.copyWith(fontSize: 18.h),
+                                  style: theme.textTheme.bodyMedium
+                                      ?.copyWith(fontSize: 18.h),
                                 ),
                               ],
                             ),
@@ -348,11 +677,13 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 24.h,
                                   ),
+                                  maxLines: 1,
                                 ),
                                 SizedBox(height: 4.h),
                                 AutoSizeText(
                                   "Date",
-                                  style: theme.textTheme.bodyMedium?.copyWith(fontSize: 18.h),
+                                  style: theme.textTheme.bodyMedium
+                                      ?.copyWith(fontSize: 18.h),
                                 ),
                               ],
                             ),
@@ -381,7 +712,8 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                                 SizedBox(height: 4.h),
                                 AutoSizeText(
                                   "Duration",
-                                  style: theme.textTheme.bodyMedium?.copyWith(fontSize: 18.h),
+                                  style: theme.textTheme.bodyMedium
+                                      ?.copyWith(fontSize: 18.h),
                                 ),
                               ],
                             ),
@@ -390,7 +722,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                       ),
                     ],
                   ),
-                   
+
                   // Event Description
                   Container(
                     width: double.infinity,
@@ -401,11 +733,12 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                     ),
                     child: Text(
                       event['event_description'] ?? "No description available.",
-                      style: theme.textTheme.bodyMedium?.copyWith(fontSize: 18.h),
+                      style:
+                          theme.textTheme.bodyMedium?.copyWith(fontSize: 18.h),
                       textAlign: TextAlign.justify,
                     ),
                   ),
-                   
+
                   // Event Location
                   GestureDetector(
                     onTap: () {
@@ -423,7 +756,6 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                             children: [
                               Text(
                                 "Location",
@@ -445,7 +777,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                       ),
                     ),
                   ),
-                   
+
                   // Contact Number Tile
                   Container(
                     decoration: BoxDecoration(
@@ -461,16 +793,17 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                       ),
                       title: Text(
                         "Contact Number",
-                        style: theme.textTheme.bodyLarge!
-                            .copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                        style: theme.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                       subtitle: Text(
                         event['contact_number'] ?? "N/A",
-                        style: theme.textTheme.bodyMedium!.copyWith(color: Colors.white70),
+                        style: theme.textTheme.bodyMedium!
+                            .copyWith(color: Colors.white70),
                       ),
                     ),
                   ),
-                   
+
                   // Social Media Link Tile
                   Container(
                     decoration: BoxDecoration(
@@ -486,16 +819,17 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                       ),
                       title: Text(
                         "Social Media Link",
-                        style: theme.textTheme.bodyLarge!
-                            .copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                        style: theme.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                       subtitle: Text(
                         event['social_media_link'] ?? "N/A",
-                        style: theme.textTheme.bodyMedium!.copyWith(color: Colors.white70),
+                        style: theme.textTheme.bodyMedium!
+                            .copyWith(color: Colors.white70),
                       ),
                     ),
                   ),
-                   
+
                   // Emergency Contact Number Tile
                   Container(
                     decoration: BoxDecoration(
@@ -511,28 +845,41 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                       ),
                       title: Text(
                         "Emergency Contact Number",
-                        style: theme.textTheme.bodyLarge!
-                            .copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                        style: theme.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                       subtitle: Text(
                         event['emergency_contact_info'] ?? "N/A",
-                        style: theme.textTheme.bodyMedium!.copyWith(color: Colors.white70),
+                        style: theme.textTheme.bodyMedium!
+                            .copyWith(color: Colors.white70),
                       ),
                     ),
                   ),
-                   
+
                   // Activity-specific details (if available)
                   if (activity.isNotEmpty)
+
                     _buildActivitySpecificDetails(
                       selectedActivityCategory?.toLowerCase() ?? "",
                       activity,
                       event,
                     ),
-                   
+                  (controller.eventTags.isEmpty)
+                      ? Center(child: Text("No tags available"))
+                      : Wrap(
+                          spacing: 8.0, // Space between tags
+                          runSpacing: 4.0, // Space between rows
+                          children: controller.eventTags
+                              .map((tag) => _buildTagBadge(tag))
+                              .toList(),
+                        ),
+
                   CustomElevatedButton(
-                    text: "Submit".tr,
+                    text: "Go to Home".tr,
                     onPressed: () {
-                      controller.fetchEventDetails(eventCreatedId!, selectedActivityCategory!);
+                      // controller.fetchEventDetails(
+                      //     eventCreatedId!, selectedActivityCategory!);
+                      Get.offAllNamed(AppRoutes.homeScreen);
                     },
                   ),
                 ],

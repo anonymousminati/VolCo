@@ -4,9 +4,9 @@ import 'package:volco/core/utils/supabase_handler.dart';
 
 class EventDescriptionController extends GetxController {
   var isLoading = true.obs;
-  var eventDetails = {}.obs;      // Stores common event details
-  var activityDetails = {}.obs;   // Stores category-specific details
-
+  var eventDetails = {}.obs; // Stores common event details
+  var activityDetails = {}.obs; // Stores category-specific details
+  var eventTags = [].obs; // Stores event tags
   final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
   final SupabaseService supabaseService = SupabaseService();
 
@@ -24,6 +24,13 @@ class EventDescriptionController extends GetxController {
           .single();
       eventDetails.assignAll(commonResponse);
 
+      final tagsResponse = await supabaseClient
+          .from('event_tags')
+          .select()
+          .eq('event_id', eventId)
+          .single();
+      print(tagsResponse["tag_name"].split(","));
+      eventTags.assignAll(tagsResponse["tag_name"].split(","));
       // Determine the specific table name based on the event category.
       String? tableName;
       switch (eventCategory.toLowerCase()) {
@@ -33,7 +40,7 @@ class EventDescriptionController extends GetxController {
         case "health & wellness":
           tableName = "health_event_details";
           break;
-        case "counselling":
+        case "counseling":
           tableName = "counselling_event_details";
           break;
         case "conservation":
@@ -48,7 +55,7 @@ class EventDescriptionController extends GetxController {
         case "animal rescue":
           tableName = "animal_rescue_event_details";
           break;
-        case "clean activity":
+        case "cleaning":
           tableName = "clean_event_details";
           break;
         default:

@@ -32,92 +32,95 @@ class CreateEventScreen extends GetView<CreateEventController> {
   Widget build(BuildContext context) {
 
     return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body:Obx((){
-          if (controller.isLoading.value) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }else{
-            return Form(
-              key: _createEventformKey,
-              child: SizedBox(
-                width: double.maxFinite,
-                child: SingleChildScrollView(
-                  child: Container(
-                    width: double.maxFinite,
-                    padding: EdgeInsets.only(
-                      left: 24.h,
-                      right: 24.h,
-                      top: 10.h,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-
-                        CustomImageView(
-                          imagePath: ImageConstant.imgArrowLeft,
-                          height: 28.h,
-                          width: 30.h,
-                          onTap: () {
-                            Get.back();
-                          },
-                        ),
-                        SizedBox(height: 24.h),
-                        Text(
-                          "Create New Revolution".tr,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.displayMedium!.copyWith(
-                            height: 1.50,
+      child: RefreshIndicator(
+        onRefresh: ()=>controller.loadActivitySpecificFields(controller.selectedCategory.value),
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body:Obx((){
+            if (controller.isLoading.value) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }else{
+              return Form(
+                key: _createEventformKey,
+                child: SizedBox(
+                  width: double.maxFinite,
+                  child: SingleChildScrollView(
+                    child: Container(
+                      width: double.maxFinite,
+                      padding: EdgeInsets.only(
+                        left: 24.h,
+                        right: 24.h,
+                        top: 10.h,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+        
+                          CustomImageView(
+                            imagePath: ImageConstant.imgArrowLeft,
+                            height: 28.h,
+                            width: 30.h,
+                            onTap: () {
+                              Get.back();
+                            },
                           ),
-                        ),
-                        SizedBox(height: 24.h),
-
-                        _buildCreateEventFormSection(context),
-                        // Save Button
-                        SizedBox(height: 24.h),
-                        CustomElevatedButton(
-                          text: "Submit".tr,
-                          onPressed: () async {
-                            if (_createEventformKey.currentState!.validate()) {
-                              print("step1");
-                              // Call createNewEvent() from the controller
-                              bool success = await controller.createNewEvent();
-                              print("step2");
-
-                              if (success) {
-                                print("step3");
-                                // Navigate to home screen if event creation is successful.
-                                Get.offAllNamed(AppRoutes.eventDescriptionScreen,arguments: {
-                                  "eventCreatedId":controller.eventId,
-                                  "eventCategory":controller.selectedCategory.value
-
-                                });
-                              } else {
-                                print("step4");
-
-                                Get.snackbar("Error", "Event creation failed. Please try again.");
+                          SizedBox(height: 24.h),
+                          Text(
+                            "Create New Revolution".tr,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.displayMedium!.copyWith(
+                              height: 1.50,
+                            ),
+                          ),
+                          SizedBox(height: 24.h),
+        
+                          _buildCreateEventFormSection(context),
+                          // Save Button
+                          SizedBox(height: 24.h),
+                          CustomElevatedButton(
+                            text: "Submit".tr,
+                            onPressed: () async {
+                              if (_createEventformKey.currentState!.validate()) {
+                                print("step1");
+                                // Call createNewEvent() from the controller
+                                bool success = await controller.createNewEvent();
+                                print("step2");
+        
+                                if (success) {
+                                  print("step3");
+                                  // Navigate to home screen if event creation is successful.
+                                  Get.offAllNamed(AppRoutes.eventDescriptionScreen,arguments: {
+                                    "eventCreatedId":controller.eventId,
+                                    "eventCategory":controller.selectedCategory.value
+        
+                                  });
+                                } else {
+                                  print("step4");
+        
+                                  Get.snackbar("Error", "Event creation failed. Please try again.");
+                                }
+                              }else{
+                                print("step5");
+        
+                                Get.snackbar("Error", "Please fill all the fields");
                               }
-                            }else{
-                              print("step5");
-
-                              Get.snackbar("Error", "Please fill all the fields");
-                            }
-                          },
-                        ),
-
-
-                      ],
+                            },
+                          ),
+        
+        
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          }
-        })
-
+              );
+            }
+          })
+        
+        ),
       ),
     );
   }
@@ -414,6 +417,38 @@ class CreateEventScreen extends GetView<CreateEventController> {
             },
           ),
 
+          // Emergency Contact Number
+          CustomTextFormField(
+            controller: controller.emergencyContactController,
+            hintText: "Emergency Contact Number".tr,
+            textInputType: TextInputType.phone,
+            textInputAction: TextInputAction.next,
+            prefix: Container(
+              margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
+              child: CustomImageView(
+                imagePath: ImageConstant.imgNoteSkyBlue,
+                height: 18.h,
+                width: 20.h,
+                fit: BoxFit.contain,
+              ),
+            ),
+            prefixConstraints: BoxConstraints(
+              maxHeight: 60.h,
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 20.h,
+              vertical: 18.h,
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Emergency Contact Number is required'.tr;
+              }
+              if (!isValidPhone(value, isRequired: true)) {
+                return 'Enter a valid phone number'.tr;
+              }
+              return null;
+            },
+          ),
 
           Obx(() {
             switch (controller.selectedCategory.value) {
@@ -421,7 +456,7 @@ class CreateEventScreen extends GetView<CreateEventController> {
                 return EducationFields();
               case 'Health & Wellness':
                 return HealthWellnessFields();
-              case 'Counselling':
+              case 'Counseling':
                 return CounselingFields();
               case 'Conservation':
                 return ConservationFields();

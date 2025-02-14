@@ -26,6 +26,7 @@ class CreateEventController extends GetxController {
   final socialMediaController = TextEditingController();
   final dateController = TextEditingController();
   final timeController = TextEditingController();
+  final emergencyContactController = TextEditingController();
   // **📌 Image Picker & Date-Time Fields**
   Rxn<XFile> pickedImage = Rxn<XFile>();
   Rxn<DateTime> selectedDate = Rxn<DateTime>();
@@ -149,7 +150,7 @@ class CreateEventController extends GetxController {
       futures.add(loadTags('animal_rescue'));
       futures.add(loadAnimalTypes());
       futures.add(loadTaskInvolved());
-    } else if (type == "Clean Activity") {
+    } else if (type == "Cleaning") {
       futures.add(loadTags('clean'));
       futures.add(loadAreaTypes());
       futures.add(loadWasteCategories());
@@ -254,87 +255,74 @@ class CreateEventController extends GetxController {
         await supabaseService.fetchEventFieldOptions('education', 'age_group');
     print("ageGroups: $ageGroups");
   }
-
   Future<void> loadEducationSubjectFocus() async {
     subjectFocus.value = await supabaseService.fetchEventFieldOptions(
         'education', 'subject_focus');
     print("subjectFocus: $subjectFocus");
   }
-
   // ** Health & Wellness Loaders **
   Future<void> loadHealthServicesType() async {
     typeOfServices.value = await supabaseService.fetchEventFieldOptions(
         'health_and_wellness', 'type_of_service');
     print("typeOfServices: $typeOfServices");
   }
-
   Future<void> loadHealthMedicalProfessionals() async {
     medicalProfessionalList.value =
         await supabaseService.fetchEventFieldOptions(
             'health_and_wellness', 'medical_professional_required');
     print("medicalProfessionalList: $medicalProfessionalList");
   }
-
   // ** Counseling Loaders **
   Future<void> loadCounselingTypes() async {
     counselingTypes.value = await supabaseService.fetchEventFieldOptions(
         'counseling', 'counseling_type');
     print("counselingTypes: $counselingTypes");
   }
-
   Future<void> loadCounselingSessionFormats() async {
     sessionFormats.value = await supabaseService.fetchEventFieldOptions(
         'counseling', 'session_format');
     print("sessionFormats: $sessionFormats");
   }
-
   // ** Conservation Loader **
   Future<void> loadConservationActivityTypes() async {
     conservationActivityTypes.value = await supabaseService
         .fetchEventFieldOptions('conservation', 'activity_type');
     print("conservationActivityTypes: $conservationActivityTypes");
   }
-
   // ** Work with Elders Loader **
   Future<void> loadElderActivityTypes() async {
     elderActivityTypes.value = await supabaseService.fetchEventFieldOptions(
         'work_with_elders', 'activity_type');
     print("elderActivityTypes: $elderActivityTypes");
   }
-
   // ** Work with Orphans Loader **
   Future<void> loadOrphanActivityTypes() async {
     orphanActivityTypes.value = await supabaseService.fetchEventFieldOptions(
         'work_with_orphans', 'activity_type');
     print("orphanActivityTypes: $orphanActivityTypes");
   }
-
   // ** Animal Rescue Loaders **
   Future<void> loadAnimalTypes() async {
     animalTypes.value = await supabaseService.fetchEventFieldOptions(
         'animal_rescue', 'animal_type');
     print("animalTypes: $animalTypes");
   }
-
   Future<void> loadTaskInvolved() async {
     taskInvolved.value = await supabaseService.fetchEventFieldOptions(
         'animal_rescue', 'task_involved');
     print("taskInvolved: $taskInvolved");
   }
-
   // ** Clean Activity Loaders **
   Future<void> loadAreaTypes() async {
     areaTypes.value = await supabaseService.fetchEventFieldOptions(
-        'clean_activity', 'area_type');
+        'clean', 'area_type');
     print("areaTypes: $areaTypes");
   }
-
   Future<void> loadWasteCategories() async {
     wasteCategories.value = await supabaseService.fetchEventFieldOptions(
-        'clean_activity', 'waste_category');
+        'clean', 'waste_category');
     print("wasteCategories: $wasteCategories");
   }
-
   // ** tag loader **
   Future<void> loadTags(String tageventcatogory) async {
     TagsValueList.value =
@@ -430,7 +418,7 @@ class CreateEventController extends GetxController {
         'contact_number': mobileNumberController.text.trim(),
         'social_media_link': socialMediaController.text.trim(),
         'emergency_contact_info':
-            "Emergency contact details here", // Update as needed
+            emergencyContactController.text.trim()??"Emergency contact details here", // Update as needed
         'volunteer_requirements': volunteerController.text.trim(),
         'activity_type': selectedCategory.value,
       }).select('event_id');
@@ -460,32 +448,35 @@ class CreateEventController extends GetxController {
           'materials_needed': materialsNeededController.text,
         });
         print("createNewEvent 12 1");
-      } else if (selectedCategory.value == "Health & Wellness") {
+      }
+      else if (selectedCategory.value == "Health & Wellness") {
         await supabaseClient.from('event_tags').insert({
           'event_id': eventId,
           'tag_name': selectedTags.join(", "),
         });
         await supabaseClient.from('health_event_details').insert({
           'event_id': eventId,
-          'service_type': selectedServices.join(", "),
+          'type_of_service': selectedServices.join(", "),
           'medical_professional_required':
               selectedMedicalProfessional.value ?? "",
           'equipment_needed': equipmentNeeded.text.trim(),
-          'medication_guidelines': medicationGuidelines.text.trim(),
+          'medication_handling_guidelines': medicationGuidelines.text.trim(),
         });
         print("createNewEvent 12 2");
-      } else if (selectedCategory.value == "Counseling") {
+      }
+      else if (selectedCategory.value == "Counseling") {
         await supabaseClient.from('event_tags').insert({
           'event_id': eventId,
           'tag_name': selectedTags.join(", "),
         });
-        await supabaseClient.from('counseling_event_details').insert({
+        await supabaseClient.from('counselling_event_details').insert({
           'event_id': eventId,
           'counseling_type': selectedCounselingType.value ?? "",
           'session_format': selectedSessionFormat.value ?? "",
         });
         print("createNewEvent 12 3");
-      } else if (selectedCategory.value == "Conservation") {
+      }
+      else if (selectedCategory.value == "Conservation") {
         await supabaseClient.from('event_tags').insert({
           'event_id': eventId,
           'tag_name': selectedTags.join(", "),
@@ -498,7 +489,8 @@ class CreateEventController extends GetxController {
           'waste_disposal_plan': wasteDisposalPlan.text.trim(),
         });
         print("createNewEvent 12 4");
-      } else if (selectedCategory.value == "Work with Elders") {
+      }
+      else if (selectedCategory.value == "Work with Elders") {
         await supabaseClient.from('event_tags').insert({
           'event_id': eventId,
           'tag_name': selectedTags.join(", "),
@@ -509,7 +501,8 @@ class CreateEventController extends GetxController {
           'items_to_bring': itemsToBring.text.trim(),
         });
         print("createNewEvent 12 5");
-      } else if (selectedCategory.value == "Work with Orphans") {
+      }
+      else if (selectedCategory.value == "Work with Orphans") {
         await supabaseClient.from('event_tags').insert({
           'event_id': eventId,
           'tag_name': selectedTags.join(", "),
@@ -521,7 +514,8 @@ class CreateEventController extends GetxController {
           'donation_needs': donationNeeds.text.trim(),
         });
         print("createNewEvent 12 6");
-      } else if (selectedCategory.value == "Animal Rescue") {
+      }
+      else if (selectedCategory.value == "Animal Rescue") {
         await supabaseClient.from('event_tags').insert({
           'event_id': eventId,
           'tag_name': selectedTags.join(", "),
@@ -534,16 +528,17 @@ class CreateEventController extends GetxController {
           'handling_equipment': handlingEquipment.text.trim(),
         });
         print("createNewEvent 12 7");
-      } else if (selectedCategory.value == "Clean Activity") {
+      }
+      else if (selectedCategory.value == "Cleaning") {
         await supabaseClient.from('event_tags').insert({
           'event_id': eventId,
           'tag_name': selectedTags.join(", "),
         });
-        await supabaseClient.from('clean_activity_event_details').insert({
+        await supabaseClient.from('clean_event_details').insert({
           'event_id': eventId,
           'area_type': selectedAreaType.value ?? "",
           'waste_category': selectedWasteCategory.value ?? "",
-          'recycling_plan': recyclingPlan.text.trim(),
+          'recycling_plan_description': recyclingPlan.text.trim(),
         });
         print("createNewEvent 12 8");
       }
@@ -606,6 +601,7 @@ class CreateEventController extends GetxController {
     handlingEquipment.dispose();
     recyclingPlan.dispose();
     materialsNeededController.dispose();
+    emergencyContactController.dispose();
     super.onClose();
   }
 }
