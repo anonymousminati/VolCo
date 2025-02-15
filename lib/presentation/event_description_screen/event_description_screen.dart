@@ -234,8 +234,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                 Expanded(
                   child: InfoContainer(
                     title: "Tools Provided/Needed",
-                    value: (activity["tools_provided_needed"] as List<dynamic>?)
-                            ?.join(", ") ??
+                    value: activity["tools_provided_needed"]  ??
                         "N/A",
                   ),
                 ),
@@ -358,8 +357,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    (activity["items_to_bring"] as List<dynamic>?)
-                            ?.join(", ") ??
+                    activity["items_to_bring"] ??
                         "N/A",
                     style: theme.textTheme.bodyMedium!.copyWith(
                       color: Colors.white,
@@ -394,6 +392,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
               ],
             ),
             Row(
+              spacing: 20.h,
               children: [
                 Expanded(
                   child: InfoContainer(
@@ -404,8 +403,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                 Expanded(
                   child: InfoContainer(
                     title: "Donation Needs",
-                    value: (activity["donation_needs"] as List<dynamic>?)
-                            ?.join(", ") ??
+                    value: activity["donation_needs"] ??
                         "N/A",
                   ),
                 ),
@@ -430,8 +428,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                 Expanded(
                   child: InfoContainer(
                     title: "Tasks Involved",
-                    value: (activity["tasks_involved"] as List<dynamic>?)
-                            ?.join(", ") ??
+                    value: activity["tasks_involved"]  ??
                         "N/A",
                   ),
                 ),
@@ -443,14 +440,13 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                 Expanded(
                   child: InfoContainer(
                     title: "Vaccination Status",
-                    value: activity["vaccination_status"] ?? "N/A",
+                    value: activity["vaccination_status_disclosure"] ?? "N/A",
                   ),
                 ),
                 Expanded(
                   child: InfoContainer(
                     title: "Handling Equipment",
-                    value: (activity["handling_equipment"] as List<dynamic>?)
-                            ?.join(", ") ??
+                    value: activity["handling_equipment"]  ??
                         "N/A",
                   ),
                 ),
@@ -562,7 +558,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
+      child: RefreshIndicator(child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Obx(() {
           if (controller.isLoading.value) {
@@ -609,7 +605,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                   AutoSizeText(
                     event['event_name'] ?? "Event Name",
                     style:
-                        CustomTextStyles.titleLarge20.copyWith(fontSize: 40.h),
+                    CustomTextStyles.titleLarge20.copyWith(fontSize: 40.h),
                     maxLines: 2,
                     minFontSize: 20,
                     overflow: TextOverflow.ellipsis,
@@ -734,7 +730,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                     child: Text(
                       event['event_description'] ?? "No description available.",
                       style:
-                          theme.textTheme.bodyMedium?.copyWith(fontSize: 18.h),
+                      theme.textTheme.bodyMedium?.copyWith(fontSize: 18.h),
                       textAlign: TextAlign.justify,
                     ),
                   ),
@@ -867,12 +863,12 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                   (controller.eventTags.isEmpty)
                       ? Center(child: Text("No tags available"))
                       : Wrap(
-                          spacing: 8.0, // Space between tags
-                          runSpacing: 4.0, // Space between rows
-                          children: controller.eventTags
-                              .map((tag) => _buildTagBadge(tag))
-                              .toList(),
-                        ),
+                    spacing: 8.0, // Space between tags
+                    runSpacing: 4.0, // Space between rows
+                    children: controller.eventTags
+                        .map((tag) => _buildTagBadge(tag))
+                        .toList(),
+                  ),
 
                   CustomElevatedButton(
                     text: "Go to Home".tr,
@@ -887,7 +883,9 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
             ),
           );
         }),
-      ),
+      ), onRefresh: (){
+        return controller.fetchEventDetails(eventCreatedId!, selectedActivityCategory!);
+      }),
     );
   }
 }

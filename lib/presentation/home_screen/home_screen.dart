@@ -3,6 +3,7 @@ import 'package:volco/core/app_export.dart';
 import 'package:volco/presentation/create_event_catogory_screen/create_event_catogory_screen.dart';
 import 'package:volco/presentation/home_screen/controller/home_controller.dart';
 import 'package:volco/presentation/home_screen/home_screen_initial_page.dart';
+import 'package:volco/presentation/search_screen/search_screen.dart';
 import 'package:volco/widgets/custom_bottom_bar.dart';
 
 
@@ -45,8 +46,8 @@ class HomeScreen extends GetWidget<HomeController> {
     switch (type) {
       case BottomBarEnum.Home:
         return AppRoutes.homeScreenInitialPage;
-      // case BottomBarEnum.Search:
-      //   return AppRoutes.searchPage;
+      case BottomBarEnum.Search:
+        return AppRoutes.searchScreen;
       case BottomBarEnum.Create:
         return AppRoutes.createEventCatogoryScreen;
       // case BottomBarEnum.Profile:
@@ -61,8 +62,8 @@ class HomeScreen extends GetWidget<HomeController> {
     switch (currentRoute) {
       case AppRoutes.homeScreenInitialPage:
         return HomeScreenInitialPage();
-      // case AppRoutes.searchPage:
-      //   return SearchPage();
+      case AppRoutes.searchScreen:
+        return SearchScreen();
       case AppRoutes.createEventCatogoryScreen:
         return CreateEventCatogoryScreen();
       // case AppRoutes.profileSettingsPage:

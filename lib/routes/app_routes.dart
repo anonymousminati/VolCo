@@ -71,6 +71,10 @@ class AppRoutes {
 
   static const String eventDescriptionScreen = '/event_description_screen';
 
+  static const String searchScreen = '/search_screen';
+
+
+
   static List<GetPage> pages = [
     GetPage(
       name: splashScreen,

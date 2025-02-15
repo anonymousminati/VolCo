@@ -37,8 +37,8 @@ class HomeScreenInitialPage extends StatelessWidget {
 
                     // Navigate to home screen if event creation is successful.
                     Get.offAllNamed(AppRoutes.eventDescriptionScreen,arguments: {
-                      "eventCreatedId":46,
-                      "eventCategory":"Cleaning"
+                      "eventCreatedId":53,
+                      "eventCategory":"Work With Elders"
 
                     });
 

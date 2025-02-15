@@ -202,6 +202,15 @@ class WorkWithEldersFields extends StatelessWidget {
             },
           ),
         ),
+        //Wheelchair Accessible
+        CustomSelectDropdown(
+          hintText: "Wheel Chair Accessible".tr,
+          options: ["Yes", "No"],
+          onChanged: (value) {
+            // Save the selected value
+            controller.wheelChairAccessible.value = value!;
+          },
+        ),
         // Items to Bring
         CustomTextFormField(
           hintText: "Items to Bring".tr,

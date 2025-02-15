@@ -77,6 +77,7 @@ class CreateEventController extends GetxController {
   RxList<String> elderActivityTypes = <String>[].obs;
   var selectedElderActivityType = RxnString();
   final itemsToBring = TextEditingController();
+  final wheelChairAccessible = RxnString();
 
   // **Work with Orphans**
   RxList<String> orphanActivityTypes = <String>[].obs;
@@ -140,10 +141,10 @@ class CreateEventController extends GetxController {
     } else if (type == "Conservation") {
       futures.add(loadTags('conservation'));
       futures.add(loadConservationActivityTypes());
-    } else if (type == "Work with Elders") {
+    } else if (type == "Work With Elders") {
       futures.add(loadTags('work_with_elders'));
       futures.add(loadElderActivityTypes());
-    } else if (type == "Work with Orphans") {
+    } else if (type == "Work With Orphans") {
       futures.add(loadTags('work_with_orphans'));
       futures.add(loadOrphanActivityTypes());
     } else if (type == "Animal Rescue") {
@@ -309,7 +310,7 @@ class CreateEventController extends GetxController {
   }
   Future<void> loadTaskInvolved() async {
     taskInvolved.value = await supabaseService.fetchEventFieldOptions(
-        'animal_rescue', 'task_involved');
+        'animal_rescue', 'tasks_involved');
     print("taskInvolved: $taskInvolved");
   }
   // ** Clean Activity Loaders **
@@ -435,6 +436,7 @@ class CreateEventController extends GetxController {
       print("Event Created with ID: $eventId");
 
       // **Insert Additional Fields Based on Category**
+      print("Insert Additional Fields Based on Category : ${selectedCategory.value}");
       if (selectedCategory.value == "Education") {
         await supabaseClient.from('event_tags').insert({
           'event_id': eventId,
@@ -484,30 +486,31 @@ class CreateEventController extends GetxController {
         await supabaseClient.from('conservation_event_details').insert({
           'event_id': eventId,
           'activity_type': selectedActivityType.value ?? "",
-          'tools_provided': toolsProvided.text.trim(),
-          'environmental_impact': environmentalImpact.text.trim(),
+          'tools_provided_needed': toolsProvided.text.trim(),
+          'environmental_impact_description': environmentalImpact.text.trim(),
           'waste_disposal_plan': wasteDisposalPlan.text.trim(),
         });
         print("createNewEvent 12 4");
       }
-      else if (selectedCategory.value == "Work with Elders") {
+      else if (selectedCategory.value == "Work With Elders") {
         await supabaseClient.from('event_tags').insert({
           'event_id': eventId,
           'tag_name': selectedTags.join(", "),
         });
-        await supabaseClient.from('elder_care_event_details').insert({
+        await supabaseClient.from('elders_event_details').insert({
           'event_id': eventId,
           'activity_type': selectedElderActivityType.value ?? "",
           'items_to_bring': itemsToBring.text.trim(),
+          'wheelchair_accessible': wheelChairAccessible.value ?? "No",
         });
         print("createNewEvent 12 5");
       }
-      else if (selectedCategory.value == "Work with Orphans") {
+      else if (selectedCategory.value == "Work With Orphans") {
         await supabaseClient.from('event_tags').insert({
           'event_id': eventId,
           'tag_name': selectedTags.join(", "),
         });
-        await supabaseClient.from('orphan_care_event_details').insert({
+        await supabaseClient.from('orphans_event_details').insert({
           'event_id': eventId,
           'child_age_range': childAgeRange.text.trim(),
           'activity_type': selectedOrphanActivityType.value ?? "",
@@ -523,8 +526,8 @@ class CreateEventController extends GetxController {
         await supabaseClient.from('animal_rescue_event_details').insert({
           'event_id': eventId,
           'animal_type': selectedAnimalType.value ?? "",
-          'task_involved': selectedTaskInvolved.value ?? "",
-          'vaccination_status': vaccinationStatus.text.trim(),
+          'tasks_involved': selectedTaskInvolved.value ?? "",
+          'vaccination_status_disclosure': vaccinationStatus.text.trim(),
           'handling_equipment': handlingEquipment.text.trim(),
         });
         print("createNewEvent 12 7");
