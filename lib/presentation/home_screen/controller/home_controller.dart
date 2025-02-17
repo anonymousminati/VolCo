@@ -12,6 +12,7 @@ class HomeController extends GetxController {
       HomeScreenInitialModel().obs;
 
   RxString avatarUrl = ''.obs; // RxString for reactive updates
+  RxString userId = ''.obs; // RxString for reactive updates
 
   @override
   void onReady() {
@@ -19,11 +20,14 @@ class HomeController extends GetxController {
     _fetchAvatarUrl(); // Fetch avatar URL when the controller is ready
   }
 
-  void _fetchAvatarUrl() async {
+
+
+  Future<void> _fetchAvatarUrl()  async {
     try {
       User? user  =await SupabaseService().getUserData();
       if (user != null) {
-
+        print('User metadata: ${user.userMetadata}');
+        userId.value = user.id; // Update reactive value
         avatarUrl.value = user.userMetadata?['avatar_url'] ; // Update reactive value
       }
     } catch (error) {

@@ -94,8 +94,9 @@ class CreateEventScreen extends GetView<CreateEventController> {
                                   // Navigate to home screen if event creation is successful.
                                   Get.offAllNamed(AppRoutes.eventDescriptionScreen,arguments: {
                                     "eventCreatedId":controller.eventId,
-                                    "eventCategory":controller.selectedCategory.value
-        
+                                    "eventCategory":controller.selectedCategory.value,
+
+
                                   });
                                 } else {
                                   print("step4");

@@ -7,6 +7,8 @@ class EventDescriptionController extends GetxController {
   var eventDetails = {}.obs; // Stores common event details
   var activityDetails = {}.obs; // Stores category-specific details
   var eventTags = [].obs; // Stores event tags
+  RxString userId = ''.obs; // RxString for reactive updates
+
   final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
   final SupabaseService supabaseService = SupabaseService();
 
@@ -79,7 +81,18 @@ class EventDescriptionController extends GetxController {
       isLoading.value = false;
     }
   }
-
+  Future<void> _fetchUserId()  async {
+    try {
+      User? user  =await SupabaseService().getUserData();
+      if (user != null) {
+        print('User metadata: ${user.userMetadata}');
+        userId.value = user.id; // Update reactive value
+        // Update reactive value
+      }
+    } catch (error) {
+      print('Error fetching avatar URL: $error');
+    }
+  }
   @override
   void onInit() {
     super.onInit();

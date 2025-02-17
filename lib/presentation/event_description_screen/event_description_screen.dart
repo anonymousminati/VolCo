@@ -10,11 +10,13 @@ import 'package:volco/widgets/custom_image_view.dart';
 class EventDescriptionScreen extends GetView<EventDescriptionController> {
   final String? selectedActivityCategory;
   final int? eventCreatedId;
+  final bool isForRegistration;
 
   EventDescriptionScreen({
     Key? key,
     required this.selectedActivityCategory,
     required this.eventCreatedId,
+    required this.isForRegistration,
   }) : super(key: key);
 
   /// This function builds extra fields based on the category.
@@ -400,13 +402,13 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                     value: activity["activity_type"] ?? "N/A",
                   ),
                 ),
-                Expanded(
+               Expanded(
                   child: InfoContainer(
                     title: "Donation Needs",
                     value: activity["donation_needs"] ??
                         "N/A",
                   ),
-                ),
+                )
               ],
             ),
           ],
@@ -869,15 +871,39 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                         .map((tag) => _buildTagBadge(tag))
                         .toList(),
                   ),
+                  Row(
+                    spacing: 20.h,
+                    children: [
+                      Expanded(
+                        child: CustomElevatedButton(
+                          text: "Go to Home".tr,
+                          onPressed: () {
+                            // controller.fetchEventDetails(
+                            //     eventCreatedId!, selectedActivityCategory!);
+                            Get.offAllNamed(AppRoutes.homeScreen);
+                          },
+                        ),
+                      ),
+          // TODO: change the condition to check if the user is the organizer ==
+          (isForRegistration && controller.userId.value != controller.eventDetails.value["organizer_id"] )  ?Expanded(
+                        child: CustomElevatedButton(
+                          text: "Join event".tr,
 
-                  CustomElevatedButton(
-                    text: "Go to Home".tr,
-                    onPressed: () {
-                      // controller.fetchEventDetails(
-                      //     eventCreatedId!, selectedActivityCategory!);
-                      Get.offAllNamed(AppRoutes.homeScreen);
-                    },
-                  ),
+                          buttonStyle: ElevatedButton.styleFrom(
+                              backgroundColor: appTheme.green600
+                          ),
+                          buttonTextStyle: CustomTextStyles.titleMedium16_1.copyWith(color: appTheme.black900),
+                          onPressed: () {
+                            // controller.fetchEventDetails(
+                            //     eventCreatedId!, selectedActivityCategory!);
+                            // Get.offAllNamed(AppRoutes.homeScreen);
+
+                            print("join event clicked");
+                          },
+                        ),
+                      ): SizedBox.shrink(),
+                    ],
+                  )
                 ],
               ),
             ),

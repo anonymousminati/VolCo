@@ -7,6 +7,7 @@ import 'package:volco/core/utils/authentication.dart';
 import 'package:volco/core/utils/image_constant.dart';
 import 'package:volco/presentation/home_screen/controller/home_controller.dart';
 import 'package:volco/presentation/home_screen/models/homescreenlist_item_model.dart';
+import 'package:volco/presentation/home_screen/widget/homeBanner.dart';
 import 'package:volco/presentation/home_screen/widget/homescreenlist_item_widget.dart';
 import 'package:volco/widgets/custom_outlined_button.dart';
 
@@ -95,6 +96,7 @@ class HomeScreenInitialPage extends StatelessWidget {
       height: 38.h,
       width: 150.h,
       text: "recommended".tr,
+
       buttonStyle: CustomButtonStyle.fillPrimaryTL18,
       buttonTextStyle: CustomTextStyles.titleMediumSemiBold,
     );
@@ -174,6 +176,45 @@ AuthController().logout();
             ),
           ),
           SizedBox(height: 34.h),
+          RoundedImageWidget(imageUrl: ImageConstant.imgHomeBanner),
+          SizedBox(height: 20.h),
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20.h),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.h),
+              side: BorderSide(color: Colors.red, width: 2),
+            ),
+            tileColor: appTheme.gray800, // Background color
+            leading: CustomImageView(
+              imagePath: ImageConstant.imgSoS,
+              height: 50.h,
+              width: 50.h,
+            ),
+            title: Text(
+              "Emergency Alert",
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+            subtitle: Text(
+              "Mobilize volunteer quickly",
+              style: TextStyle(color: Colors.white),
+            ),
+            trailing: AspectRatio(
+              aspectRatio: 1,
+              child: Container(
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12.h),
+                ),
+                child: Icon(
+                  Icons.warning_rounded,
+                  color: Colors.red,
+                  size: 60.h,
+                ),
+              ),
+            ),
+          ),
+
           Text(
             "hello Prathamesh".tr,
             style: theme.textTheme.headlineLarge,

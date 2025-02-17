@@ -180,9 +180,11 @@ class AppRoutes {
         final String selectedActivityCategory =
             Get.arguments['eventCategory'] ?? "";
         final int eventCreatedId = Get.arguments['eventCreatedId'] ?? 0;
+        final bool isForRegister = Get.arguments['isForRegister'] ?? false;
         return EventDescriptionScreen(
             selectedActivityCategory: selectedActivityCategory,
-            eventCreatedId: eventCreatedId);
+            eventCreatedId: eventCreatedId,
+            isForRegistration: isForRegister);
         },
       bindings: [EventDescriptionBinding()],
     ),

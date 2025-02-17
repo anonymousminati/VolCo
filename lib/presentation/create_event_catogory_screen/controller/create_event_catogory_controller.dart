@@ -73,7 +73,6 @@ class CreateEventCatogoryController extends GetxController {
   Future<void> initializeEventCategories() async {
     List<Map<String, dynamic>> response =
         await supabaseService.fetchCatogories();
-    supabaseService.fetchCatogories();
     eventCategories.clear();
     for (var category in response) {
       eventCategories.add(CreateEventCategoryModel(
