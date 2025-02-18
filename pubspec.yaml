@@ -52,6 +52,7 @@ dependencies:
   dotted_border: ^2.1.0
   syncfusion_flutter_datepicker: ^28.2.4
   intl: ^0.20.2
+  google_maps_flutter: ^2.10.0
 
 dev_dependencies:
   flutter_test:
