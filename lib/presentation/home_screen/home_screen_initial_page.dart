@@ -16,11 +16,10 @@ class HomeScreenInitialPage extends StatelessWidget {
 
   HomeController controller = Get.find<HomeController>();
 
-
-
   @override
   Widget build(BuildContext context) {
-    print("user avatar print from updateuserdetailswithoutfiles ${controller.avatarUrl}");
+    print(
+        "user avatar print from updateuserdetailswithoutfiles ${controller.avatarUrl}");
 
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -35,18 +34,21 @@ class HomeScreenInitialPage extends StatelessWidget {
             CustomElevatedButton(
               text: "Submit".tr,
               onPressed: () async {
-
-                    // Navigate to home screen if event creation is successful.
-                    Get.offAllNamed(AppRoutes.eventDescriptionScreen,arguments: {
-                      "eventCreatedId":53,
-                      "eventCategory":"Work With Elders"
-
-                    });
-
+                // Navigate to home screen if event creation is successful.
+                Get.offAllNamed(AppRoutes.eventDescriptionScreen, arguments: {
+                  "eventCreatedId": 53,
+                  "eventCategory": "Work With Elders"
+                });
               },
             ),
-
             SizedBox(height: 4.h),
+            CustomElevatedButton(
+              text: "Google Map open".tr,
+              onPressed: () async {
+                // Navigate to home screen if event creation is successful.
+                Get.offAllNamed(AppRoutes.googleMapScreen);
+              },
+            ),
           ],
         ),
       ),
@@ -96,7 +98,6 @@ class HomeScreenInitialPage extends StatelessWidget {
       height: 38.h,
       width: 150.h,
       text: "recommended".tr,
-
       buttonStyle: CustomButtonStyle.fillPrimaryTL18,
       buttonTextStyle: CustomTextStyles.titleMediumSemiBold,
     );
@@ -121,7 +122,6 @@ class HomeScreenInitialPage extends StatelessWidget {
   }
 
   Widget _buildFloatingIconColumn() {
-
     return Container(
       width: double.maxFinite,
       margin: EdgeInsets.symmetric(horizontal: 24.h),
@@ -150,7 +150,7 @@ class HomeScreenInitialPage extends StatelessWidget {
                   height: 28.h,
                   width: 30.h,
                   onTap: () {
-AuthController().logout();
+                    AuthController().logout();
                   },
                 ),
                 CustomImageView(
@@ -163,8 +163,9 @@ AuthController().logout();
                 ),
                 Obx(
                   () => CustomImageView(
-                    imagePath:controller.avatarUrl.value.isEmpty
-                        ? ImageConstant.imgProfileSkyBlue // Fallback if URL is empty
+                    imagePath: controller.avatarUrl.value.isEmpty
+                        ? ImageConstant
+                            .imgProfileSkyBlue // Fallback if URL is empty
                         : controller.avatarUrl.value,
                     height: 28.h,
                     width: 30.h,
@@ -192,7 +193,8 @@ AuthController().logout();
             ),
             title: Text(
               "Emergency Alert",
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
             ),
             subtitle: Text(
               "Mobilize volunteer quickly",
@@ -214,7 +216,6 @@ AuthController().logout();
               ),
             ),
           ),
-
           Text(
             "hello Prathamesh".tr,
             style: theme.textTheme.headlineLarge,
@@ -262,11 +263,15 @@ AuthController().logout();
 
   Widget _buildHotelRow() {
     return Container(
-        width: 500,
-        alignment: Alignment.centerLeft,
-        margin: EdgeInsets.only(left: 24.h),
-        child: SizedBox(
-            width: double.maxFinite, height: 400.h, child: Text("helllll"),),);
+      width: 500,
+      alignment: Alignment.centerLeft,
+      margin: EdgeInsets.only(left: 24.h),
+      child: SizedBox(
+        width: double.maxFinite,
+        height: 400.h,
+        child: Text("helllll"),
+      ),
+    );
   }
 
   /// Section Widget

@@ -9,6 +9,8 @@ import 'package:volco/presentation/event_description_screen/binding/event_descri
 import 'package:volco/presentation/event_description_screen/event_description_screen.dart';
 import 'package:volco/presentation/forgot_password_screen/binding/forgot_password_binding.dart';
 import 'package:volco/presentation/forgot_password_screen/forgot_password_screen.dart';
+import 'package:volco/presentation/google_map_screen/binding/google_map_binding.dart';
+import 'package:volco/presentation/google_map_screen/google_map_screen.dart';
 import 'package:volco/presentation/home_screen/binding/home_binding.dart';
 import 'package:volco/presentation/home_screen/home_screen.dart';
 import 'package:volco/presentation/home_screen/home_screen_initial_page.dart';
@@ -75,8 +77,11 @@ class AppRoutes {
 
   static const String searchScreen = '/search_screen';
 
-  static const String volunteerRegistrationScreen =
-      '/volunteer_registration_screen';
+  static const String volunteerRegistrationScreen = '/volunteer_registration_screen';
+
+  static const String  googleMapScreen= '/google_map_screen';
+
+
 
   static List<GetPage> pages = [
     GetPage(
@@ -196,11 +201,15 @@ class AppRoutes {
       page: () {
         final int eventId = Get.arguments['eventId'] ?? "";
         return VolunteerRegistrationScreen(
-
           eventId: eventId,
         );
       },
       bindings: [VolunteerRegistrationBinding()],
+    ),
+    GetPage(
+      name: googleMapScreen,
+      page: () => GoogleMapScreen(),
+      bindings: [GoogleMapBinding()],
     ),
   ];
 }
