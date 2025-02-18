@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:volco/core/utils/image_constant.dart';
 import 'package:volco/core/utils/project_constants.dart'; // Contains your GOOGLE_MAP_API_KEY
 
 class GoogleMapScreenController extends GetxController {
@@ -13,7 +15,7 @@ class GoogleMapScreenController extends GetxController {
   );
   // Observable current position (updated live)
   Rx<LatLng?> currentPosition = Rx<LatLng?>(null);
-
+RxString googleMapDarkStyle =  "".obs;
   // Destination – you may change this as needed.
   final LatLng destination = const LatLng(18.5172655, 73.8514514);
 
@@ -32,7 +34,10 @@ class GoogleMapScreenController extends GetxController {
     _initializeLocation();
   }
 
+
+
   Future<void> _initializeLocation() async {
+    googleMapDarkStyle.value = await rootBundle.loadString(ImageConstant.mapDarkStyle);
     // Request location service and permission
     bool serviceEnabled = await _location.serviceEnabled();
     if (!serviceEnabled) {

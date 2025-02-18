@@ -46,7 +46,7 @@ class HomeScreenInitialPage extends StatelessWidget {
               text: "Google Map open".tr,
               onPressed: () async {
                 // Navigate to home screen if event creation is successful.
-                Get.offAllNamed(AppRoutes.googleMapScreen);
+                Get.toNamed(AppRoutes.googleMapScreen);
               },
             ),
           ],

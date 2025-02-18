@@ -576,6 +576,14 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                     spacing: 20.h,
                     children: [
                       // Back Arrow
+                      CustomImageView(
+                        imagePath: ImageConstant.imgArrowLeft,
+                        height: 28.h,
+                        width: 30.h,
+                        onTap: () => Get.back(),
+                      ),
+
+
                       _buildDescriptionDetails(event),
 
                       // Activity-specific details (if available)
@@ -673,12 +681,6 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
       crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
-        CustomImageView(
-          imagePath: ImageConstant.imgArrowLeft,
-          height: 28.h,
-          width: 30.h,
-          onTap: () => Get.back(),
-        ),
 
         // Event Image
         Container(

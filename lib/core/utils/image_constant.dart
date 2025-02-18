@@ -4,6 +4,8 @@ class ImageConstant {
 
   static String lottiePath = 'assets/lottie';
 
+  static String mapStylePath = 'assets/map_style';
+
   //App logo images standard
   static String imgLogoStandard = '$imagePath/VolCo_logo_standard.png';
 
@@ -128,4 +130,8 @@ class ImageConstant {
   static String uploadAnimationLottie = '$lottiePath/uploadAnimation.json';
 
   static String uploadSuccessAnimationLottie = '$lottiePath/uploadSuccess.json';
+
+
+  //map style constants here
+  static String mapDarkStyle = '$mapStylePath/dark_map_style.json';
 }

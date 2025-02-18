@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:volco/core/app_export.dart';
+import 'package:volco/core/utils/image_constant.dart';
 import 'package:volco/presentation/google_map_screen/controller/google_map_controller.dart';
 import 'package:volco/widgets/custom_elevated_button.dart';
 
@@ -18,18 +19,17 @@ class GoogleMapScreen extends GetView<GoogleMapScreenController> {
         appBar: AppBar(
           title: const Text("Event Navigation"),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.info_outline),
-              onPressed: () {
-                // Print current location info when the button is pressed
-                controller.zoomToCurrentLocation();
-              },
-            )
+            CustomImageView(
+              imagePath: ImageConstant.imgArrowLeft,
+              height: 28.h,
+              width: 30.h,
+              onTap: () => Get.back(),
+            ),
           ],
         ),
         body: Obx(() {
           return GoogleMap(
-
+style: controller.googleMapDarkStyle.value ,
             onMapCreated: (GoogleMapController mapController) {
               controller.mapController = mapController;
             },
