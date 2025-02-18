@@ -10,7 +10,7 @@ LightCodeColors get appTheme => ThemeHelper().themeColor();
 ThemeData get theme => ThemeHelper().themeData();
 
 class ThemeHelper {
-  var _appTheme = PrefUtils().getThemeData();
+  var _appTheme = PrefUtils.instance.getThemeData();
 
   Map<String, LightCodeColors> _supportedCustomScheme = {
     'lightCode': LightCodeColors()
@@ -20,7 +20,7 @@ class ThemeHelper {
   };
 
   void changeTheme(String _newTheme) {
-    PrefUtils().setThemeData(_newTheme);
+    PrefUtils.instance.setThemeData(_newTheme);
     Get.forceAppUpdate();
   }
 

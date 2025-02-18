@@ -1,50 +1,43 @@
 import 'dart:convert';
-import 'dart:ui';
-import 'package:flutter/scheduler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// ignore_for_file: must_be_immutable
 class PrefUtils {
-  PrefUtils() {
-    SharedPreferences.getInstance().then((value) {
-      _sharedPreferences = value;
-    });
-  }
-  static SharedPreferences? _sharedPreferences;
+  // Singleton instance
+  static final PrefUtils instance = PrefUtils._internal();
+
+  // Private constructor
+  PrefUtils._internal();
+
+  SharedPreferences? _prefs;
+
+  /// Initializes the SharedPreferences instance.
   Future<void> init() async {
-    _sharedPreferences ??= await SharedPreferences.getInstance();
-    print('SharedPreference Initialized');
+    _prefs ??= await SharedPreferences.getInstance();
+    print('SharedPreferences initialized');
   }
 
-  ///will clear all the data stored in preference
-  void clearPreferencesData() async {
-    _sharedPreferences!.clear();
+  /// Clears all stored preference data.
+  Future<void> clearPreferencesData() async {
+    await _prefs?.clear();
   }
 
-  //set the supabase auth session
-  Future<void> setSupabaseAuthSession(String value) {
-    return _sharedPreferences!.setString('supabase_auth_session', value);
+  /// Stores the Supabase auth session as a JSON string.
+  Future<void> setSupabaseAuthSession(String value) async {
+    await _prefs!.setString('supabase_auth_session', value);
   }
 
-  //get the supabase auth session
-  String getSupabaseAuthSession() {
-    try {
-      return _sharedPreferences!.getString('supabase_auth_session')!;
-    } catch (e) {
-      print("error while getting shared pred supabase_auth_session: $e");
-      return '';
-    }
+  /// Retrieves the stored Supabase auth session JSON string.
+  String? getSupabaseAuthSession() {
+    return _prefs?.getString('supabase_auth_session');
   }
 
-  Future<void> setThemeData(String value) {
-    return _sharedPreferences!.setString('themeData', value);
+  /// Stores theme data.
+  Future<void> setThemeData(String value) async {
+    await _prefs!.setString('themeData', value);
   }
 
+  /// Retrieves the stored theme data.
   String getThemeData() {
-    try {
-      return _sharedPreferences!.getString('themeData')!;
-    } catch (e) {
-      return 'primary';
-    }
+    return _prefs?.getString('themeData') ?? 'primary';
   }
 }

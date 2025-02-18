@@ -26,27 +26,26 @@ class SplashController extends GetxController {
   }
 
   Future<void> _checkAuthenticationStatus() async {
-    final supabaseHandler = SupabaseHandler();
-    final supabaseClient = supabaseHandler.supabaseClient;
+    final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
     var currentUser = supabaseClient.auth.currentUser;
     print("currentUser: $currentUser");
 
-    String savedSession = PrefUtils().getSupabaseAuthSession();
-    if (savedSession.isNotEmpty) {
+    String? savedSession = await PrefUtils.instance.getSupabaseAuthSession();
+    if (savedSession!.isNotEmpty) {
       // If the session exists, try to set the session and get the user details
-   try {
-        await supabaseClient.auth.recoverSession(savedSession);
+      try {
+        await supabaseClient.auth.recoverSession(savedSession.toString());
         currentUser = supabaseClient.auth.currentUser;
       } catch (e) {
         print("Error recovering session: $e");
       }
     }
 
-
     print("currentUser: $currentUser");
     if (currentUser != null) {
       // Check if user has completed their profile
-      final bool allFieldsFilled =  await authenticationController.checkAllFieldsFilled(currentUser.id);
+      final bool allFieldsFilled =
+          await authenticationController.checkAllFieldsFilled(currentUser.id);
       print("allFieldsFilled: $allFieldsFilled ");
       if (allFieldsFilled) {
         // User profile is complete, redirect to Home Screen

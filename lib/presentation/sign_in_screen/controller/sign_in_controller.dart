@@ -102,7 +102,7 @@ class SignInController extends GetxController {
               ),
             ),
             isDismissible: false,);
-        await PrefUtils().setSupabaseAuthSession(session!.refreshToken!);
+        await PrefUtils.instance.setSupabaseAuthSession(session!.refreshToken!);
         print("session stored successfully");
         // supabaseService.insertRecord("profiles", {
         //   "id": user!.id,

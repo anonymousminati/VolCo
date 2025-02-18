@@ -14,7 +14,7 @@ import 'package:volco/routes/app_routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await PrefUtils.instance.init();  // Ensure preferences are initialized
 
    SupabaseHandler().initialize(PROJECT_URL, PROJECT_ANON_KEY);
 

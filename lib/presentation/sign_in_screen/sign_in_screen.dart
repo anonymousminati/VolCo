@@ -246,6 +246,7 @@ class SignInScreen extends GetWidget<SignInController> {
                   },
                 )),
             SizedBox(height: 24.h),
+
             SizedBox(
               width: double.maxFinite,
               child: Row(

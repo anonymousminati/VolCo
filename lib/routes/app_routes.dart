@@ -31,6 +31,8 @@ import 'package:volco/presentation/splash_screen/binding/splash_binding.dart';
 import 'package:volco/presentation/splash_screen/splash_screen.dart';
 import 'package:volco/presentation/user_details_screen/binding/user_details_binding.dart';
 import 'package:volco/presentation/user_details_screen/user_details_screen.dart';
+import 'package:volco/presentation/volunteer_registration_screen/binding/volunteer_registration_binding.dart';
+import 'package:volco/presentation/volunteer_registration_screen/volunteer_registration_screen.dart';
 import 'package:volco/presentation/welcome_screen/binding/welcome_binding.dart';
 import 'package:volco/presentation/welcome_screen/welcome_screen.dart';
 
@@ -73,7 +75,8 @@ class AppRoutes {
 
   static const String searchScreen = '/search_screen';
 
-
+  static const String volunteerRegistrationScreen =
+      '/volunteer_registration_screen';
 
   static List<GetPage> pages = [
     GetPage(
@@ -185,8 +188,19 @@ class AppRoutes {
             selectedActivityCategory: selectedActivityCategory,
             eventCreatedId: eventCreatedId,
             isForRegistration: isForRegister);
-        },
+      },
       bindings: [EventDescriptionBinding()],
+    ),
+    GetPage(
+      name: volunteerRegistrationScreen,
+      page: () {
+        final int eventId = Get.arguments['eventId'] ?? "";
+        return VolunteerRegistrationScreen(
+
+          eventId: eventId,
+        );
+      },
+      bindings: [VolunteerRegistrationBinding()],
     ),
   ];
 }

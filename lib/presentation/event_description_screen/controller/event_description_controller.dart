@@ -8,9 +8,31 @@ class EventDescriptionController extends GetxController {
   var activityDetails = {}.obs; // Stores category-specific details
   var eventTags = [].obs; // Stores event tags
   RxString userId = ''.obs; // RxString for reactive updates
-
+  RxBool isUserisRegistered = false.obs; // Reactive flag for registration status
   final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
   final SupabaseService supabaseService = SupabaseService();
+
+
+
+  @override
+  void onInit() async {
+    super.onInit();
+    final args = Get.arguments;
+    if (args != null) {
+      final int eventId = args['eventCreatedId'] ?? 0;
+      final String eventCategory = args['eventCategory'] ?? "";
+      if (eventId > 0 && eventCategory.isNotEmpty) {
+        // First, fetch the event details
+        await fetchEventDetails(eventId, eventCategory);
+        // Then, fetch the user ID
+        await _fetchUserId();
+        // Finally, check if the volunteer is registered (only if event_id is non-null)
+        if (eventDetails["event_id"] != null) {
+          await isVolunteerRegistered(userId.value, eventDetails["event_id"]);
+        }
+      }
+    }
+  }
 
   /// Fetches event details from the 'events' table and then
   /// fetches activity-specific details from the corresponding table.
@@ -93,16 +115,41 @@ class EventDescriptionController extends GetxController {
       print('Error fetching avatar URL: $error');
     }
   }
-  @override
-  void onInit() {
-    super.onInit();
-    final args = Get.arguments;
-    if (args != null) {
-      final int eventId = args['eventCreatedId'] ?? 0;
-      final String eventCategory = args['eventCategory'] ?? "";
-      if (eventId > 0 && eventCategory.isNotEmpty) {
-        fetchEventDetails(eventId, eventCategory);
-      }
+  Future<void> isVolunteerRegistered(String volunteerId, int eventId) async {
+    try {
+      final response = await supabaseClient
+          .from('registrations')
+          .select('registration_id')
+          .eq('volunteer_id', volunteerId)
+          .eq('event_id', eventId)
+          .maybeSingle(); // Returns null if no record is found
+
+      isUserisRegistered.value = response != null;
+    } catch (e) {
+      Get.snackbar("Error", "Failed to check registration: ${e.toString()}");
     }
   }
+
+  /// Cancel the volunteer registration for the current event.
+  Future<bool> cancelRegistration() async {
+    try {
+      if (eventDetails.isEmpty) return false;
+      int eventId = eventDetails["event_id"];
+      final response = await supabaseClient
+          .from('registrations')
+          .delete()
+          .eq('volunteer_id', userId.value)
+          .eq('event_id', eventId);
+      if (response.error == null) {
+        isUserisRegistered.value = false;
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to cancel registration: ${e.toString()}");
+      return false;
+    }
+  }
+
 }

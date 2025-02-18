@@ -95,8 +95,6 @@ class CreateEventScreen extends GetView<CreateEventController> {
                                   Get.offAllNamed(AppRoutes.eventDescriptionScreen,arguments: {
                                     "eventCreatedId":controller.eventId,
                                     "eventCategory":controller.selectedCategory.value,
-
-
                                   });
                                 } else {
                                   print("step4");

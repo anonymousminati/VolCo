@@ -70,7 +70,7 @@ class SignUpController extends GetxController {
       final User? user = response.user;
       print("user: $user");
       if (response.user != null) {
-        await PrefUtils().setSupabaseAuthSession(session!.refreshToken!);
+        await PrefUtils.instance.setSupabaseAuthSession(session!.refreshToken!);
         print("session stored successfully");
         // supabaseService.insertRecord("profiles", {
         //   "id": user!.id,

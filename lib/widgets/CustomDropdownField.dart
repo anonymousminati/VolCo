@@ -84,7 +84,7 @@ class _CustomSelectDropdownState extends State<CustomSelectDropdown> {
           color: widget.fillColor ?? appTheme.blueGray900,
           borderRadius: BorderRadius.circular(12.h),
           border: widget.borderDecoration ?? Border.all(
-            color: theme.colorScheme.primary,
+            color: appTheme.blueGray90076,
             width: 1,
           ),
         ),
