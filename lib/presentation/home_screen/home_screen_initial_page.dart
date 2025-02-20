@@ -1,14 +1,12 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:volco/core/app_export.dart';
 import 'package:volco/core/utils/authentication.dart';
 import 'package:volco/core/utils/image_constant.dart';
 import 'package:volco/presentation/home_screen/controller/home_controller.dart';
-import 'package:volco/presentation/home_screen/models/homescreenlist_item_model.dart';
 import 'package:volco/presentation/home_screen/widget/homeBanner.dart';
-import 'package:volco/presentation/home_screen/widget/homescreenlist_item_widget.dart';
+import 'package:volco/widgets/custom_google_map_location_picker.dart';
 import 'package:volco/widgets/custom_outlined_button.dart';
 
 class HomeScreenInitialPage extends StatelessWidget {
@@ -49,6 +47,81 @@ class HomeScreenInitialPage extends StatelessWidget {
                 Get.toNamed(AppRoutes.googleMapScreen);
               },
             ),
+            CustomElevatedButton(
+              text: "Google Map sheet open".tr,
+              onPressed: () async {
+                // Navigate to home screen if event creation is successful.
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (BuildContext context) {
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.85,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: appTheme.gray800,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16.0),
+                          topRight: Radius.circular(16.0),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              'Search for Place',
+                              style: theme.textTheme.headlineSmall!.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 20),
+
+                            // 🌍 Location Picker Widget
+                            Expanded(
+                              child: LocationPickerWidget(
+                                onLocationSelected:
+                                    (String placeName, LatLng coordinates) {
+                                  controller.selectedPlaceName.value = placeName;
+                                  controller.selectedCoordinates = coordinates;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+
+// 📍 Display the selected location on Home Screen
+            Obx(() {
+              return Column(
+                children: [
+                  SizedBox(height: 20),
+                  Text(
+                    "Selected Place: ${controller.selectedPlaceName.value}",
+                    style: theme.textTheme.bodyLarge!.copyWith(
+                      color: appTheme.whiteA700,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Coordinates: ${controller.selectedCoordinates?.latitude}, ${controller.selectedCoordinates?.longitude}",
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: appTheme.whiteA700,
+                    ),
+                  ),
+                ],
+              );
+            }),
+
           ],
         ),
       ),
@@ -240,89 +313,6 @@ class HomeScreenInitialPage extends StatelessWidget {
     );
   }
 
-  /// Section Widget
-  Widget _buildFortyEight() {
-    return CustomElevatedButton(
-      height: 32.h,
-      width: 70.h,
-      text: "lbl_4_8".tr,
-      margin: EdgeInsets.only(right: 34.h),
-      leftIcon: Container(
-        margin: EdgeInsets.only(right: 8.h),
-        child: CustomImageView(
-          imagePath: ImageConstant.imgStarFilledWhite,
-          height: 12.h,
-          width: 12.h,
-          fit: BoxFit.contain,
-        ),
-      ),
-      buttonStyle: CustomButtonStyle.fillPrimaryTL18,
-      buttonTextStyle: theme.textTheme.titleSmall!,
-    );
-  }
-
-  Widget _buildHotelRow() {
-    return Container(
-      width: 500,
-      alignment: Alignment.centerLeft,
-      margin: EdgeInsets.only(left: 24.h),
-      child: SizedBox(
-        width: double.maxFinite,
-        height: 400.h,
-        child: Text("helllll"),
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildRecentlyBookedRow() {
-    return SizedBox(
-      width: double.maxFinite,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "lbl_recently_booked".tr,
-            style: theme.textTheme.titleMedium,
-          ),
-          GestureDetector(
-            onTap: () {
-              onTapTxtSeeallone();
-            },
-            child: Text(
-              "lbl_see_all".tr,
-              style: CustomTextStyles.titleMediumPrimary16,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildHomeScreenList() {
-    return Obx(
-      () => ListView.separated(
-        padding: EdgeInsets.zero,
-        physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        separatorBuilder: (context, index) {
-          return SizedBox(
-            height: 24.h,
-          );
-        },
-        itemCount: controller.homeScreenInitialModelObj.value
-            .homescreenlistItemList.value.length,
-        itemBuilder: (context, index) {
-          HomescreenlistItemModel model = controller.homeScreenInitialModelObj
-              .value.homescreenlistItemList.value[index];
-          return HomescreenlistItemWidget(
-            model,
-          );
-        },
-      ),
-    );
-  }
 
   /// TODO:Navigates to the notificationsScreen when the action is triggered.
   onTapImgIconsone() {

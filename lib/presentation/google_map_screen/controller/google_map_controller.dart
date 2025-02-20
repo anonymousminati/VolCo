@@ -124,7 +124,7 @@ RxString googleMapDarkStyle =  "".obs;
         CameraUpdate.newCameraPosition(
           CameraPosition(
             target: currentPosition.value!,
-            zoom: 17, // Adjust zoom level as needed
+            zoom: 18, // Adjust zoom level as needed
           ),
         ),
       );

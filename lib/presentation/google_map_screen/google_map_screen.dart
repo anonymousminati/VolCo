@@ -4,7 +4,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:volco/core/app_export.dart';
 import 'package:volco/core/utils/image_constant.dart';
 import 'package:volco/presentation/google_map_screen/controller/google_map_controller.dart';
-import 'package:volco/widgets/custom_elevated_button.dart';
 
 class GoogleMapScreen extends GetView<GoogleMapScreenController> {
   const GoogleMapScreen({Key? key}) : super(key: key);
@@ -29,18 +28,22 @@ class GoogleMapScreen extends GetView<GoogleMapScreenController> {
         ),
         body: Obx(() {
           return GoogleMap(
-style: controller.googleMapDarkStyle.value ,
+            style: controller.googleMapDarkStyle.value,
             onMapCreated: (GoogleMapController mapController) {
               controller.mapController = mapController;
             },
             initialCameraPosition: CameraPosition(
-              target: controller.currentPosition.value ?? GoogleMapScreenController.initialCameraPosition.target,
-              zoom: 15,
+              target: controller.currentPosition.value ??
+                  GoogleMapScreenController.initialCameraPosition.target,
+              zoom: 18,
             ),
             markers: controller.markers.value,
             polylines: Set<Polyline>.of(controller.polylines.values),
             myLocationEnabled: true,
             myLocationButtonEnabled: true,
+            compassEnabled: true,
+            mapToolbarEnabled: true,
+            zoomControlsEnabled: true,
           );
         }),
         floatingActionButton: FloatingActionButton(

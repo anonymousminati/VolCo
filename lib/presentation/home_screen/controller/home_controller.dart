@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:volco/core/app_export.dart';
+import 'package:volco/core/utils/project_constants.dart';
 import 'package:volco/presentation/home_screen/models/home_model.dart';
 import 'package:volco/presentation/home_screen/models/home_screen_initial_model.dart';
 
@@ -13,13 +15,14 @@ class HomeController extends GetxController {
 
   RxString avatarUrl = ''.obs; // RxString for reactive updates
   RxString userId = ''.obs; // RxString for reactive updates
+  RxString selectedPlaceName = ''.obs;
+  LatLng? selectedCoordinates ;
 
   @override
   void onReady() {
     super.onReady();
     _fetchAvatarUrl(); // Fetch avatar URL when the controller is ready
   }
-
 
 
   Future<void> _fetchAvatarUrl()  async {
