@@ -6,7 +6,7 @@ class EventDescriptionController extends GetxController {
   var isLoading = true.obs;
   var eventDetails = {}.obs; // Stores common event details
   var activityDetails = {}.obs; // Stores category-specific details
-  var eventTags = [].obs; // Stores event tags
+  var eventTags = [].obs;// Stores event tags
   RxString userId = ''.obs; // RxString for reactive updates
   RxBool isUserisRegistered = false.obs; // Reactive flag for registration status
   final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;

@@ -25,6 +25,7 @@ class HomeController extends GetxController {
   }
 
 
+
   Future<void> _fetchAvatarUrl()  async {
     try {
       User? user  =await SupabaseService().getUserData();

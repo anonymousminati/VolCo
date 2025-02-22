@@ -1,3 +1,4 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:volco/core/app_export.dart';
 import 'package:volco/presentation/avatar_capture_screen/avatar_capture_screen.dart';
 import 'package:volco/presentation/avatar_capture_screen/binding/avatar_capture_binding.dart';
@@ -208,7 +209,10 @@ class AppRoutes {
     ),
     GetPage(
       name: googleMapScreen,
-      page: () => GoogleMapScreen(),
+      page: (){
+        LatLng destinationCordinates = Get.arguments['destinationCordinates'];
+        return GoogleMapScreen(destinationCordinates: destinationCordinates);
+      },
       bindings: [GoogleMapBinding()],
     ),
   ];

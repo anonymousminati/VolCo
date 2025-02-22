@@ -40,13 +40,7 @@ class HomeScreenInitialPage extends StatelessWidget {
               },
             ),
             SizedBox(height: 4.h),
-            CustomElevatedButton(
-              text: "Google Map open".tr,
-              onPressed: () async {
-                // Navigate to home screen if event creation is successful.
-                Get.toNamed(AppRoutes.googleMapScreen);
-              },
-            ),
+
             CustomElevatedButton(
               text: "Google Map sheet open".tr,
               onPressed: () async {
@@ -98,6 +92,8 @@ class HomeScreenInitialPage extends StatelessWidget {
                 );
               },
             ),
+
+
 
 // 📍 Display the selected location on Home Screen
             Obx(() {

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -14,6 +15,7 @@ import 'package:volco/presentation/create_event_screen/widgets/eventFields.dart'
 import 'package:volco/presentation/home_screen/home_screen.dart';
 import 'package:volco/presentation/user_details_screen/controller/user_details_controller.dart';
 import 'package:volco/widgets/customMultiSelectDropdown.dart';
+import 'package:volco/widgets/custom_google_map_location_picker.dart';
 import 'package:volco/widgets/custom_image_picker.dart';
 
 class CreateEventScreen extends GetView<CreateEventController> {
@@ -287,6 +289,55 @@ class CreateEventScreen extends GetView<CreateEventController> {
           //Location
           CustomTextFormField(
             controller: controller.locationController,
+            onTap: () async {
+              // Navigate to home screen if event creation is successful.
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (BuildContext context) {
+                  return Container(
+                    height: MediaQuery.of(context).size.height * 0.85,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: appTheme.gray800,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16.0),
+                        topRight: Radius.circular(16.0),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            'Search for Place',
+                            style: theme.textTheme.headlineSmall!.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 20),
+
+                          // 🌍 Location Picker Widget
+                          Expanded(
+                            child: LocationPickerWidget(
+                              onLocationSelected:
+                                  (String placeName, LatLng coordinates) {
+                                controller.locationController.text = placeName;
+                                controller.selectedCoordinates = coordinates;
+                                print("location cords: ${controller.selectedCoordinates}");
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
             hintText: "Location".tr,
             textInputType: TextInputType.text,
             textInputAction: TextInputAction.done,

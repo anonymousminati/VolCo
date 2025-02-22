@@ -15,9 +15,9 @@ class GoogleMapScreenController extends GetxController {
   );
   // Observable current position (updated live)
   Rx<LatLng?> currentPosition = Rx<LatLng?>(null);
-RxString googleMapDarkStyle =  "".obs;
+  RxString googleMapDarkStyle = "".obs;
   // Destination – you may change this as needed.
-  final LatLng destination = const LatLng(18.5172655, 73.8514514);
+   late final LatLng destination ;
 
   // Markers observable
   RxSet<Marker> markers = <Marker>{}.obs;
@@ -34,7 +34,11 @@ RxString googleMapDarkStyle =  "".obs;
     _initializeLocation();
   }
 
-
+  void updatedestination(LatLng destinationCordinates) {
+    destination = destinationCordinates;
+    _updateMarkers();
+    _updatePolyline();
+  }
 
   Future<void> _initializeLocation() async {
     googleMapDarkStyle.value = await rootBundle.loadString(ImageConstant.mapDarkStyle);
@@ -54,7 +58,8 @@ RxString googleMapDarkStyle =  "".obs;
     // Listen to location updates
     _location.onLocationChanged.listen((LocationData locationData) {
       if (locationData.latitude != null && locationData.longitude != null) {
-        currentPosition.value = LatLng(locationData.latitude!, locationData.longitude!);
+        currentPosition.value =
+            LatLng(locationData.latitude!, locationData.longitude!);
         _updateMarkers();
         // Optionally, if you want to update the polyline in real time, call _updatePolyline()
         _updatePolyline();
@@ -95,9 +100,12 @@ RxString googleMapDarkStyle =  "".obs;
     final polylinePoints = PolylinePoints();
     final result = await polylinePoints.getRouteBetweenCoordinates(
       googleApiKey: GOOGLE_MAP_API_KEY,
-      request: PolylineRequest( origin: PointLatLng(currentPosition.value!.latitude, currentPosition.value!.longitude),
-        destination: PointLatLng(destination.latitude, destination.longitude),
-        mode: TravelMode.driving,),
+      request: PolylineRequest(
+        origin: PointLatLng(
+            currentPosition.value!.latitude, currentPosition.value!.longitude),
+        destination: PointLatLng(destination!.latitude, destination!.longitude),
+        mode: TravelMode.driving,
+      ),
     );
 
     if (result.points.isNotEmpty) {

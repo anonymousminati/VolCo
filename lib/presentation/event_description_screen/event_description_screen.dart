@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:volco/core/app_export.dart';
 import 'package:volco/core/utils/image_constant.dart';
 import 'package:volco/presentation/event_description_screen/controller/event_description_controller.dart';
@@ -583,7 +584,6 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                         onTap: () => Get.back(),
                       ),
 
-
                       _buildDescriptionDetails(event),
 
                       // Activity-specific details (if available)
@@ -618,7 +618,9 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                           Obx(() {
                             // Only show registration buttons if the current user is not the organizer
                             if (isForRegistration &&
-                                controller.userId.value != controller.eventDetails.value["organizer_id"]) {
+                                controller.userId.value !=
+                                    controller
+                                        .eventDetails.value["organizer_id"]) {
                               if (controller.isUserisRegistered.value) {
                                 // Show Cancel Registration button
                                 return Expanded(
@@ -626,14 +628,18 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                                     text: "Cancel Registration".tr,
                                     buttonStyle: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.redAccent),
-                                    buttonTextStyle: CustomTextStyles.titleMedium16_1
+                                    buttonTextStyle: CustomTextStyles
+                                        .titleMedium16_1
                                         .copyWith(color: Colors.white),
                                     onPressed: () async {
-                                      bool success = await controller.cancelRegistration();
+                                      bool success =
+                                          await controller.cancelRegistration();
                                       if (success) {
-                                        Get.snackbar("Success", "Registration cancelled successfully.");
+                                        Get.snackbar("Success",
+                                            "Registration cancelled successfully.");
                                       } else {
-                                        Get.snackbar("Error", "Failed to cancel registration. Please try again.");
+                                        Get.snackbar("Error",
+                                            "Failed to cancel registration. Please try again.");
                                       }
                                     },
                                   ),
@@ -645,13 +651,17 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                                     text: "Join event".tr,
                                     buttonStyle: ElevatedButton.styleFrom(
                                         backgroundColor: appTheme.green600),
-                                    buttonTextStyle: CustomTextStyles.titleMedium16_1
+                                    buttonTextStyle: CustomTextStyles
+                                        .titleMedium16_1
                                         .copyWith(color: appTheme.black900),
                                     onPressed: () {
                                       print("join event clicked");
-                                      Get.offAllNamed(AppRoutes.volunteerRegistrationScreen, arguments: {
-                                        "eventId": controller.eventDetails.value["event_id"],
-                                      });
+                                      Get.offAllNamed(
+                                          AppRoutes.volunteerRegistrationScreen,
+                                          arguments: {
+                                            "eventId": controller
+                                                .eventDetails.value["event_id"],
+                                          });
                                     },
                                   ),
                                 );
@@ -675,13 +685,11 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
     );
   }
 
-  Widget _buildDescriptionDetails(RxMap event){
+  Widget _buildDescriptionDetails(RxMap event) {
     return Column(
       spacing: 20.h,
       crossAxisAlignment: CrossAxisAlignment.start,
-
       children: [
-
         // Event Image
         Container(
           padding: EdgeInsets.all(8.h),
@@ -690,8 +698,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
             borderRadius: BorderRadius.circular(12.h),
           ),
           child: CustomImageView(
-            imagePath:
-            event['image_url'] ?? ImageConstant.imgTextSvg,
+            imagePath: event['image_url'] ?? ImageConstant.imgTextSvg,
             height: 200.h,
             width: double.infinity,
             fit: BoxFit.cover,
@@ -702,8 +709,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
         // Event Name
         AutoSizeText(
           event['event_name'] ?? "Event Name",
-          style: CustomTextStyles.titleLarge20
-              .copyWith(fontSize: 40.h),
+          style: CustomTextStyles.titleLarge20.copyWith(fontSize: 40.h),
           maxLines: 2,
           minFontSize: 20,
           overflow: TextOverflow.ellipsis,
@@ -737,8 +743,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                     children: [
                       AutoSizeText(
                         event['event_time'] ?? "N/A",
-                        style:
-                        theme.textTheme.bodyLarge!.copyWith(
+                        style: theme.textTheme.bodyLarge!.copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: 24.h,
                         ),
@@ -768,8 +773,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                     children: [
                       AutoSizeText(
                         event['event_date'] ?? "N/A",
-                        style:
-                        theme.textTheme.bodyLarge!.copyWith(
+                        style: theme.textTheme.bodyLarge!.copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: 24.h,
                         ),
@@ -800,8 +804,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                     children: [
                       AutoSizeText(
                         "${event['duration_hours']} hrs" ?? "N/A",
-                        style:
-                        theme.textTheme.bodyLarge!.copyWith(
+                        style: theme.textTheme.bodyLarge!.copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: 24.h,
                         ),
@@ -829,10 +832,8 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
             borderRadius: BorderRadius.circular(12.h),
           ),
           child: Text(
-            event['event_description'] ??
-                "No description available.",
-            style: theme.textTheme.bodyMedium
-                ?.copyWith(fontSize: 18.h),
+            event['event_description'] ?? "No description available.",
+            style: theme.textTheme.bodyMedium?.copyWith(fontSize: 18.h),
             textAlign: TextAlign.justify,
           ),
         ),
@@ -840,7 +841,13 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
         // Event Location
         GestureDetector(
           onTap: () {
-            print("Open Map");
+            print(
+                "destinationCordinates: ${event['location_cords']['latitude']} to ${event['location_cords']['longitude']} ");
+            Get.toNamed(AppRoutes.googleMapScreen, arguments: {
+              "destinationCordinates": LatLng(
+                  event['location_cords']['latitude'],
+                  event['location_cords']['longitude'])
+            });
           },
           child: Container(
             width: double.infinity,
@@ -853,8 +860,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       "Location",
@@ -884,8 +890,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
             borderRadius: BorderRadius.circular(12.h),
           ),
           child: ListTile(
-            contentPadding:
-            EdgeInsets.symmetric(horizontal: 12.h),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12.h),
             leading: Icon(
               Icons.phone_in_talk_outlined,
               color: theme.colorScheme.primary,
@@ -893,14 +898,13 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
             ),
             title: Text(
               "Contact Number",
-              style: theme.textTheme.bodyLarge!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+              style: theme.textTheme.bodyLarge!
+                  .copyWith(fontWeight: FontWeight.bold, color: Colors.white),
             ),
             subtitle: Text(
               event['contact_number'] ?? "N/A",
-              style: theme.textTheme.bodyMedium!
-                  .copyWith(color: Colors.white70),
+              style:
+                  theme.textTheme.bodyMedium!.copyWith(color: Colors.white70),
             ),
           ),
         ),
@@ -912,8 +916,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
             borderRadius: BorderRadius.circular(12.h),
           ),
           child: ListTile(
-            contentPadding:
-            EdgeInsets.symmetric(horizontal: 12.h),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12.h),
             leading: CustomImageView(
               imagePath: ImageConstant.imgUrlSkyBlue,
               width: 24.h,
@@ -921,14 +924,13 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
             ),
             title: Text(
               "Social Media Link",
-              style: theme.textTheme.bodyLarge!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+              style: theme.textTheme.bodyLarge!
+                  .copyWith(fontWeight: FontWeight.bold, color: Colors.white),
             ),
             subtitle: Text(
               event['social_media_link'] ?? "N/A",
-              style: theme.textTheme.bodyMedium!
-                  .copyWith(color: Colors.white70),
+              style:
+                  theme.textTheme.bodyMedium!.copyWith(color: Colors.white70),
             ),
           ),
         ),
@@ -940,8 +942,7 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
             borderRadius: BorderRadius.circular(12.h),
           ),
           child: ListTile(
-            contentPadding:
-            EdgeInsets.symmetric(horizontal: 12.h),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12.h),
             leading: CustomImageView(
               imagePath: ImageConstant.imgUrlEmergencyContact,
               width: 24.h,
@@ -949,14 +950,13 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
             ),
             title: Text(
               "Emergency Contact Number",
-              style: theme.textTheme.bodyLarge!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+              style: theme.textTheme.bodyLarge!
+                  .copyWith(fontWeight: FontWeight.bold, color: Colors.white),
             ),
             subtitle: Text(
               event['emergency_contact_info'] ?? "N/A",
-              style: theme.textTheme.bodyMedium!
-                  .copyWith(color: Colors.white70),
+              style:
+                  theme.textTheme.bodyMedium!.copyWith(color: Colors.white70),
             ),
           ),
         ),

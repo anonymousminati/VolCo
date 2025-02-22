@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
@@ -20,6 +21,7 @@ class CreateEventController extends GetxController {
   final durationController = TextEditingController();
   final mobileNumberController = TextEditingController();
   final locationController = TextEditingController();
+  LatLng? selectedCoordinates ;
   final skillsController = TextEditingController();
   final ageController = TextEditingController();
   final volunteerController = TextEditingController();
@@ -415,6 +417,10 @@ class CreateEventController extends GetxController {
             "${selectedTime.value?.hour}:${selectedTime.value?.minute}",
         'duration_hours': int.tryParse(durationController.text) ?? 1,
         'location': locationController.text.trim(),
+        'location_cords':{
+          "latitude": selectedCoordinates!.latitude,
+          "longitude": selectedCoordinates!.longitude
+        },
         // 'required_volunteers': int.tryParse(volunteerController.text) ?? 1,
         'contact_number': mobileNumberController.text.trim(),
         'social_media_link': socialMediaController.text.trim(),

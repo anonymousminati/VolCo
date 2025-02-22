@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:volco/core/utils/supabase_handler.dart';
@@ -15,6 +16,8 @@ class UserDetailsController extends GetxController {
   final emailController = TextEditingController();
   final mobileNumberController = TextEditingController();
   final locationController = TextEditingController();
+  LatLng? selectedCoordinates ;
+
   final skillsController = TextEditingController();
   final ageController = TextEditingController();
   final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
@@ -45,6 +48,10 @@ class UserDetailsController extends GetxController {
         email: emailController.text.trim(),
         mobileNumber: mobileNumberController.text.trim(),
         location: locationController.text.trim(),
+        location_cords:{
+          "latitude": selectedCoordinates!.latitude,
+          "longitude": selectedCoordinates!.longitude
+        },
         skills: skillsController.text.trim(),
         age: ageController.text.isNotEmpty ? int.tryParse(ageController.text.trim()) : null,
         profileImageUrl:user_profile!['avatar_url'],
@@ -87,6 +94,10 @@ class UserDetailsController extends GetxController {
         email: emailController.text.trim(),
         mobileNumber: mobileNumberController.text.trim(),
         location: locationController.text.trim(),
+        location_cords:{
+          "latitude": selectedCoordinates!.latitude,
+          "longitude": selectedCoordinates!.longitude
+        },
         skills: skillsController.text.trim(),
         age: ageController.text.isNotEmpty ? int.tryParse(ageController.text.trim()) : null,
       );
