@@ -122,6 +122,8 @@ class ImageConstant {
 
   static String imgSoS = '$imagePath/img_sos.png';
 
+  static String chatRoomSvg = '$imagePath/chatRoomSvg.svg';
+
 
 
 
