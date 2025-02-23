@@ -586,37 +586,41 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                             width: 30.h,
                             onTap: () => Get.back(),
                           ),
-
-                          GestureDetector(
-                            onTap: (){
-                              print(controller.eventDetails["event_id"]);
-                              // Get.toNamed(AppRoutes.chatRoomScreen, arguments: {
-                              //   "eventId": controller.eventDetails["event_id"],
-                              //   "eventTitle": controller.eventDetails["event_name"],
-                              // });
+                          if (controller.userId.value ==
+                                  controller
+                                      .eventDetails.value["organizer_id"] ||
+                              controller.isUserisRegistered.value)
+                            GestureDetector(
+                              onTap: () {
+                                print(controller.eventDetails["event_id"]);
+                                // Get.toNamed(AppRoutes.chatRoomScreen, arguments: {
+                                //   "eventId": controller.eventDetails["event_id"],
+                                //   "eventTitle": controller.eventDetails["event_name"],
+                                // });
                               },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.h),
-                                border: Border.all(color: appTheme.lightBlue600),
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 12.h, vertical: 8.h),
-                              child: Row(
-                                spacing: 10.h,
-                                children: [
-                                  CustomImageView(
-                                    height: 24.h,
-                                    imagePath: ImageConstant.chatRoomSvg,
-                                  ),
-                                  Text("Chat room".tr,
-                                      style: CustomTextStyles.titleMedium16_1
-                                          .copyWith(color: appTheme.lightBlue600)),
-
-                                ],
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.h),
+                                  border:
+                                      Border.all(color: appTheme.lightBlue600),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 12.h, vertical: 8.h),
+                                child: Row(
+                                  spacing: 10.h,
+                                  children: [
+                                    CustomImageView(
+                                      height: 24.h,
+                                      imagePath: ImageConstant.chatRoomSvg,
+                                    ),
+                                    Text("Chat room".tr,
+                                        style: CustomTextStyles.titleMedium16_1
+                                            .copyWith(
+                                                color: appTheme.lightBlue600)),
+                                  ],
+                                ),
                               ),
                             ),
-                          )
                         ],
                       ),
 

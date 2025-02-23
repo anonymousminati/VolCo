@@ -552,6 +552,19 @@ class CreateEventController extends GetxController {
         print("createNewEvent 12 8");
       }
 
+      print("createNewEvent 13 1");
+
+      try {
+        final chatroomResponse = await supabaseClient.from('chatrooms').insert({'event_id': eventId});
+        print("createNewEvent 13 2");
+        print("chatroomResponse: $chatroomResponse");
+      } on Exception catch (e) {
+        // TODO
+        print("Error creating chatroom: $e");
+        return false;
+      }
+
+      
       print("Event created successfully!");
       Get.back();
       Get.bottomSheet(

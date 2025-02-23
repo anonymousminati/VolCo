@@ -78,11 +78,10 @@ class AppRoutes {
 
   static const String searchScreen = '/search_screen';
 
-  static const String volunteerRegistrationScreen = '/volunteer_registration_screen';
+  static const String volunteerRegistrationScreen =
+      '/volunteer_registration_screen';
 
-  static const String  googleMapScreen= '/google_map_screen';
-
-
+  static const String googleMapScreen = '/google_map_screen';
 
   static List<GetPage> pages = [
     GetPage(
@@ -209,7 +208,7 @@ class AppRoutes {
     ),
     GetPage(
       name: googleMapScreen,
-      page: (){
+      page: () {
         LatLng destinationCordinates = Get.arguments['destinationCordinates'];
         return GoogleMapScreen(destinationCordinates: destinationCordinates);
       },

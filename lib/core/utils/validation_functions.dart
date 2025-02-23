@@ -48,6 +48,20 @@ bool isText(String? inputString, {bool isRequired = false}) {
   return isInputStringValid;
 }
 
+bool isAddress(String? inputString, {bool isRequired = false}) {
+  bool isInputStringValid = false;
+  if (!isRequired && (inputString == null ? true : inputString.isEmpty)) {
+    isInputStringValid = true;
+  }
+  if (inputString != null && inputString.isNotEmpty) {
+    const pattern = r"^[a-zA-Z0-9\s,.'-]+$";
+    final regExp = RegExp(pattern);
+    isInputStringValid = regExp.hasMatch(inputString);
+  }
+  return isInputStringValid;
+}
+
+
 /// Checks if string is phone number
 bool isValidPhone(String? inputString, {bool isRequired = false}) {
   bool isInputStringValid = false;

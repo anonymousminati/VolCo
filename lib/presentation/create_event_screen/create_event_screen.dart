@@ -37,7 +37,7 @@ class CreateEventScreen extends GetView<CreateEventController> {
       child: RefreshIndicator(
         onRefresh: ()=>controller.loadActivitySpecificFields(controller.selectedCategory.value),
         child: Scaffold(
-          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: true,
           body:Obx((){
             if (controller.isLoading.value) {
               return Center(
@@ -361,7 +361,7 @@ class CreateEventScreen extends GetView<CreateEventController> {
               if (value == null || value.isEmpty) {
                 return 'Location is required'.tr;
               }
-              if (!isText(value, isRequired: true)) {
+              if (!isAddress(value, isRequired: true)) {
                 return 'Location should contain only alphabets'.tr;
               }
               return null;

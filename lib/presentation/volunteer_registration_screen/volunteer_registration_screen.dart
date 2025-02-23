@@ -103,13 +103,13 @@ class VolunteerRegistrationScreen
                             ),
 
                             SizedBox(height: 24),
-                            CustomElevatedButton(
-                              text: "regis 2",
-                              onPressed: () async {
-                                controller.updateEventId(eventId);
-                                print("Refreshed");
-                              },
-                            ),
+                            // CustomElevatedButton(
+                            //   text: "regis 2",
+                            //   onPressed: () async {
+                            //     controller.updateEventId(eventId);
+                            //     print("Refreshed");
+                            //   },
+                            // ),
                           ],
                         ),
                       ),

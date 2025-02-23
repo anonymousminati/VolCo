@@ -6,13 +6,12 @@ class EventDescriptionController extends GetxController {
   var isLoading = true.obs;
   var eventDetails = {}.obs; // Stores common event details
   var activityDetails = {}.obs; // Stores category-specific details
-  var eventTags = [].obs;// Stores event tags
+  var eventTags = [].obs; // Stores event tags
   RxString userId = ''.obs; // RxString for reactive updates
-  RxBool isUserisRegistered = false.obs; // Reactive flag for registration status
+  RxBool isUserisRegistered =
+      false.obs; // Reactive flag for registration status
   final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
   final SupabaseService supabaseService = SupabaseService();
-
-
 
   @override
   void onInit() async {
@@ -103,9 +102,10 @@ class EventDescriptionController extends GetxController {
       isLoading.value = false;
     }
   }
-  Future<void> _fetchUserId()  async {
+
+  Future<void> _fetchUserId() async {
     try {
-      User? user  =await SupabaseService().getUserData();
+      User? user = await SupabaseService().getUserData();
       if (user != null) {
         print('User metadata: ${user.userMetadata}');
         userId.value = user.id; // Update reactive value
@@ -115,6 +115,7 @@ class EventDescriptionController extends GetxController {
       print('Error fetching avatar URL: $error');
     }
   }
+
   Future<void> isVolunteerRegistered(String volunteerId, int eventId) async {
     try {
       final response = await supabaseClient
@@ -151,5 +152,4 @@ class EventDescriptionController extends GetxController {
       return false;
     }
   }
-
 }

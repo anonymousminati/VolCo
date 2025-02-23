@@ -6,8 +6,9 @@ import 'package:volco/core/utils/image_constant.dart';
 import 'package:volco/presentation/google_map_screen/controller/google_map_controller.dart';
 
 class GoogleMapScreen extends GetView<GoogleMapScreenController> {
-   GoogleMapScreen( {required this.destinationCordinates,Key? key}) : super(key: key){
-controller.updatedestination(destinationCordinates!);
+  GoogleMapScreen({required this.destinationCordinates, Key? key})
+      : super(key: key) {
+    controller.updatedestination(destinationCordinates!);
   }
   final LatLng? destinationCordinates;
 

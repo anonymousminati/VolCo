@@ -17,7 +17,7 @@ class GoogleMapScreenController extends GetxController {
   Rx<LatLng?> currentPosition = Rx<LatLng?>(null);
   RxString googleMapDarkStyle = "".obs;
   // Destination – you may change this as needed.
-   late final LatLng destination ;
+  late final LatLng destination;
 
   // Markers observable
   RxSet<Marker> markers = <Marker>{}.obs;
@@ -41,7 +41,8 @@ class GoogleMapScreenController extends GetxController {
   }
 
   Future<void> _initializeLocation() async {
-    googleMapDarkStyle.value = await rootBundle.loadString(ImageConstant.mapDarkStyle);
+    googleMapDarkStyle.value =
+        await rootBundle.loadString(ImageConstant.mapDarkStyle);
     // Request location service and permission
     bool serviceEnabled = await _location.serviceEnabled();
     if (!serviceEnabled) {

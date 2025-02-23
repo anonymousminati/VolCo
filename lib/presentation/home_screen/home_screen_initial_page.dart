@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:volco/core/app_export.dart';
@@ -79,7 +78,8 @@ class HomeScreenInitialPage extends StatelessWidget {
                               child: LocationPickerWidget(
                                 onLocationSelected:
                                     (String placeName, LatLng coordinates) {
-                                  controller.selectedPlaceName.value = placeName;
+                                  controller.selectedPlaceName.value =
+                                      placeName;
                                   controller.selectedCoordinates = coordinates;
                                 },
                               ),
@@ -92,8 +92,6 @@ class HomeScreenInitialPage extends StatelessWidget {
                 );
               },
             ),
-
-
 
 // 📍 Display the selected location on Home Screen
             Obx(() {
@@ -117,7 +115,6 @@ class HomeScreenInitialPage extends StatelessWidget {
                 ],
               );
             }),
-
           ],
         ),
       ),
@@ -308,7 +305,6 @@ class HomeScreenInitialPage extends StatelessWidget {
       ),
     );
   }
-
 
   /// TODO:Navigates to the notificationsScreen when the action is triggered.
   onTapImgIconsone() {
