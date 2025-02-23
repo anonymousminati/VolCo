@@ -66,6 +66,7 @@ class ChatroomScreen extends GetView<ChatroomController> {
 
                         return ListView.builder(
                           itemCount: controller.messages.length,
+                          controller: controller.scrollController,
                           itemBuilder: (context, index) {
                             final message = controller.messages[index];
                             return _buildChatBubble(message, controller);

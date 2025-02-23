@@ -4,6 +4,7 @@ import 'package:volco/core/app_export.dart';
 import 'package:volco/core/utils/authentication.dart';
 import 'package:volco/core/utils/image_constant.dart';
 import 'package:volco/presentation/home_screen/controller/home_controller.dart';
+import 'package:volco/presentation/home_screen/themeStyleCheck.dart';
 import 'package:volco/presentation/home_screen/widget/homeBanner.dart';
 import 'package:volco/widgets/custom_google_map_location_picker.dart';
 import 'package:volco/widgets/custom_outlined_button.dart';
@@ -92,7 +93,14 @@ class HomeScreenInitialPage extends StatelessWidget {
                 );
               },
             ),
-
+            SizedBox(height: 32.h),
+            CustomElevatedButton(
+              text: "check theme".tr,
+              onPressed: () async {
+                // Navigate to home screen if event creation is successful.
+             Get.to(() => Themestylecheck());
+              },
+            ),
 // 📍 Display the selected location on Home Screen
             Obx(() {
               return Column(

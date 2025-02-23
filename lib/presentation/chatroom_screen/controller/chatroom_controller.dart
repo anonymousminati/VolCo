@@ -11,6 +11,7 @@ class ChatroomController extends GetxController {
   RxBool isUserisRegistered = false.obs;
   var messages = <ChatMessage>[].obs;
   var messageController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
   final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
   final SupabaseService supabaseService = SupabaseService();
 
@@ -20,6 +21,7 @@ class ChatroomController extends GetxController {
     await _fetchUserDetails();
     // Do not call subscribeToMessages here because eventId is still null.
     fetchMessages(); // This might return empty until eventId is set.
+    messages.listen((_) => scrollToBottom());
     isLoading.value = false;
   }
 
@@ -33,17 +35,24 @@ class ChatroomController extends GetxController {
     try {
       final response = await supabaseClient
           .from('messages')
-          .select('message_id, chatroom_id, sender_id, sender_name, message, created_at')
+          .select(
+          'message_id, chatroom_id, sender_id, sender_name, message, created_at')
           .eq('chatroom_id', eventId)
           .order('created_at', ascending: true);
-      messages.assignAll(response.map((json) => ChatMessage.fromJson(json)).toList());
+
+      messages.assignAll(
+          response.map((json) => ChatMessage.fromJson(json)).toList());
+
+      // Scroll to bottom after messages are loaded
+      Future.delayed(Duration(milliseconds: 300), () {
+        scrollToBottom();
+      });
     } catch (e) {
       print('Error fetching messages: $e');
     } finally {
       isLoading.value = false;
     }
   }
-
   /// Send a new message
   Future<void> sendMessage() async {
     if (messageController.text.trim().isEmpty) return;
@@ -60,6 +69,11 @@ class ChatroomController extends GetxController {
         'message': messageController.text.trim(),
       });
       messageController.clear();
+
+      // Scroll to bottom after a small delay
+      Future.delayed(Duration(milliseconds: 300), () {
+        scrollToBottom();
+      });
     } catch (e) {
       print('Error sending message: $e');
     }
@@ -77,7 +91,13 @@ class ChatroomController extends GetxController {
         .eq('chatroom_id', eventId)
         .order('created_at', ascending: true)
         .listen((data) {
-      messages.assignAll(data.map((json) => ChatMessage.fromJson(json)).toList());
+      messages.assignAll(
+          data.map((json) => ChatMessage.fromJson(json)).toList());
+
+      // Ensure we scroll down when new messages arrive
+      Future.delayed(Duration(milliseconds: 300), () {
+        scrollToBottom();
+      });
     });
   }
 
@@ -99,6 +119,17 @@ class ChatroomController extends GetxController {
     }
   }
 
+  void scrollToBottom() {
+    if (scrollController.hasClients) {
+      Future.delayed(Duration(milliseconds: 100), () {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 150),
+          curve: Curves.easeOut,
+        );
+      });
+    }
+  }
   @override
   void onClose() {
     messageController.dispose();
