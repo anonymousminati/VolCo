@@ -2,6 +2,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:volco/core/app_export.dart';
 import 'package:volco/presentation/avatar_capture_screen/avatar_capture_screen.dart';
 import 'package:volco/presentation/avatar_capture_screen/binding/avatar_capture_binding.dart';
+import 'package:volco/presentation/chatroom_screen/binding/chatroom_binding.dart';
+import 'package:volco/presentation/chatroom_screen/chatroom_screen.dart';
 import 'package:volco/presentation/create_event_catogory_screen/binding/create_event_catogory_binding.dart';
 import 'package:volco/presentation/create_event_catogory_screen/create_event_catogory_screen.dart';
 import 'package:volco/presentation/create_event_screen/binding/create_event_binding.dart';
@@ -82,6 +84,8 @@ class AppRoutes {
       '/volunteer_registration_screen';
 
   static const String googleMapScreen = '/google_map_screen';
+
+  static const String chatRoomScreen = '/chat_room_screen';
 
   static List<GetPage> pages = [
     GetPage(
@@ -213,6 +217,13 @@ class AppRoutes {
         return GoogleMapScreen(destinationCordinates: destinationCordinates);
       },
       bindings: [GoogleMapBinding()],
+    ),GetPage(
+      name: chatRoomScreen,
+      page: () {
+        int eventId = Get.arguments['eventId'];
+        return ChatroomScreen(eventId:eventId ,);
+      },
+      bindings: [ChatroomBinding()],
     ),
   ];
 }

@@ -593,10 +593,10 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
                             GestureDetector(
                               onTap: () {
                                 print(controller.eventDetails["event_id"]);
-                                // Get.toNamed(AppRoutes.chatRoomScreen, arguments: {
-                                //   "eventId": controller.eventDetails["event_id"],
-                                //   "eventTitle": controller.eventDetails["event_name"],
-                                // });
+                                Get.toNamed(AppRoutes.chatRoomScreen, arguments: {
+                                  "eventId": controller.eventDetails["event_id"],
+
+                                });
                               },
                               child: Container(
                                 decoration: BoxDecoration(
