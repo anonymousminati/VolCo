@@ -90,37 +90,90 @@ class ChatroomScreen extends GetView<ChatroomController> {
   Widget _buildChatBubble(ChatMessage message, ChatroomController controller) {
     final bool isMe = message.senderId == controller.user?.id;
 
-    return Align(
-      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: isMe ? Colors.blue : Colors.grey[300],
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (!isMe)
-              Text(
-                message.senderName, // Display sender name
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      child: Row(
+        mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (!isMe) ...[
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: Colors.amber,
+              child: Text(
+                message.senderName[0].toUpperCase(),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-            SizedBox(height: 5),
-            Text(
-              message.message,
-              style: TextStyle(color: isMe ? Colors.white : Colors.black),
             ),
-            SizedBox(height: 5),
-            Text(
-              "${message.createdAt.hour}:${message.createdAt.minute}",
-              style: TextStyle(fontSize: 10, color: isMe ? Colors.white70 : Colors.black54),
-            ),
+            SizedBox(width: 8),
           ],
-        ),
+          Flexible(
+            child: IntrinsicWidth(
+              child: IntrinsicHeight(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: isMe ? Colors.blueAccent : Colors.grey[300],
+                    gradient: isMe
+                        ? LinearGradient(colors: [Colors.blue, Colors.blueAccent])
+                        : null,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                      bottomLeft: isMe ? Radius.circular(12) : Radius.zero,
+                      bottomRight: isMe ? Radius.zero : Radius.circular(12),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 4,
+                        offset: Offset(2, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min, // Wrap content tightly
+                    children: [
+                      if (!isMe)
+                        Text(
+                          message.senderName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      SizedBox(height: 4),
+                      Text(
+                        message.message,
+                        style: TextStyle(color: isMe ? Colors.white : Colors.black),
+                      ),
+                      SizedBox(height: 4),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          _formatTime(message.createdAt),
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: isMe ? Colors.white70 : Colors.black54,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          if (isMe) SizedBox(width: 8),
+        ],
       ),
     );
+  }
+
+  /// Helper function to format time as "hh:mm AM/PM"
+  String _formatTime(DateTime time) {
+    return "${time.hour % 12 == 0 ? 12 : time.hour % 12}:${time.minute.toString().padLeft(2, '0')} ${time.hour >= 12 ? 'PM' : 'AM'}";
   }
 
   /// Message input field
