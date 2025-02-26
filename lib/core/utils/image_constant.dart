@@ -126,6 +126,8 @@ class ImageConstant {
 
   static String sendIconimg = '$imagePath/sendIcon.png';
 
+  static String logoutimg = '$imagePath/logout.png';
+
 
 
 

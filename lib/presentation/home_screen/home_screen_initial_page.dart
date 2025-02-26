@@ -232,7 +232,7 @@ class HomeScreenInitialPage extends StatelessWidget {
                   height: 28.h,
                   width: 30.h,
                   onTap: () {
-                    onTapImgIconsone();
+
                   },
                 ),
                 Obx(
@@ -245,6 +245,9 @@ class HomeScreenInitialPage extends StatelessWidget {
                     width: 30.h,
                     margin: EdgeInsets.only(left: 20.h),
                     radius: BorderRadius.circular(14.h),
+                    onTap: () {
+                      Get.toNamed(AppRoutes.profileScreen);
+                    },
                   ),
                 ),
               ],

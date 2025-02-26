@@ -26,6 +26,8 @@ import 'package:volco/presentation/onboarding_three_screen/binding/onboarding_th
 import 'package:volco/presentation/onboarding_three_screen/onboading_three_screen.dart';
 import 'package:volco/presentation/onboarding_two_screen/binding/onboarding_two_binding.dart';
 import 'package:volco/presentation/onboarding_two_screen/onboading_two_screen.dart';
+import 'package:volco/presentation/profile_screen/binding/profile_binding.dart';
+import 'package:volco/presentation/profile_screen/profile_screen.dart';
 import 'package:volco/presentation/reset_password_screen/binding/reset_password_binding.dart';
 import 'package:volco/presentation/reset_password_screen/reset_password_screen.dart';
 import 'package:volco/presentation/sign_in_screen/binding/sign_in_binding.dart';
@@ -86,6 +88,9 @@ class AppRoutes {
   static const String googleMapScreen = '/google_map_screen';
 
   static const String chatRoomScreen = '/chat_room_screen';
+
+  static const String profileScreen = '/profile_screen';
+
 
   static List<GetPage> pages = [
     GetPage(
@@ -225,5 +230,10 @@ class AppRoutes {
       },
       bindings: [ChatroomBinding()],
     ),
+    GetPage(
+  name: profileScreen,
+  page: ()=>ProfileScreen(),
+  bindings: [ProfileBinding()],
+  ),
   ];
 }
