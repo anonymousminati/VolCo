@@ -388,6 +388,7 @@ class CreateEventController extends GetxController {
             .from("event_images")
             .upload(imageName, imageFile);
         print("createNewEvent 6");
+        print("response create event upload url: $response");
 
         if (response.isEmpty) {
           print("Image upload failed");

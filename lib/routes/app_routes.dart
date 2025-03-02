@@ -91,6 +91,8 @@ class AppRoutes {
 
   static const String profileScreen = '/profile_screen';
 
+  static const String postMediaScreen = '/post_media_screen';
+
 
   static List<GetPage> pages = [
     GetPage(

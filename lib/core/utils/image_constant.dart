@@ -116,7 +116,8 @@ class ImageConstant {
 
   static String imgUrlSkyBlue = '$imagePath/urlimageskyblue.png';
 
-  static String imgUrlEmergencyContact = '$imagePath/emergency_contact_number.png';
+  static String imgUrlEmergencyContact =
+      '$imagePath/emergency_contact_number.png';
 
   static String imgHomeBanner = '$imagePath/img_home_banner.png';
 
@@ -128,15 +129,18 @@ class ImageConstant {
 
   static String logoutimg = '$imagePath/logout.png';
 
+  static String menuImg = '$imagePath/menu_img.svg';
 
+  static String heartSvg = '$imagePath/heart_svg.svg';
 
+  static String heartfilledSvg = '$imagePath/heart_filled_svg.svg';
 
+  static String commentSvg = '$imagePath/comment_svg.svg';
 
 //lottie constants here
   static String uploadAnimationLottie = '$lottiePath/uploadAnimation.json';
 
   static String uploadSuccessAnimationLottie = '$lottiePath/uploadSuccess.json';
-
 
   //map style constants here
   static String mapDarkStyle = '$mapStylePath/dark_map_style.json';
