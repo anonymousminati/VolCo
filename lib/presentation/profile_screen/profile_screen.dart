@@ -284,7 +284,24 @@ class ProfileScreen extends StatelessWidget {
                                             });
                                       });
                                 }),
-                                Center(child: Text('User Posts')),
+                                Obx(() {
+                                  return controller.userPosts.isEmpty
+                                      ? Center(child: Text("No posts available"))
+                                      : ListView.separated(
+                                    padding: EdgeInsets.all(10),
+                                    separatorBuilder: (context, index) =>
+                                        SizedBox(height: 20.h),
+                                    shrinkWrap: true,
+                                    itemCount: controller.userPosts.length,
+                                    itemBuilder: (context, index) {
+
+                                      final post = controller.userPosts[index];
+                                      return  post;
+                                    },
+                                  );
+                                }),
+
+
                                 Obx(() {
                                   return ListView.separated(
                                       padding: EdgeInsets.all(10),
