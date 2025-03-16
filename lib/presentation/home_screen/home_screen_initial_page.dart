@@ -29,100 +29,100 @@ class HomeScreenInitialPage extends StatelessWidget {
           children: [
             _buildFloatingIconColumn(),
             SizedBox(height: 32.h),
-            CustomElevatedButton(
-              text: "Submit".tr,
-              onPressed: () async {
-                // Navigate to home screen if event creation is successful.
-                Get.offAllNamed(AppRoutes.eventDescriptionScreen, arguments: {
-                  "eventCreatedId": 53,
-                  "eventCategory": "Work With Elders"
-                });
-              },
-            ),
+            // CustomElevatedButton(
+            //   text: "Submit".tr,
+            //   onPressed: () async {
+            //     // Navigate to home screen if event creation is successful.
+            //     Get.offAllNamed(AppRoutes.eventDescriptionScreen, arguments: {
+            //       "eventCreatedId": 53,
+            //       "eventCategory": "Work With Elders"
+            //     });
+            //   },
+            // ),
             SizedBox(height: 4.h),
 
-            CustomElevatedButton(
-              text: "Google Map sheet open".tr,
-              onPressed: () async {
-                // Navigate to home screen if event creation is successful.
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (BuildContext context) {
-                    return Container(
-                      height: MediaQuery.of(context).size.height * 0.85,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: appTheme.gray800,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(16.0),
-                          topRight: Radius.circular(16.0),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text(
-                              'Search for Place',
-                              style: theme.textTheme.headlineSmall!.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 20),
-
-                            // 🌍 Location Picker Widget
-                            Expanded(
-                              child: LocationPickerWidget(
-                                onLocationSelected:
-                                    (String placeName, LatLng coordinates) {
-                                  controller.selectedPlaceName.value =
-                                      placeName;
-                                  controller.selectedCoordinates = coordinates;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-            SizedBox(height: 32.h),
-            CustomElevatedButton(
-              text: "check theme".tr,
-              onPressed: () async {
-                // Navigate to home screen if event creation is successful.
-             Get.to(() => Themestylecheck());
-              },
-            ),
-// 📍 Display the selected location on Home Screen
-            Obx(() {
-              return Column(
-                children: [
-                  SizedBox(height: 20),
-                  Text(
-                    "Selected Place: ${controller.selectedPlaceName.value}",
-                    style: theme.textTheme.bodyLarge!.copyWith(
-                      color: appTheme.whiteA700,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    "Coordinates: ${controller.selectedCoordinates?.latitude}, ${controller.selectedCoordinates?.longitude}",
-                    style: theme.textTheme.bodyMedium!.copyWith(
-                      color: appTheme.whiteA700,
-                    ),
-                  ),
-                ],
-              );
-            }),
+//             CustomElevatedButton(
+//               text: "Google Map sheet open".tr,
+//               onPressed: () async {
+//                 // Navigate to home screen if event creation is successful.
+//                 showModalBottomSheet(
+//                   context: context,
+//                   isScrollControlled: true,
+//                   backgroundColor: Colors.transparent,
+//                   builder: (BuildContext context) {
+//                     return Container(
+//                       height: MediaQuery.of(context).size.height * 0.85,
+//                       width: double.infinity,
+//                       decoration: BoxDecoration(
+//                         color: appTheme.gray800,
+//                         borderRadius: BorderRadius.only(
+//                           topLeft: Radius.circular(16.0),
+//                           topRight: Radius.circular(16.0),
+//                         ),
+//                       ),
+//                       child: Padding(
+//                         padding: const EdgeInsets.all(16.0),
+//                         child: Column(
+//                           mainAxisSize: MainAxisSize.min,
+//                           children: <Widget>[
+//                             Text(
+//                               'Search for Place',
+//                               style: theme.textTheme.headlineSmall!.copyWith(
+//                                 color: Colors.white,
+//                                 fontWeight: FontWeight.bold,
+//                               ),
+//                             ),
+//                             SizedBox(height: 20),
+//
+//                             // 🌍 Location Picker Widget
+//                             Expanded(
+//                               child: LocationPickerWidget(
+//                                 onLocationSelected:
+//                                     (String placeName, LatLng coordinates) {
+//                                   controller.selectedPlaceName.value =
+//                                       placeName;
+//                                   controller.selectedCoordinates = coordinates;
+//                                 },
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                     );
+//                   },
+//                 );
+//               },
+//             ),
+//             SizedBox(height: 32.h),
+//             CustomElevatedButton(
+//               text: "check theme".tr,
+//               onPressed: () async {
+//                 // Navigate to home screen if event creation is successful.
+//              Get.to(() => Themestylecheck());
+//               },
+//             ),
+// // 📍 Display the selected location on Home Screen
+//             Obx(() {
+//               return Column(
+//                 children: [
+//                   SizedBox(height: 20),
+//                   Text(
+//                     "Selected Place: ${controller.selectedPlaceName.value}",
+//                     style: theme.textTheme.bodyLarge!.copyWith(
+//                       color: appTheme.whiteA700,
+//                       fontWeight: FontWeight.bold,
+//                     ),
+//                   ),
+//                   SizedBox(height: 10),
+//                   Text(
+//                     "Coordinates: ${controller.selectedCoordinates?.latitude}, ${controller.selectedCoordinates?.longitude}",
+//                     style: theme.textTheme.bodyMedium!.copyWith(
+//                       color: appTheme.whiteA700,
+//                     ),
+//                   ),
+//                 ],
+//               );
+//             }),
           ],
         ),
       ),
@@ -293,25 +293,25 @@ class HomeScreenInitialPage extends StatelessWidget {
               ),
             ),
           ),
-          Text(
-            "hello Prathamesh".tr,
-            style: theme.textTheme.headlineLarge,
-          ),
-          SizedBox(height: 22.h),
-          _buildSearchBar(),
-          SizedBox(height: 30.h),
-          SizedBox(
-            width: double.maxFinite,
-            child: Row(
-              children: [
-                _buildRecommendedButton(),
-                SizedBox(width: 14.h),
-                _buildPopularButton(),
-                SizedBox(width: 14.h),
-                _buildTrendingButton()
-              ],
-            ),
-          ),
+          // Text(
+          //   "hello Prathamesh".tr,
+          //   style: theme.textTheme.headlineLarge,
+          // ),
+          // SizedBox(height: 22.h),
+          // _buildSearchBar(),
+          // SizedBox(height: 30.h),
+          // SizedBox(
+          //   width: double.maxFinite,
+          //   child: Row(
+          //     children: [
+          //       _buildRecommendedButton(),
+          //       SizedBox(width: 14.h),
+          //       _buildPopularButton(),
+          //       SizedBox(width: 14.h),
+          //       _buildTrendingButton()
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

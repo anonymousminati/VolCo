@@ -116,7 +116,7 @@ class SearchEventController extends GetxController {
         onJoinTap: () {
           print("User wants to sign up for ${event['event_name']}!");
 
-          Get.offAllNamed(AppRoutes.eventDescriptionScreen,arguments: {
+          Get.toNamed(AppRoutes.eventDescriptionScreen,arguments: {
             "eventCreatedId":event["event_id"],
             "eventCategory":event["activity_type"],
             "isForRegister":true,
