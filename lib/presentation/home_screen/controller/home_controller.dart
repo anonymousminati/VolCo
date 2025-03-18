@@ -6,6 +6,7 @@ import 'package:volco/core/app_export.dart';
 import 'package:volco/core/utils/project_constants.dart';
 import 'package:volco/presentation/home_screen/models/home_model.dart';
 import 'package:volco/presentation/home_screen/models/home_screen_initial_model.dart';
+import 'package:volco/widgets/event_card_widget.dart';
 
 class HomeController extends GetxController {
   TextEditingController searchBarController = TextEditingController();
@@ -17,11 +18,17 @@ class HomeController extends GetxController {
   RxString userId = ''.obs; // RxString for reactive updates
   RxString selectedPlaceName = ''.obs;
   LatLng? selectedCoordinates ;
+  RxList<EventCardWidget> eventList = <EventCardWidget>[].obs;
+
+  final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
+  final SupabaseService supabaseService = SupabaseService();
+
 
   @override
   void onReady() {
     super.onReady();
     _fetchAvatarUrl(); // Fetch avatar URL when the controller is ready
+    fetchEventsByAddress("Bhelkenagar, Kothrud, Pune, Maharashtra, India");
   }
 
 
@@ -36,6 +43,41 @@ class HomeController extends GetxController {
       }
     } catch (error) {
       print('Error fetching avatar URL: $error');
+    }
+  }
+
+  Future<void> fetchEventsByAddress(String address) async {
+    try {
+      var response = await supabaseClient
+          .rpc('search_events_by_address', params: {'search_address': address})
+          .select();
+      print(response);
+      List<Map<String, dynamic>> events = List<Map<String, dynamic>>.from(response ?? []);
+
+      eventList.assignAll(events.map((event) => EventCardWidget(
+        eventName: event['event_name'],
+        imageUrl: event['image_url'] ?? '',
+        eventDate: event['event_date'].toString(),
+        eventTime: event['event_time'].toString(),
+        volunteerCount: int.tryParse(event['volunteer_requirements'] ?? '0') ?? 0,
+        location: event['location'],
+        joinText: "Wants Join",
+        onTap: () {
+          print("${event['event_name']} clicked!");
+        },
+        onJoinTap: () {
+          print("User wants to sign up for ${event['event_name']}!");
+          Get.toNamed(AppRoutes.eventDescriptionScreen, arguments: {
+            "eventCreatedId": event["event_id"],
+            "eventCategory": event["activity_type"],
+            "isForRegister": true,
+          });
+        },
+      )));
+
+      eventList.refresh();
+    } catch (error) {
+      print("Error fetching events: $error");
     }
   }
 

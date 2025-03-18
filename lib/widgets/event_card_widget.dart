@@ -33,7 +33,7 @@ class EventCardWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap, // Tap the entire card if needed
       child: Container(
-        width: double.infinity,
+        width: MediaQuery.of(context).size.width-40.h,// add code such that it will adjust for available screen width not listview width
         decoration: BoxDecoration(
           color: appTheme.gray800,
           borderRadius: BorderRadius.circular(12.h),
@@ -140,7 +140,7 @@ class EventCardWidget extends StatelessWidget {
                     eventName,
                     style: theme.textTheme.headlineSmall?.copyWith(
                         color: Colors.white, fontWeight: FontWeight.bold),
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
