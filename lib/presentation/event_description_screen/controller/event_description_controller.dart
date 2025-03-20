@@ -10,6 +10,8 @@ class EventDescriptionController extends GetxController {
   RxString userId = ''.obs; // RxString for reactive updates
   RxBool isUserisRegistered =
       false.obs; // Reactive flag for registration status
+
+  RxList<Map<String, dynamic>> volunteerProfiles = <Map<String, dynamic>>[].obs;
   final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
   final SupabaseService supabaseService = SupabaseService();
 
@@ -25,10 +27,14 @@ class EventDescriptionController extends GetxController {
         await fetchEventDetails(eventId, eventCategory);
         // Then, fetch the user ID
         await _fetchUserId();
-        // Finally, check if the volunteer is registered (only if event_id is non-null)
+        // Check if the volunteer is registered (if applicable)
         if (eventDetails["event_id"] != null) {
           await isVolunteerRegistered(userId.value, eventDetails["event_id"]);
         }
+        // Finally, fetch the volunteer profiles for this event
+        await fetchEventRegisteredVolunteers();
+        // And subscribe to realtime changes on registrations for this event
+        subscribeToRegisteredVolunteerChanges();
       }
     }
   }
@@ -131,6 +137,33 @@ class EventDescriptionController extends GetxController {
     }
   }
 
+  Future<void> fetchEventRegisteredVolunteers() async {
+    try {
+      int eventId = eventDetails["event_id"];
+      // Call the RPC function 'get_event_volunteers'
+      final response = await supabaseClient
+          .rpc('get_registered_event_volunteers', params: {'p_event_id': eventId}).select();
+      print("Volunteer profiles response: $response");
+      if (response != null) {
+        volunteerProfiles.assignAll(List<Map<String, dynamic>>.from(response));
+      }
+    } catch (e) {
+      print("Error fetching event volunteers: $e");
+    }
+  }
+
+  /// Subscribe to realtime changes on the registrations table for this event.
+  void subscribeToRegisteredVolunteerChanges() {
+    supabaseClient
+        .from('registrations')
+        .stream(primaryKey: ['registration_id'])
+        .eq('event_id', eventDetails["event_id"])
+        .listen((data) {
+      print("Realtime update on registrations: $data");
+      fetchEventRegisteredVolunteers();
+    });
+  }
+
   /// Cancel the volunteer registration for the current event.
   Future<bool> cancelRegistration() async {
     try {
@@ -141,14 +174,19 @@ class EventDescriptionController extends GetxController {
           .delete()
           .eq('volunteer_id', userId.value)
           .eq('event_id', eventId);
-      if (response.error == null) {
+      print("cancel response: $response");
+      if (response == null) {
+        print("cancel regis error null");
         isUserisRegistered.value = false;
+
         return true;
       } else {
+        print("cencel registration false");
         return false;
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to cancel registration: ${e.toString()}");
+      print("error:failed to cancel registration ${e.toString()}");
       return false;
     }
   }

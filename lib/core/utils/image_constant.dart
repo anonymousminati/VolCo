@@ -137,6 +137,8 @@ class ImageConstant {
 
   static String commentSvg = '$imagePath/comment_svg.svg';
 
+  static String usersSvg = '$imagePath/usersSvg.svg';
+
 //lottie constants here
   static String uploadAnimationLottie = '$lottiePath/uploadAnimation.json';
 

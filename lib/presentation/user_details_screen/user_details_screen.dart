@@ -362,6 +362,35 @@ class UserDetailsScreen extends StatelessWidget {
           ),
           SizedBox(height: 24.h),
           CustomTextFormField(
+            controller: controller.bioController,
+            hintText: "Bio".tr,
+            textInputType: TextInputType.text,
+            textInputAction: TextInputAction.done,
+            prefix: Container(
+              margin: EdgeInsets.fromLTRB(20.h, 18.h, 12.h, 18.h),
+              child: CustomImageView(
+                imagePath: ImageConstant.imgNoteSkyBlue,
+                height: 18.h,
+                width: 20.h,
+                fit: BoxFit.contain,
+              ),
+            ),
+            prefixConstraints: BoxConstraints(
+              maxHeight: 60.h,
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 20.h,
+              vertical: 18.h,
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Address is required'.tr;
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 24.h),
+          CustomTextFormField(
             controller: controller.skillsController,
             hintText: "Skills".tr,
             textInputType: TextInputType.text,

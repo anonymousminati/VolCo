@@ -5,7 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class UserDetailsModel {
   final String fullName;
-
+  final String bio;
   final String email;
   final String mobileNumber;
   final String location;
@@ -21,6 +21,7 @@ class UserDetailsModel {
     required this.location,
     required this.location_cords,
     required this.skills,
+    required this.bio,
     this.age,
     this.profileImageUrl,
   });
@@ -34,6 +35,7 @@ class UserDetailsModel {
       'location': location,
       'location_cords': location_cords,
       'skills': skills,
+      'bio':bio,
       'age': age,
       'avatar_url': profileImageUrl,
     };
@@ -45,6 +47,7 @@ class UserDetailsModel {
       fullName: json['full_name'],
       email: json['username'],
       mobileNumber: json['mobile_number'],
+      bio: json['bio'],
       location: json['location'],
       location_cords: json['location_cords'] is String
           ? jsonDecode(json['location_cords'])
@@ -57,11 +60,12 @@ class UserDetailsModel {
 
   // Validate fields
   bool isValid() {
-    print("userdetailsvalid: ${fullName.isNotEmpty} , ${email.isNotEmpty} , ${mobileNumber.isNotEmpty} , ${location.isNotEmpty} , ${skills.isNotEmpty} , ${age == null || age! > 0}");
+    print("userdetailsvalid: ${fullName.isNotEmpty} , ${email.isNotEmpty} , ${mobileNumber.isNotEmpty} , ${location.isNotEmpty} , ${skills.isNotEmpty}, ${bio.isNotEmpty} , ${age == null || age! > 0}");
     return fullName.isNotEmpty &&
         email.isNotEmpty &&
         mobileNumber.isNotEmpty &&
         location.isNotEmpty &&
+        bio.isNotEmpty &&
         skills.isNotEmpty &&
         (age == null || age! > 0);
   }

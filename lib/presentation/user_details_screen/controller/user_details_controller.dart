@@ -17,6 +17,7 @@ class UserDetailsController extends GetxController {
   final mobileNumberController = TextEditingController();
   final locationController = TextEditingController();
   LatLng? selectedCoordinates ;
+  final bioController = TextEditingController();
 
   final skillsController = TextEditingController();
   final ageController = TextEditingController();
@@ -46,6 +47,7 @@ class UserDetailsController extends GetxController {
       final userDetails = UserDetailsModel(
         fullName: '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
         email: emailController.text.trim(),
+        bio: bioController.text.trim(),
         mobileNumber: mobileNumberController.text.trim(),
         location: locationController.text.trim(),
         location_cords:{
@@ -90,7 +92,7 @@ class UserDetailsController extends GetxController {
       // Prepare user details
       final userDetails = UserDetailsModel(
         fullName: firstNameController.text.trim()+ " " + lastNameController.text.trim(),
-
+        bio:bioController.text.trim(),
         email: emailController.text.trim(),
         mobileNumber: mobileNumberController.text.trim(),
         location: locationController.text.trim(),
@@ -154,6 +156,7 @@ class UserDetailsController extends GetxController {
     mobileNumberController.dispose();
     locationController.dispose();
     skillsController.dispose();
+    bioController.dispose();
     ageController.dispose();
     super.onClose();
   }
