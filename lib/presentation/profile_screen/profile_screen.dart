@@ -281,7 +281,7 @@ class ProfileScreen extends StatelessWidget {
                                             location: event['location'],
                                             onTap: () {
                                               // Navigate to event details if needed
-                                            });
+                                            }, isFavorite: false,);
                                       });
                                 }),
                                 Obx(() {
@@ -325,7 +325,9 @@ class ProfileScreen extends StatelessWidget {
                                             location: event['location'],
                                             onTap: () {
                                               // Navigate to event details if needed
-                                            });
+                                            }
+                                            , isFavorite: false,
+                                            );
                                       });
                                 }),
                               ],

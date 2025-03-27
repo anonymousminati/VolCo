@@ -1,73 +1,49 @@
-import 'dart:ffi';
-import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:volco/core/utils/image_constant.dart';
 import 'package:volco/core/utils/supabase_handler.dart';
-import 'package:volco/presentation/create_event_catogory_screen/models/create_event_catogory_model.dart';
-import 'package:volco/presentation/user_details_screen/models/user_details_model.dart';
 import 'package:volco/routes/app_routes.dart';
 import 'package:volco/widgets/event_card_widget.dart';
 import 'package:volco/widgets/label_widget.dart';
 
-class SearchEventController extends GetxController {
-  // Text controllers
-
+class SavedController extends GetxController {
   final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
   final SupabaseService supabaseService = SupabaseService();
 
-  // Search bar controller
-  final searchBarController = TextEditingController();
+  // Search bar controller (if needed for filtering favorites)
 
   // Reactive variables
   RxList<LabelWidget> eventCategoriesLabelList = <LabelWidget>[].obs;
   RxList<EventCardWidget> eventList = <EventCardWidget>[].obs;
-  RxString selectedCategory = "All".obs; // Default category
+  RxString selectedCategory = "All".obs;
   RxString avatarUrl = ''.obs;
   RxSet<int> favoriteEventIds = <int>{}.obs; // Store favorite event IDs
 
+  @override
+  void onReady() {
+    super.onReady();
+    _fetchAvatarUrl();
+    fetchFavoriteEventIds();
+    fetchFavoriteEventsList();
+    subscribeToEventChanges();
+    subscribeToCategoryChanges();
+    initializeEventCategories();
 
-  void _fetchAvatarUrl() async {
+  }
+
+  Future<void> _fetchAvatarUrl() async {
     try {
-      User? user = await SupabaseService().getUserData();
+      User? user = await supabaseService.getUserData();
       if (user != null) {
-        avatarUrl.value =
-            user.userMetadata?['avatar_url']; // Update reactive value
+        avatarUrl.value = user.userMetadata?['avatar_url'] ?? "";
       }
     } catch (error) {
       print('Error fetching avatar URL: $error');
     }
   }
 
-  List<Color> myColors = [
-    Color(0xFFB6F36B),
-    Color(0xFFFDDE67),
-    Color(0xFFFF9B61),
-    Color(0xFFC8A0FF),
-    Color(0xFF95DBFA),
-    Color(0xFF7462E1),
-    Color(0xFFFBF3DA),
-    Color(0xFFF2E0A6),
-  ].obs;
-  @override
-  void onReady() {
-    super.onReady();
-    _fetchAvatarUrl();
-    shuffleAndPrintColors();
-    fetchFavoriteEventIds();
-
-    fetchOngoingUpcomingEvents(); // Fetch events on load
-    subscribeToEventChanges(); // Listen for real-time updates
-    subscribeToCategoryChanges();
-    initializeEventCategories();
-    searchBarController.addListener(() {
-      fetchOngoingUpcomingEvents();  // Fetch events on search text change
-    });
-  }
-
+  /// Fetch favorite event IDs using a separate RPC function if needed.
   Future<void> fetchFavoriteEventIds() async {
     try {
       final String? userId = await supabaseService.getUserId(); // Await the user ID
@@ -80,56 +56,36 @@ class SearchEventController extends GetxController {
       });
       print("fav id res :$response");
       List<int> favIds = (response as List<dynamic>).map((event) => event['event_id'] as int).toList();
-      print("Favorite Event IDs from ser: $favIds");
+      print("Favorite Event IDs: $favIds");
       favoriteEventIds.assignAll(favIds);
     } catch (e) {
       print("Error fetching favorite event IDs: $e");
     }
   }
-  void shuffleAndPrintColors() {
-    // Create a random number generator.
-    final random = Random();
 
-    // Shuffle the list in place using the Fisher-Yates algorithm.
-    for (var i = myColors.length - 1; i > 0; i--) {
-      // Pick a random number from 0 to i.
-      var n = random.nextInt(i + 1);
-
-      // Swap colors[i] with the element at random index.
-      var temp = myColors[i];
-      myColors[i] = myColors[n];
-      myColors[n] = temp;
-    }
-
-    // Print the shuffled list of colors.
-    print('Shuffled Colors:');
-    myColors.forEach((color) => print(color));
-  }
-
-  /// **Fetches ongoing and upcoming events**
-  /// Fetches ongoing and upcoming events based on search query and selected category
-  Future<void> fetchOngoingUpcomingEvents() async {
+  /// Fetch favorite events with details using the new SQL function.
+  Future<void> fetchFavoriteEventsList() async {
     try {
-      String searchQuery = searchBarController.text.trim();
+      final String? userId = await supabaseService.getUserId(); // Await the user ID
+      if (userId == null) {
+        print("User ID is null");
+        return;
+      }
+      // Optionally, pass search criteria and category if needed:
+      final response = await supabaseClient.rpc('get_favorite_events', params: {
+        'user_uuid': userId,
 
-      // Call Supabase stored function
-      final response = await supabaseClient.rpc(
-        'get_events_by_search',
-        params: {
-          'category': selectedCategory.value,
-          'search_query': searchQuery,
-        },
-      );
+      }).select();
 
-      // Ensure response is a list of maps
-      List<Map<String, dynamic>> events = List<Map<String, dynamic>>.from(response ?? []);
-      // Clear and update the event list
-      eventList.assignAll(events.map((event) => EventCardWidget(
+      // List<Map<String, dynamic>> events = List<Map<String, dynamic>>.from(response ?? []);
+
+      // Build EventCardWidgets for each event and mark them as favorites.
+      eventList.assignAll(response.map((event) => EventCardWidget(
         eventName: event['event_name'],
         imageUrl: event['image_url'] ?? '',
         eventDate: event['event_date'].toString(),
         eventTime: event['event_time'].toString(),
-        volunteerCount: int.parse(event['volunteer_requirements']) ?? 0,
+        volunteerCount: int.tryParse(event['volunteer_requirements'] ?? '0') ?? 0,
         location: event['location'],
         joinText: "Wants Join",
         onTap: () {
@@ -137,28 +93,28 @@ class SearchEventController extends GetxController {
         },
         onJoinTap: () {
           print("User wants to sign up for ${event['event_name']}!");
-
-          Get.toNamed(AppRoutes.eventDescriptionScreen,arguments: {
-            "eventCreatedId":event["event_id"],
-            "eventCategory":event["activity_type"],
-            "isForRegister":true,
-
+          Get.toNamed(AppRoutes.eventDescriptionScreen, arguments: {
+            "eventCreatedId": event["event_id"],
+            "eventCategory": event["activity_type"],
+            "isForRegister": true,
           });
         },
         onFavTap: () {
           toggleFavorite(event['event_id']);
         },
-        isFavorite: favoriteEventIds.contains(event['event_id']),
-      )));
 
+        isFavorite: favoriteEventIds.contains(event['event_id']), // These events are favorites.
+      )).toList());
     } catch (e) {
-      print("Error fetching events: $e");
+      print("Error fetching favorite events list: $e");
     }
   }
+
+  /// Toggle favorite status for an event.
   Future<void> toggleFavorite(int eventId) async {
     try {
       print(1);
-      final userId = await supabaseService.getUserId();
+      final String? userId = await supabaseService.getUserId(); // Await the user ID
       if (userId == null) {
         print("User ID is null");
         return;
@@ -192,7 +148,7 @@ class SearchEventController extends GetxController {
       }
       favoriteEventIds.refresh();
       // Re-fetch favorite events list after update.
-      await fetchOngoingUpcomingEvents();
+      await fetchFavoriteEventsList();
     } catch (e) {
       print("Error toggling favorite: $e");
     }
@@ -203,7 +159,13 @@ class SearchEventController extends GetxController {
         .from('events')
         .stream(primaryKey: ['event_id'])
         .listen((_) {
-      fetchOngoingUpcomingEvents();
+      fetchFavoriteEventsList();
+    });
+    supabaseClient
+        .from('favorites')
+        .stream(primaryKey: ['id'])
+        .listen((_) {
+      fetchFavoriteEventsList();
     });
   }
 
@@ -219,8 +181,6 @@ class SearchEventController extends GetxController {
 
     // Fetch categories from the database
     List<Map<String, dynamic>> response = await supabaseService.fetchCatogories();
-
-    // Add fetched categories
     eventCategoriesLabelList.addAll(response.map((category) => LabelWidget(
       labelText: category['catogory_name'],
       color: Color(0xFFF2E0A6),
@@ -230,15 +190,10 @@ class SearchEventController extends GetxController {
 
   void updateSelectedCategory(String category) {
     print("Selected Category: $category");
-    selectedCategory.value = category; // Update the selected category
-
-    // Update the UI to reflect the selected category
+    selectedCategory.value = category;
     eventCategoriesLabelList.refresh();
-print("eventCategoriesLabelList refreshed");
-    // Fetch events for the selected category
-    fetchOngoingUpcomingEvents();
+    fetchFavoriteEventsList();
   }
-
 
   void subscribeToCategoryChanges() {
     supabaseClient
@@ -247,7 +202,6 @@ print("eventCategoriesLabelList refreshed");
         .listen((updatedData) {
       print("Categories Updated: $updatedData");
 
-      // Refresh category list
       List<LabelWidget> updatedCategories = [
         LabelWidget(
           labelText: "All",
@@ -268,7 +222,6 @@ print("eventCategoriesLabelList refreshed");
 
   @override
   void onClose() {
-    searchBarController.dispose();
     super.onClose();
   }
 }

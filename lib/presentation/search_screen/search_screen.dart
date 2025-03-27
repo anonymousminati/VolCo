@@ -18,6 +18,7 @@ class SearchScreen extends StatelessWidget {
       child: RefreshIndicator(
         onRefresh: () async {
           await controller.fetchOngoingUpcomingEvents();
+          await controller.fetchFavoriteEventIds();
         },
         child: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -46,6 +47,7 @@ class SearchScreen extends StatelessWidget {
       ),
     );
   }
+
 
   Widget buildHeader() {
     return SizedBox(

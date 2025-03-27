@@ -72,7 +72,7 @@ class HomeController extends GetxController {
             "eventCategory": event["activity_type"],
             "isForRegister": true,
           });
-        },
+        }, isFavorite: false,
       )));
 
       eventList.refresh();

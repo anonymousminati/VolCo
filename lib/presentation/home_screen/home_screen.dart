@@ -4,9 +4,9 @@ import 'package:volco/presentation/create_event_catogory_screen/create_event_cat
 import 'package:volco/presentation/home_screen/controller/home_controller.dart';
 import 'package:volco/presentation/home_screen/home_screen_initial_page.dart';
 import 'package:volco/presentation/post_media_screen/post_media_screen.dart';
+import 'package:volco/presentation/saved_screen/saved_screen.dart';
 import 'package:volco/presentation/search_screen/search_screen.dart';
 import 'package:volco/widgets/custom_bottom_bar.dart';
-
 
 class HomeScreen extends GetWidget<HomeController> {
   @override
@@ -51,6 +51,8 @@ class HomeScreen extends GetWidget<HomeController> {
         return AppRoutes.searchScreen;
       case BottomBarEnum.Create:
         return AppRoutes.createEventCatogoryScreen;
+      case BottomBarEnum.Saved:
+        return AppRoutes.savedScreen;
       case BottomBarEnum.Media:
         return AppRoutes.postMediaScreen;
       default:
@@ -67,6 +69,8 @@ class HomeScreen extends GetWidget<HomeController> {
         return SearchScreen();
       case AppRoutes.createEventCatogoryScreen:
         return CreateEventCatogoryScreen();
+      case AppRoutes.savedScreen:
+        return SavedScreen();
       case AppRoutes.postMediaScreen:
         return PostMediaScreen();
       default:

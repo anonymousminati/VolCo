@@ -14,26 +14,31 @@ class EventCardWidget extends StatelessWidget {
   final String joinText;
   final VoidCallback? onTap;
   final VoidCallback? onJoinTap;
+  final VoidCallback? onFavTap;
+  final bool isFavorite;
 
-  const EventCardWidget({
-    Key? key,
-    required this.eventName,
-    required this.imageUrl,
-    required this.eventDate,
-    required this.eventTime,
-    required this.volunteerCount,
-    required this.location,
-    this.joinText = "Wants Join",
-    this.onTap,
-    this.onJoinTap,
-  }) : super(key: key);
+  const EventCardWidget(
+      {Key? key,
+      required this.eventName,
+      required this.imageUrl,
+      required this.eventDate,
+      required this.eventTime,
+      required this.volunteerCount,
+      required this.location,
+      this.joinText = "Wants Join",
+      this.onTap,
+      this.onJoinTap,
+      this.onFavTap,
+      required this.isFavorite})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap, // Tap the entire card if needed
       child: Container(
-        width: MediaQuery.of(context).size.width-40.h,// add code such that it will adjust for available screen width not listview width
+        width: MediaQuery.of(context).size.width -
+            40.h, // add code such that it will adjust for available screen width not listview width
         decoration: BoxDecoration(
           color: appTheme.gray800,
           borderRadius: BorderRadius.circular(12.h),
@@ -102,9 +107,10 @@ class EventCardWidget extends StatelessWidget {
                 Positioned(
                   right: 10.h,
                   bottom: 10.h,
-                  child: SizedBox( // Wrap AspectRatio inside SizedBox
-                    width: 50.h,   // Provide width
-                    height: 50.h,  // Provide height
+                  child: SizedBox(
+                    // Wrap AspectRatio inside SizedBox
+                    width: 50.h, // Provide width
+                    height: 50.h, // Provide height
                     child: AspectRatio(
                       aspectRatio: 1, // Maintain square aspect ratio
                       child: Container(
@@ -133,7 +139,6 @@ class EventCardWidget extends StatelessWidget {
             Row(
               spacing: 10.h,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
               children: [
                 Expanded(
                   child: AutoSizeText(
@@ -148,11 +153,11 @@ class EventCardWidget extends StatelessWidget {
                 // Optionally, you can add event time below the event name if needed:
                 AutoSizeText(
                   eventTime,
-                  style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white70),
+                  style: theme.textTheme.bodyMedium
+                      ?.copyWith(color: Colors.white70),
                   maxLines: 1,
                 ),
               ],
-
             ),
             SizedBox(height: 10.h),
             // Row with location, star icon, and join button
@@ -185,25 +190,32 @@ class EventCardWidget extends StatelessWidget {
                 ),
                 SizedBox(width: 8.h),
                 // Star icon
-                Container(
-                  padding: EdgeInsets.all(8.h),
-                  decoration: BoxDecoration(
-                    color: appTheme.amber500,
-                    borderRadius: BorderRadius.circular(50.h),
-                  ),
-                  child: Icon(
-                    Icons.star_border_outlined,
-                    color: Colors.black,
-                    size: 20.h,
-                  ),
+                //add code to show star icon if event is favorite
+                GestureDetector(
+                  onTap: onFavTap,
+                  child: Container(
+                      padding: EdgeInsets.all(8.h),
+                      decoration: BoxDecoration(
+                        color: appTheme.yellowA700,
+                        borderRadius: BorderRadius.circular(50.h),
+                      ),
+                      child: CustomImageView(
+                        imagePath: isFavorite
+                            ? ImageConstant.favFilledSvg
+                            : ImageConstant.favOutlineSvg,
+                        width: 24.h,
+                        height: 24.h,
+
+                      )),
                 ),
+
                 SizedBox(width: 8.h),
                 // Join button with its own gesture detector
                 GestureDetector(
                   onTap: onJoinTap,
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 32.h, vertical: 10.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 32.h, vertical: 10.h),
                     decoration: BoxDecoration(
                       color: appTheme.cyan500,
                       borderRadius: BorderRadius.circular(50.h),
@@ -222,11 +234,9 @@ class EventCardWidget extends StatelessWidget {
             ),
 
             // Event name text
-
           ],
         ),
       ),
     );
   }
 }
-

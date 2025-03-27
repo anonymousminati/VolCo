@@ -30,6 +30,8 @@ import 'package:volco/presentation/profile_screen/binding/profile_binding.dart';
 import 'package:volco/presentation/profile_screen/profile_screen.dart';
 import 'package:volco/presentation/reset_password_screen/binding/reset_password_binding.dart';
 import 'package:volco/presentation/reset_password_screen/reset_password_screen.dart';
+import 'package:volco/presentation/saved_screen/binding/saved_binding.dart';
+import 'package:volco/presentation/saved_screen/saved_screen.dart';
 import 'package:volco/presentation/sign_in_screen/binding/sign_in_binding.dart';
 import 'package:volco/presentation/sign_in_screen/sign_in_screen.dart';
 import 'package:volco/presentation/sign_up_screen/binding/sign_up_binding.dart';
@@ -92,6 +94,8 @@ class AppRoutes {
   static const String profileScreen = '/profile_screen';
 
   static const String postMediaScreen = '/post_media_screen';
+
+  static const String savedScreen = '/saved_screen';
 
 
   static List<GetPage> pages = [
@@ -236,6 +240,10 @@ class AppRoutes {
   name: profileScreen,
   page: ()=>ProfileScreen(),
   bindings: [ProfileBinding()],
+  ),GetPage(
+  name: savedScreen,
+  page: ()=>SavedScreen(),
+  bindings: [SavedBinding()],
   ),
   ];
 }
