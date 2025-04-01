@@ -30,8 +30,20 @@ class HomeScreenInitialPage extends StatelessWidget {
           children: [
             _buildFloatingIconColumn(),
             SizedBox(height: 32.h),
+            ElevatedButton(
+              onPressed: () {
+                Get.offAllNamed(AppRoutes.eventDescriptionScreen, arguments: {
+                  "eventCreatedId":68,
+                  "eventCategory": "Health & Wellness",
+                });
+              },
+              child: Text("Go to Event Description"),
+            ),
+            SizedBox(height: 32.h),
 
             _buildEventListView(context),
+
+
           ],
         ),
       ),

@@ -148,6 +148,9 @@ class _LocationPickerWidgetState extends State<LocationPickerWidget> {
                   ],
                 ),
                 child: TextField(
+                  style: TextStyle(
+                    color: appTheme.black900
+                  ),
                   controller: searchPlaceController,
                   decoration: InputDecoration(
                     hintText: "Search for a place...",
@@ -235,27 +238,17 @@ class _LocationPickerWidgetState extends State<LocationPickerWidget> {
         ),
         // Confirm Button (at the bottom)
         Positioned(
-          bottom: 20,
+          bottom: 0,
           left: 20,
           right: 20,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
+          child: CustomElevatedButton(text:"Confirm Location",
             onPressed: () {
               widget.onLocationSelected(selectedPlaceName, currentPosition);
               Navigator.pop(context); // Close the modal/bottom sheet
             },
-            child: const Text(
-              "Confirm Location",
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          ),
+           ),
         ),
+
       ],
     );
   }

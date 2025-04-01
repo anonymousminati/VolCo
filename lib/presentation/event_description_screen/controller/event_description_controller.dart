@@ -26,7 +26,7 @@ class EventDescriptionController extends GetxController {
         // First, fetch the event details
         await fetchEventDetails(eventId, eventCategory);
         // Then, fetch the user ID
-        await _fetchUserId();
+        await fetchUserId();
         // Check if the volunteer is registered (if applicable)
         if (eventDetails["event_id"] != null) {
           await isVolunteerRegistered(userId.value, eventDetails["event_id"]);
@@ -52,6 +52,7 @@ class EventDescriptionController extends GetxController {
           .eq('event_id', eventId)
           .single();
       eventDetails.assignAll(commonResponse);
+      print("event Details:$eventDetails");
 
       final tagsResponse = await supabaseClient
           .from('event_tags')
@@ -109,12 +110,12 @@ class EventDescriptionController extends GetxController {
     }
   }
 
-  Future<void> _fetchUserId() async {
+  Future<void> fetchUserId() async {
     try {
-      User? user = await SupabaseService().getUserData();
+      String? user = await SupabaseService().getUserId();
       if (user != null) {
-        print('User metadata: ${user.userMetadata}');
-        userId.value = user.id; // Update reactive value
+        print('User metadata: ${user}');
+        userId.value = user; // Update reactive value
         // Update reactive value
       }
     } catch (error) {

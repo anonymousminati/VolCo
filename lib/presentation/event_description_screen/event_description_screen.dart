@@ -558,170 +558,106 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
       child: RefreshIndicator(
           child: Scaffold(
             resizeToAvoidBottomInset: false,
-            body: Obx(() {
-              if (controller.isLoading.value) {
-                return Center(child: CircularProgressIndicator());
-              }
-              if (controller.eventDetails.isEmpty) {
-                return Center(child: Text("No event details available"));
-              }
-              var event = controller.eventDetails;
-              var activity = controller.activityDetails;
+            body: Obx(
+              () {
+                if (controller.isLoading.value) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (controller.eventDetails.isEmpty) {
+                  return Center(child: Text("No event details available"));
+                } else {
+                  var event = controller.eventDetails;
+                  var activity = controller.activityDetails;
 
-              return SingleChildScrollView(
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 24.h, vertical: 10.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 20.h,
-                    children: [
-                      // Back Arrow
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CustomImageView(
-                            imagePath: ImageConstant.imgArrowLeft,
-                            height: 28.h,
-                            width: 30.h,
-                            onTap: () => Get.back(),
-                          ),
-                          if (controller.userId.value ==
-                                  controller
-                                      .eventDetails.value["organizer_id"] ||
-                              controller.isUserisRegistered.value)
-                            GestureDetector(
-                              onTap: () {
-                                print(controller.eventDetails["event_id"]);
-                                Get.toNamed(AppRoutes.chatRoomScreen,
-                                    arguments: {
-                                      "eventId":
-                                          controller.eventDetails["event_id"],
-                                    });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.h),
-                                  border:
-                                      Border.all(color: appTheme.lightBlue600),
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 12.h, vertical: 8.h),
-                                child: Row(
-                                  spacing: 10.h,
-                                  children: [
-                                    CustomImageView(
-                                      height: 24.h,
-                                      imagePath: ImageConstant.chatRoomSvg,
-                                    ),
-                                    Text("Chat room".tr,
-                                        style: CustomTextStyles.titleMedium16_1
-                                            .copyWith(
-                                                color: appTheme.lightBlue600)),
-                                  ],
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-
-                      _buildDescriptionDetails(event),
-
-                      // Activity-specific details (if available)
-                      if (activity.isNotEmpty)
-                        _buildActivitySpecificDetails(
-                          selectedActivityCategory?.toLowerCase() ?? "",
-                          activity,
-                          event,
-                        ),
-                      (controller.eventTags.isEmpty)
-                          ? Center(child: Text("No tags available"))
-                          : Wrap(
-                              spacing: 8.0, // Space between tags
-                              runSpacing: 4.0, // Space between rows
-                              children: controller.eventTags
-                                  .map((tag) => _buildTagBadge(tag))
-                                  .toList(),
-                            ),
-
-                      Text(
-                        "You can Register or Cancel event untill one day before ${controller.eventDetails['event_date']} ",
-                        style: CustomTextStyles.titleMediumRed400,
-                      ),
-                      Row(
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 24.h, vertical: 10.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         spacing: 20.h,
                         children: [
-                          Expanded(
-                            child: CustomElevatedButton(
-                              text: "Go to Home".tr,
-                              onPressed: () {
-                                // controller.fetchEventDetails(
-                                //     eventCreatedId!, selectedActivityCategory!);
-                                Get.toNamed(AppRoutes.homeScreen);
-                              },
-                            ),
-                          ),
-                          Obx(() {
-                            // Check if current user is not the organizer
-                            if (isForRegistration &&
-                                controller.userId.value != controller.eventDetails.value["organizer_id"]) {
-                              // Parse event date (ensure your stored date is in a parsable format)
-                              DateTime eventDate = DateTime.tryParse(controller.eventDetails.value["event_date"]) ?? DateTime.now();
-                              // Only allow registration or cancellation if today's date is at least 1 day before the event date
-                              if (DateTime.now().isBefore(eventDate.subtract(Duration(days: 1)))) {
-                                if (controller.isUserisRegistered.value) {
-                                  // Show Cancel Registration button
-                                  return Expanded(
-                                    child: CustomElevatedButton(
-                                      text: "Cancel Registration".tr,
-                                      buttonStyle: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.redAccent,
-                                      ),
-                                      buttonTextStyle: CustomTextStyles.titleMedium16_1.copyWith(color: Colors.white),
-                                      onPressed: () async {
-                                        bool success = await controller.cancelRegistration();
-                                        if (success) {
-                                          Get.snackbar("Success", "Registration cancelled successfully.");
-                                        } else {
-                                          Get.snackbar("Error", "Failed to cancel registration. Please try again.");
-                                        }
-                                      },
-                                    ),
-                                  );
-                                } else {
-                                  // Show Join event button
-                                  return Expanded(
-                                    child: CustomElevatedButton(
-                                      text: "Join event".tr,
-                                      buttonStyle: ElevatedButton.styleFrom(
-                                        backgroundColor: appTheme.green600,
-                                      ),
-                                      buttonTextStyle: CustomTextStyles.titleMedium16_1.copyWith(color: appTheme.black900),
-                                      onPressed: () {
-                                        print("join event clicked");
-                                        Get.offAllNamed(AppRoutes.volunteerRegistrationScreen, arguments: {
-                                          "eventId": controller.eventDetails.value["event_id"],
+                          // Back Arrow
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomImageView(
+                                imagePath: ImageConstant.imgArrowLeft,
+                                height: 28.h,
+                                width: 30.h,
+                                onTap: () => Get.back(),
+                              ),
+                              if (controller.userId.value ==
+                                      controller
+                                          .eventDetails.value["organizer_id"] ||
+                                  controller.isUserisRegistered.value)
+                                GestureDetector(
+                                  onTap: () {
+                                    print(controller.eventDetails["event_id"]);
+                                    Get.toNamed(AppRoutes.chatRoomScreen,
+                                        arguments: {
+                                          "eventId": controller
+                                              .eventDetails["event_id"],
                                         });
-                                      },
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12.h),
+                                      border: Border.all(
+                                          color: appTheme.lightBlue600),
                                     ),
-                                  );
-                                }
-                              } else {
-                                // If the event date is less than one day away, do not show the buttons.
-                                return SizedBox.shrink();
-                              }
-                            } else {
-                              return SizedBox.shrink();
-                            }
-                          })
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 12.h, vertical: 8.h),
+                                    child: Row(
+                                      spacing: 10.h,
+                                      children: [
+                                        CustomImageView(
+                                          height: 24.h,
+                                          imagePath: ImageConstant.chatRoomSvg,
+                                        ),
+                                        Text("Chat room".tr,
+                                            style: CustomTextStyles
+                                                .titleMedium16_1
+                                                .copyWith(
+                                                    color:
+                                                        appTheme.lightBlue600)),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
 
+                          _buildDescriptionDetails(event),
+
+                          // Activity-specific details (if available)
+                          if (activity.isNotEmpty)
+                            _buildActivitySpecificDetails(
+                              selectedActivityCategory?.toLowerCase() ?? "",
+                              activity,
+                              event,
+                            ),
+                          (controller.eventTags.isEmpty)
+                              ? Center(child: Text("No tags available"))
+                              : Wrap(
+                                  spacing: 8.0, // Space between tags
+                                  runSpacing: 4.0, // Space between rows
+                                  children: controller.eventTags
+                                      .map((tag) => _buildTagBadge(tag))
+                                      .toList(),
+                                ),
+
+                          Text(
+                            "You can Register or Cancel event untill one day before ${controller.eventDetails['event_date']} ",
+                            style: CustomTextStyles.titleMediumRed400,
+                          ),
+                          _joinCancelBtn()
                         ],
-                      )
-                    ],
-                  ),
-                ),
-              );
-            }),
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
           ),
           onRefresh: () {
             return controller.fetchEventDetails(
@@ -729,6 +665,151 @@ class EventDescriptionScreen extends GetView<EventDescriptionController> {
           }),
     );
   }
+
+  Widget _joinCancelBtn() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      spacing: 20.h,
+      children: [
+        Expanded(
+          child: CustomElevatedButton(
+            text: "Go to Home".tr,
+            onPressed: () {
+              Get.toNamed(AppRoutes.homeScreen);
+            },
+          ),
+        ),
+        Obx(() {
+          final userId = controller.userId.value;
+          final organizerId = controller.eventDetails.value["organizer_id"];
+          final isRegistered = controller.isUserisRegistered.value;
+          if (isForRegistration && userId != organizerId) {
+            DateTime eventDate = DateTime.tryParse(
+                    controller.eventDetails.value["event_date"]) ??
+                DateTime.now();
+            if (isRegistered) {
+              return Expanded(
+                child: CustomElevatedButton(
+                  text: "Cancel Registration".tr,
+                  buttonStyle: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                  ),
+                  buttonTextStyle: CustomTextStyles.titleMedium16_1
+                      .copyWith(color: Colors.white),
+                  onPressed: () async {
+                    bool success = await controller.cancelRegistration();
+                    if (success) {
+                      Get.snackbar(
+                          "Success", "Registration cancelled successfully.");
+                    } else {
+                      Get.snackbar("Error",
+                          "Failed to cancel registration. Please try again.");
+                    }
+                  },
+                ),
+              );
+            } else {
+              return Expanded(
+                child: CustomElevatedButton(
+                  text: "Join event".tr,
+                  buttonStyle: ElevatedButton.styleFrom(
+                    backgroundColor: appTheme.green600,
+                  ),
+                  buttonTextStyle: CustomTextStyles.titleMedium16_1
+                      .copyWith(color: appTheme.black900),
+                  onPressed: () {
+                    Get.offAllNamed(AppRoutes.volunteerRegistrationScreen,
+                        arguments: {
+                          "eventId": controller.eventDetails.value["event_id"],
+                        });
+                  },
+                ),
+              );
+            }
+          } else {
+            return SizedBox.shrink();
+          }
+        })
+      ],
+    );
+  }
+
+  // Widget _joinCancelButtons(){
+  //   return   Obx(
+  //         () {
+  //       // Check if current user is not the organizer
+  //       if (isForRegistration &&
+  //           controller.userId.value !=
+  //               controller.eventDetails
+  //                   .value["organizer_id"]) {
+  //         // Parse event date (ensure your stored date is in a parsable format)
+  //         DateTime eventDate = DateTime.tryParse(
+  //             controller.eventDetails
+  //                 .value["event_date"]) ??
+  //             DateTime.now();
+  //         // Only allow registration or cancellation if today's date is at least 1 day before the event date
+  //         if (DateTime.now().isBefore(
+  //             eventDate.subtract(Duration(days: 1)))) {
+  //           if (controller.isUserisRegistered.value) {
+  //             // Show Cancel Registration button
+  //             return Expanded(
+  //               child: CustomElevatedButton(
+  //                 text: "Cancel Registration".tr,
+  //                 buttonStyle: ElevatedButton.styleFrom(
+  //                   backgroundColor: Colors.redAccent,
+  //                 ),
+  //                 buttonTextStyle: CustomTextStyles
+  //                     .titleMedium16_1
+  //                     .copyWith(color: Colors.white),
+  //                 onPressed: () async {
+  //                   bool success = await controller
+  //                       .cancelRegistration();
+  //                   if (success) {
+  //                     Get.snackbar("Success",
+  //                         "Registration cancelled successfully.");
+  //                   } else {
+  //                     Get.snackbar("Error",
+  //                         "Failed to cancel registration. Please try again.");
+  //                   }
+  //                 },
+  //               ),
+  //             );
+  //           } else {
+  //             // Show Join event button
+  //             return Expanded(
+  //               child: CustomElevatedButton(
+  //                 text: "Join event".tr,
+  //                 buttonStyle: ElevatedButton.styleFrom(
+  //                   backgroundColor: appTheme.green600,
+  //                 ),
+  //                 buttonTextStyle: CustomTextStyles
+  //                     .titleMedium16_1
+  //                     .copyWith(
+  //                     color: appTheme.black900),
+  //                 onPressed: () {
+  //                   print("join event clicked");
+  //                   Get.offAllNamed(
+  //                       AppRoutes
+  //                           .volunteerRegistrationScreen,
+  //                       arguments: {
+  //                         "eventId": controller
+  //                             .eventDetails
+  //                             .value["event_id"],
+  //                       });
+  //                 },
+  //               ),
+  //             );
+  //           }
+  //         } else {
+  //           // If the event date is less than one day away, do not show the buttons.
+  //           return SizedBox.shrink();
+  //         }
+  //       } else {
+  //         return SizedBox.shrink();
+  //       }
+  //     },
+  //   );
+  // }
 
   Widget _buildDescriptionDetails(RxMap event) {
     return Column(
