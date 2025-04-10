@@ -40,6 +40,9 @@ class HomeScreenInitialPage extends StatelessWidget {
               child: Text("Go to Event Description"),
             ),
             SizedBox(height: 32.h),
+            _buildRecommendationEventListView(context),
+
+            SizedBox(height: 32.h),
 
             _buildEventListView(context),
 
@@ -175,6 +178,38 @@ class HomeScreenInitialPage extends StatelessWidget {
                 itemCount: controller.eventList.length,
                 separatorBuilder: (context, index) => SizedBox(width: 12.h),
                 itemBuilder: (context, index) => controller.eventList[index],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  Widget _buildRecommendationEventListView(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 20.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 20.h,
+        children: [
+          Text("Event Suggestions", style: CustomTextStyles.titleLarge20,textAlign: TextAlign.start,),
+          Obx(
+                () => controller.recommendedEventList.isEmpty
+                ? Center(
+              child: Text(
+                "No events found!",
+                style: TextStyle(color: Colors.white),
+              ),
+            )
+                : SizedBox(
+              height: 310.h, // Define a specific height to bound the ListView
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                // padding: EdgeInsets.symmetric(horizontal: 16.h),
+                itemCount: controller.recommendedEventList.length,
+                separatorBuilder: (context, index) => SizedBox(width: 12.h),
+                itemBuilder: (context, index) => controller.recommendedEventList[index],
               ),
             ),
           ),
