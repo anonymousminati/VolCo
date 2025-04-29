@@ -28,97 +28,114 @@ class VolunteerRegistrationScreen
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: Obx(() {
-            if (controller.isLoading.value) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return RefreshIndicator(
-                onRefresh: ()async{
-                  controller.updateEventId(eventId);
-                  print("Refreshed");
-                },
-                child: Form(
-                  key: _volunteerEventRegistrationformKey,
-                  child: SizedBox(
-                    width: double.maxFinite,
-                    child: SingleChildScrollView(
-                      child: Container(
-                        width: double.maxFinite,
-                        padding: EdgeInsets.only(
-                          left: 24.h,
-                          right: 24.h,
-                          top: 10.h,
-                        ),
-                        child:
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 24),
+      child: PopScope(
+        canPop: false, // Prevents back navigation
 
-                            // Title
-                            Text(
-                              "Join the Movement!",
-                              style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
+        child: Scaffold(
 
-                            SizedBox(height: 24),
+            resizeToAvoidBottomInset: false,
+            body: Obx(() {
+              if (controller.isLoading.value) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                return RefreshIndicator(
+                  onRefresh: ()async{
+                    controller.updateEventId(eventId);
+                    print("Refreshed");
+                  },
+                  child: Form(
+                    key: _volunteerEventRegistrationformKey,
+                    child: SizedBox(
+                      width: double.maxFinite,
+                      child: SingleChildScrollView(
+                        child: Container(
+                          width: double.maxFinite,
+                          padding: EdgeInsets.only(
+                            left: 24.h,
+                            right: 24.h,
+                            top: 10.h,
+                          ),
+                          child:
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 24),
 
-                            _buildEventRegistrationFormSection(),
+                              // Title
+                              Text(
+                                "Join the Movement!",
+                                style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
 
-                            SizedBox(height: 24),
+                              SizedBox(height: 24),
 
-                            // Submit Button
-                            CustomElevatedButton(
-                              text: "Register",
-                              onPressed: () async {
-                                if (_volunteerEventRegistrationformKey
-                                    .currentState!
-                                    .validate()) {
-                                  if (!controller
-                                      .termsAndConditionsAccept.value) {
-                                    Get.snackbar("Error",
-                                        "You must accept the Terms and Conditions.");
-                                    return;
+                              _buildEventRegistrationFormSection(),
+
+                              SizedBox(height: 24),
+
+                              // Submit Button
+                              CustomElevatedButton(
+                                text: "Register",
+                                onPressed: () async {
+                                  if (_volunteerEventRegistrationformKey
+                                      .currentState!
+                                      .validate()) {
+                                    if (!controller
+                                        .termsAndConditionsAccept.value) {
+                                      Get.snackbar("Error",
+                                          "You must accept the Terms and Conditions.");
+                                      return;
+                                    }
+
+                                    bool response =
+                                    await controller.registerVolunteer();
+                                    if (response) {
+                                      Get.snackbar("Success",
+                                          "You have successfully registered!");
+                                      Get.offAllNamed(AppRoutes.homeScreen);
+                                    } else {
+                                      Get.snackbar("Error",
+                                          "Registration failed. Please try again.");
+                                    }
                                   }
+                                },
+                              ),
 
-                                  bool response =
-                                  await controller.registerVolunteer();
-                                  if (response) {
-                                    Get.snackbar("Success",
-                                        "You have successfully registered!");
-                                    Get.offAllNamed(AppRoutes.homeScreen);
-                                  } else {
-                                    Get.snackbar("Error",
-                                        "Registration failed. Please try again.");
-                                  }
-                                }
-                              },
-                            ),
+                              SizedBox(height: 24),
 
-                            SizedBox(height: 24),
-                            // CustomElevatedButton(
-                            //   text: "regis 2",
-                            //   onPressed: () async {
-                            //     controller.updateEventId(eventId);
-                            //     print("Refreshed");
-                            //   },
-                            // ),
-                          ],
+                              CustomElevatedButton(
+                                text: "Go to Home",
+                                buttonStyle: ButtonStyle(backgroundColor: WidgetStatePropertyAll(appTheme.red400)),
+                                onPressed: () async {
+
+                                  Get.offAllNamed(AppRoutes.homeScreen);
+
+                                },
+                              ),
+
+                              SizedBox(height: 24),
+                              // CustomElevatedButton(
+                              //   text: "regis 2",
+                              //   onPressed: () async {
+                              //     controller.updateEventId(eventId);
+                              //     print("Refreshed");
+                              //   },
+                              // ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              );
-            }
-          })),
+                );
+              }
+            })),
+      ),
     );
   }
 

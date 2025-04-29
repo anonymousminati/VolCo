@@ -51,6 +51,7 @@ class EventCardWidget extends StatelessWidget {
           ],
         ),
         padding: EdgeInsets.all(10.h),
+         // Add margin to the card
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -135,7 +136,7 @@ class EventCardWidget extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 5.h),
             Row(
               spacing: 10.h,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -159,7 +160,7 @@ class EventCardWidget extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 10.h),
+
             // Row with location, star icon, and join button
             Row(
               children: [
