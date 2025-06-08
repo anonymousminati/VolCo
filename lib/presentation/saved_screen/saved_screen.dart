@@ -58,22 +58,22 @@ class SavedScreen extends StatelessWidget {
             ),
           ),
           Spacer(),
-          CustomImageView(
-            imagePath: ImageConstant.imgLocation,
-            height: 28.h,
-            width: 30.h,
-            onTap: () {
-              AuthController().logout();
-            },
-          ),
-          CustomImageView(
-            imagePath: ImageConstant.imgBellBlue,
-            height: 28.h,
-            width: 30.h,
-            onTap: () {
-              // Handle notifications tap if needed.
-            },
-          ),
+          // CustomImageView(
+          //   imagePath: ImageConstant.imgLocation,
+          //   height: 28.h,
+          //   width: 30.h,
+          //   onTap: () {
+          //     AuthController().logout();
+          //   },
+          // ),
+          // CustomImageView(
+          //   imagePath: ImageConstant.imgBellBlue,
+          //   height: 28.h,
+          //   width: 30.h,
+          //   onTap: () {
+          //     // Handle notifications tap if needed.
+          //   },
+          // ),
           Obx(
                 () => CustomImageView(
               imagePath: controller.avatarUrl.value.isEmpty

@@ -25,6 +25,7 @@ class HomeController extends GetxController {
   final SupabaseClient supabaseClient = SupabaseHandler().supabaseClient;
   final SupabaseService supabaseService = SupabaseService();
   final dio = Dio();
+  RxBool isAnimating = false.obs;
 
 
   @override
@@ -34,6 +35,8 @@ class HomeController extends GetxController {
 
     _fetchAvatarUrl(); // Fetch avatar URL when the controller is ready
     fetchEventsByAddress("Bhelkenagar, Kothrud, Pune, Maharashtra, India");
+    isAnimating.value = true; // Start the animation
+
   }
 
   Future<void> fetchRecommendedEvents() async {

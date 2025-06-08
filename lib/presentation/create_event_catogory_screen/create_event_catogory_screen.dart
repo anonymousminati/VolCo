@@ -56,22 +56,22 @@ class CreateEventCatogoryScreen extends StatelessWidget {
                             ),
                           ),
                           Spacer(),
-                          CustomImageView(
-                            imagePath: ImageConstant.imgLocation,
-                            height: 28.h,
-                            width: 30.h,
-                            onTap: () {
-                              AuthController().logout();
-                            },
-                          ),
-                          CustomImageView(
-                            imagePath: ImageConstant.imgBellBlue,
-                            height: 28.h,
-                            width: 30.h,
-                            onTap: () {
-                              onTapImgIconsone();
-                            },
-                          ),
+                          // CustomImageView(
+                          //   imagePath: ImageConstant.imgLocation,
+                          //   height: 28.h,
+                          //   width: 30.h,
+                          //   onTap: () {
+                          //     AuthController().logout();
+                          //   },
+                          // ),
+                          // CustomImageView(
+                          //   imagePath: ImageConstant.imgBellBlue,
+                          //   height: 28.h,
+                          //   width: 30.h,
+                          //   onTap: () {
+                          //     onTapImgIconsone();
+                          //   },
+                          // ),
                           Obx(
                             () => CustomImageView(
                               imagePath: controller.avatarUrl.value.isEmpty
