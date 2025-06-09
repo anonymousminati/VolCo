@@ -3,7 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:fx_2_folder/fx_14_text_reveal/text_reveal_widget.dart';
+import 'package:volco/widgets/TextRevealAnimation.dart';
 
 class FlyingCharactersStrategy extends BaseAnimationStrategy {
   final double maxOffset;

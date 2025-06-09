@@ -9,6 +9,7 @@ import 'package:volco/presentation/onboarding_three_screen/controller/onboading_
 import 'package:volco/widgets/custom_elevated_button.dart';
 import 'package:volco/widgets/custom_image_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:volco/widgets/orbit_widget.dart';
 
 class LetSYouInScreen extends GetWidget<LetsYouInController> {
 
@@ -39,18 +40,18 @@ class LetSYouInScreen extends GetWidget<LetsYouInController> {
                       Get.back();
                     },
                   ),
-                  SizedBox(height: 134.h),
+                  SizedBox(height: 20.h),
                   Text(
                     "Let's You In".tr,
                     style: theme.textTheme.displayMedium,
                   ),
-                  SizedBox(height: 90.h),
+                  SizedBox(height: 20.h),
                   _buildSocialMediaLoginSection(),
-                  SizedBox(height: 58.h),
+                  SizedBox(height: 20.h),
                   _buildDividerRow(),
-                  SizedBox(height: 56.h),
+                  SizedBox(height: 20.h),
                   _buildPasswordSignInButton(),
-                  SizedBox(height: 100.h),
+                  SizedBox(height: 20.h),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -148,11 +149,23 @@ class LetSYouInScreen extends GetWidget<LetsYouInController> {
       width: double.maxFinite,
       child: Column(
         children: [
-          _buildFacebookLoginButton(),
+          // _buildFacebookLoginButton(),
+          OrbitingCircles(
+            children: [
+              Icon(Icons.star),
+              Icon(Icons.favorite),
+              Icon(Icons.music_note),
+            ],
+
+            orbitDuration: 15, // 15 seconds per orbit
+            startDelay: 0, // 5 seconds before starting
+            orbitRadius: 50, // Base radius of 60 logical pixels
+            showOrbitPaths: true,
+          ),
           SizedBox(height: 16.h),
           _buildGoogleLoginButton(),
           SizedBox(height: 16.h),
-          _buildAppleLoginButton(),
+          // _buildAppleLoginButton(),
         ],
       ),
     );
